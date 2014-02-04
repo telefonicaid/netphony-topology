@@ -74,7 +74,7 @@ import tid.pce.tedb.TE_Information;
  * This is a BGP4 peer. It launches the BGP connections with its peers.
  * 
  * @author mcs
- *
+ * TEST GIT_2
  */
 public class BGPPeer {
 	/**
