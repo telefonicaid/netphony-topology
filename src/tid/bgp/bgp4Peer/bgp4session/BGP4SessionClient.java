@@ -28,6 +28,8 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	/**
 	 * Delay
 	 */
+	
+	
 	private boolean no_delay=true;
 	private String peerBGP_IPaddress;
 	private String localBGP4Address;
@@ -62,6 +64,8 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	
 		//int holdTime,long BGPIdentifier,int myAutonomousSystem,int version
 		log.info("Opening new BGP4 Session with host "+ peerBGP_IPaddress + " on port " + peerBGP_port +" local " + localBGP4Address);
+		log.info("Do we want to update from peer?" + updateFrom);
+		log.info("Do we want to send to peer?" + sendTo);
 		try {
 			Inet4Address addr = (Inet4Address) Inet4Address.getByName(localBGP4Address);
 			Inet4Address addrPeer = (Inet4Address) Inet4Address.getByName(peerBGP_IPaddress);
@@ -144,10 +148,15 @@ public class BGP4SessionClient extends GenericBGP4Session{
 						break;
 
 					case BGP4MessageTypes.MESSAGE_UPDATE:
-						log.info("UPDATE message received");						
+						log.info("UPDATE message received");
+						if(this.getUpdateFrom()){
 						BGP4Update bgp4Update = new BGP4Update(msg);
 						log.info(bgp4Update.toString());
-						updateDispatcher.dispathRequests(bgp4Update);
+						bgp4Update.setLearntFrom(this.getPeerBGP_IPaddress());
+						updateDispatcher.dispatchRequests(bgp4Update);
+						}
+						else
+							log.info("Update message from " + this.getPeerBGP_IPaddress() + " discarded");
 						break;
 
 					default:
@@ -175,6 +184,18 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	}
 	public void setPeerBGP_port(int peerBGP_port) {
 		this.peerBGP_port = peerBGP_port;
+	}
+	public Boolean getUpdateFrom() {
+		return updateFrom;
+	}
+	public void setUpdateFrom(Boolean updateFrom) {
+		this.updateFrom = updateFrom;
+	}
+	public Boolean getSendTo() {
+		return sendTo;
+	}
+	public void setSendTo(Boolean sendTo) {
+		this.sendTo = sendTo;
 	}
 	public boolean isNo_delay() {
 		return no_delay;

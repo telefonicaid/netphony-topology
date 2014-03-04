@@ -131,7 +131,8 @@ public class BGP4SessionServer extends GenericBGP4Session{
 						log.info("UPDATE message received");						
 						BGP4Update bgp4Update = new BGP4Update(msg);
 						log.info(bgp4Update.toString());
-						updateDispatcher.dispathRequests(bgp4Update);
+						bgp4Update.setLearntFrom(this.getRemotePeerId().toString());
+						updateDispatcher.dispatchRequests(bgp4Update);
 						break;
 
 					default:

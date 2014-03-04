@@ -23,9 +23,9 @@ import tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLi
 import tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
 import tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
 import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
+import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterIDNodeDescriptorSubTLV;
 import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4InterfaceAddressLinkDescriptorsSubTLV;
 import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4NeighborAddressLinkDescriptorSubTLV;
-import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4RouterIDSubTLV;
 import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.LinkLocalRemoteIdentifiersLinkDescriptorSubTLV;
 import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
 import tid.ospf.ospfv2.OSPFv2LinkStateUpdatePacket;
@@ -42,7 +42,6 @@ import tid.ospf.ospfv2.lsa.tlv.subtlv.RemoteInterfaceIPAddress;
 import tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
 import tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.LabelSetField;
-import tid.protocol.commons.ByteHandler;
 import tid.rsvp.constructs.gmpls.DWDMWavelengthLabel;
 
 
@@ -259,9 +258,9 @@ public class PruebaTransformacion_OSPF_BGP4 {
 		ArrayList<NodeDescriptorsSubTLV> nodeDescriptorsSubTLVList = new ArrayList<NodeDescriptorsSubTLV>();
 		
 		for (int i=0; i< addressList.size(); i++ ) {
-			IPv4RouterIDSubTLV ipv4RouterIDSubTLV = new IPv4RouterIDSubTLV();
-			ipv4RouterIDSubTLV.setIpv4Address(addressList.get(i));		
-			ipv4RouterIDSubTLV.setLanID(lanID);
+			IGPRouterIDNodeDescriptorSubTLV ipv4RouterIDSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
+			ipv4RouterIDSubTLV.setIGP_router_id_type(2);
+			ipv4RouterIDSubTLV.setIpv4AddressOSPF(addressList.get(i));		
 			nodeDescriptorsSubTLVList.add(ipv4RouterIDSubTLV);
 		}
 		localNodeDescriptors.setNodeDescriptorsSubTLVList(nodeDescriptorsSubTLVList);
@@ -324,15 +323,15 @@ public class PruebaTransformacion_OSPF_BGP4 {
 		ArrayList<NodeDescriptorsSubTLV> sourceDescriptorsSubTLVList = new ArrayList<NodeDescriptorsSubTLV>();
 		ArrayList<NodeDescriptorsSubTLV> dstDescriptorsSubTLVList = new ArrayList<NodeDescriptorsSubTLV>();
 		
-		IPv4RouterIDSubTLV ipv4RouterIDSubTLV = new IPv4RouterIDSubTLV();
-		ipv4RouterIDSubTLV.setIpv4Address(addressList.get(0));		
-		ipv4RouterIDSubTLV.setLanID(lanID);
-		sourceDescriptorsSubTLVList.add(ipv4RouterIDSubTLV);
+		IGPRouterIDNodeDescriptorSubTLV ipv4RouterIDOrigSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
+		ipv4RouterIDOrigSubTLV.setIpv4AddressOSPF(addressList.get(0));	
+		ipv4RouterIDOrigSubTLV.setIGP_router_id_type(2);
+		sourceDescriptorsSubTLVList.add(ipv4RouterIDOrigSubTLV);
 			
-		IPv4RouterIDSubTLV ipv4DstIDSubTLV = new IPv4RouterIDSubTLV();
-		ipv4DstIDSubTLV.setIpv4Address(addressList.get(1));		
-		ipv4DstIDSubTLV.setLanID(lanID);
-		dstDescriptorsSubTLVList.add(ipv4DstIDSubTLV);
+		IGPRouterIDNodeDescriptorSubTLV ipv4RouterIDDestSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
+		ipv4RouterIDDestSubTLV.setIpv4AddressOSPF(addressList.get(1));
+		ipv4RouterIDDestSubTLV.setIGP_router_id_type(2);
+		dstDescriptorsSubTLVList.add(ipv4RouterIDDestSubTLV);
 			
 		
 		localNodeDescriptors.setNodeDescriptorsSubTLVList(sourceDescriptorsSubTLVList);
@@ -418,15 +417,15 @@ public class PruebaTransformacion_OSPF_BGP4 {
 		ArrayList<NodeDescriptorsSubTLV> sourceDescriptorsSubTLVList = new ArrayList<NodeDescriptorsSubTLV>();
 		ArrayList<NodeDescriptorsSubTLV> dstDescriptorsSubTLVList = new ArrayList<NodeDescriptorsSubTLV>();
 		//IPv4
-		IPv4RouterIDSubTLV ipv4RouterIDSubTLV = new IPv4RouterIDSubTLV();
-		ipv4RouterIDSubTLV.setIpv4Address(addressList.get(0));		
-		ipv4RouterIDSubTLV.setLanID(lanID);
-		sourceDescriptorsSubTLVList.add(ipv4RouterIDSubTLV);
+		IGPRouterIDNodeDescriptorSubTLV ipv4RouterIDOrigSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
+		ipv4RouterIDOrigSubTLV.setIpv4AddressOSPF(addressList.get(0));	
+		ipv4RouterIDOrigSubTLV.setIGP_router_id_type(2);
+		sourceDescriptorsSubTLVList.add(ipv4RouterIDOrigSubTLV);
 			
-		IPv4RouterIDSubTLV ipv4DstIDSubTLV = new IPv4RouterIDSubTLV();
-		ipv4DstIDSubTLV.setIpv4Address(addressList.get(1));		
-		ipv4DstIDSubTLV.setLanID(lanID);
-		dstDescriptorsSubTLVList.add(ipv4DstIDSubTLV);
+		IGPRouterIDNodeDescriptorSubTLV ipv4RouterIDDestSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
+		ipv4RouterIDDestSubTLV.setIpv4AddressOSPF(addressList.get(1));
+		ipv4RouterIDDestSubTLV.setIGP_router_id_type(2);
+		dstDescriptorsSubTLVList.add(ipv4RouterIDDestSubTLV);
 			
 		//AS
 		ArrayList<Inet4Address> aS_ID = new ArrayList<Inet4Address>();

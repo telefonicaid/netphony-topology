@@ -25,12 +25,14 @@ public class BGP4SessionServerManager implements Runnable {
 	private  TEDB tedb;
 	private UpdateDispatcher ud;
 	Inet4Address localBGP4Address; 
+	private Boolean updateFrom;
+	private Boolean sendTo;
+	
 	public BGP4SessionServerManager(BGP4SessionsInformation bgp4SessionInformation, TEDB tedb,UpdateDispatcher ud, int bgp4Port,int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem,boolean noDelay,Inet4Address localAddress ,int mykeepAliveTimer ){
 		log = Logger.getLogger("BGP4Server");
 		this.holdTime=holdTime;
 		this.BGPIdentifier=BGPIdentifier;
 		this.version = version;
-		System.out.println("myAS7:"+myAutonomousSystem);
 		this.myAutonomousSystem=myAutonomousSystem;
 		this.bgp4SessionsInformation=bgp4SessionInformation;
 		this.bgp4Port=bgp4Port;
@@ -41,6 +43,22 @@ public class BGP4SessionServerManager implements Runnable {
 		this.keepAliveTimer = mykeepAliveTimer;
 	}
 	
+	public Boolean getSendTo() {
+		return sendTo;
+	}
+
+	public void setSendTo(Boolean sendTo) {
+		this.sendTo = sendTo;
+	}
+	
+	public Boolean getUpdateFrom() {
+		return updateFrom;
+	}
+
+	public void setUpdateFrom(Boolean updateFrom) {
+		this.updateFrom = updateFrom;
+	}
+
 	@Override
 	public void run() {
 
