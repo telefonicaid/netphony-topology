@@ -35,6 +35,8 @@ public class BGP4SessionClientManager implements Runnable{
 	private int myAutonomousSystem;
 	private int bgp4Port;
 	private UpdateDispatcher ud;
+	private Boolean updateFrom;
+	private Boolean sendTo;
 	
 	public BGP4SessionClientManager(BGP4SessionsInformation bgp4SessionInformation,UpdateDispatcher ud, String peer,int bgp4Port,String my_IPAddress,int  my_bgp4Port , int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, int my_keepAliveTimer){	
 		log=Logger.getLogger("BGP4Client");
@@ -93,6 +95,8 @@ public class BGP4SessionClientManager implements Runnable{
 			}
 			bgp4SessionClient = new BGP4SessionClient(bgp4SessionInformation,ud, peer, bgp4Port, holdTime, BGPIdentifier,
 					version,myAutonomousSystem,localBGP4Address, localBGP4Port ,keepAliveTimer);
+			bgp4SessionClient.setSendTo(sendTo);
+			bgp4SessionClient.setUpdateFrom(updateFrom);
 			bgp4SessionClient.start();
 
 			log.severe("Adding a new session in sessionManagerList");
@@ -120,6 +124,22 @@ public class BGP4SessionClientManager implements Runnable{
 			bgp4SessionClient.close();
 		}
 		
+	}
+
+	public Boolean getUpdateFrom() {
+		return updateFrom;
+	}
+
+	public void setUpdateFrom(Boolean updateFrom) {
+		this.updateFrom = updateFrom;
+	}
+
+	public Boolean getSendTo() {
+		return sendTo;
+	}
+
+	public void setSendTo(Boolean sendTo) {
+		this.sendTo = sendTo;
 	}
 	
 }

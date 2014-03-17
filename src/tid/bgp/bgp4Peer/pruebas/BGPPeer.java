@@ -14,6 +14,8 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.sound.midi.Receiver;
+
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 
@@ -73,8 +75,8 @@ import tid.pce.tedb.TE_Information;
  * Principal class. 
  * This is a BGP4 peer. It launches the BGP connections with its peers.
  * 
- * @author mcs
- * TEST GIT_2
+ * @author pac
+ *
  */
 public class BGPPeer {
 	/**
@@ -120,9 +122,19 @@ public class BGPPeer {
 	 */
 	private SendTopology sendTopologyTask;
 	/**
-	 * List of peers to which this peer has to connect
+	 * List of peers to establish connection.
 	 */
 	private LinkedList<String> peersToConnect;
+	
+	/**
+	 * List of boolean to decide wether to send or not to send to the correspondent peer
+	 */
+	private LinkedList<Boolean> sendToPeer;
+	
+	/**
+	 * List of boolean to decide wether to update or not to update from the correspondent peer
+	 */
+	private LinkedList<Boolean> updateFromPeer;
 	//Lista de "peers" aceptables (son los que dejo que se conecten a mi)
 	
 	//Lista negra de "peers" NO aceptables (no les dejo que se conecten a mi, siempre les rechazare)
@@ -163,6 +175,8 @@ public class BGPPeer {
 		params.initialize();
 		peersToConnect = params.getPeersToConnect();
 		sendTopology = params.isSendTopology();
+		this.setSendToPeer(params.getSendToPeer());
+		this.setUpdateFromPeer(params.getUpdateFromPeer());
 		
 		//Initialize loggers
 		FileHandler fh;
@@ -243,7 +257,6 @@ public class BGPPeer {
 	 */
 	public void startClient(){
 		logClient.info("Initializing Session Manager to connect as client");
-		logClient.info("peerstoConnect:"+peersToConnect);
 		if (params.getBGPIdentifier() != null){
 			Inet4Address BGPIdentifier=null;
 			try {
@@ -255,6 +268,8 @@ public class BGPPeer {
 			}
 			for (int i =0;i<peersToConnect.size();i++){		
 				bgp4SessionClientManager=new BGP4SessionClientManager(bgp4SessionsInformation,ud, peersToConnect.get(i), params.getBGP4Port(),params.getLocalBGPAddress(),params.getLocalBGPPort(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(),params.getKeepAliveTimer());
+				bgp4SessionClientManager.setSendTo(sendToPeer.get(i));
+				bgp4SessionClientManager.setUpdateFrom(updateFromPeer.get(i));
 				//FIXME: Ver si dejamos delay fijo o variable	
 				executor.scheduleWithFixedDelay(bgp4SessionClientManager, 0,params.getDelay(), TimeUnit.MILLISECONDS);
 			}
@@ -305,5 +320,17 @@ public class BGPPeer {
 	}
 	public void setSimpleTEDB(SimpleTEDB simpleTEDB) {
 		this.simpleTEDB = simpleTEDB;
+	}
+	public LinkedList<Boolean> getSendToPeer() {
+		return sendToPeer;
+	}
+	public void setSendToPeer(LinkedList<Boolean> sendToPeer) {
+		this.sendToPeer = sendToPeer;
+	}
+	public LinkedList<Boolean> getUpdateFromPeer() {
+		return updateFromPeer;
+	}
+	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
+		this.updateFromPeer = updateFromPeer;
 	}
 }

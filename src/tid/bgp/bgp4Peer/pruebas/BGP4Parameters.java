@@ -2,9 +2,14 @@ package tid.bgp.bgp4Peer.pruebas;
 
 
 import java.util.LinkedList;
+import java.util.Stack;
+import java.util.logging.Logger;
+
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
+
 
 
 import org.eclipse.jetty.util.log.Log;
@@ -15,12 +20,15 @@ import org.xml.sax.helpers.DefaultHandler;
 import tid.pce.tedb.Layer;
 
 
+
 /**
  * Parameters to configure the BGP4 session
  * @author mcs
  *
  */
 public class BGP4Parameters {
+	
+	private Logger log = Logger.getLogger("TMController");
 	/**
 	 * TCP port where the BGP is listening for incoming bgp4 connections
 	 */
@@ -71,6 +79,17 @@ public class BGP4Parameters {
 	 * List of peers to establish connection.
 	 */
 	private LinkedList<String> peersToConnect;
+	
+	/**
+	 * List of boolean to decide wether to send or not to send to the correspondent peer
+	 */
+	private LinkedList<Boolean> sendToPeer;
+	
+	/**
+	 * List of boolean to decide wether to update or not to update from the correspondent peer
+	 */
+	private LinkedList<Boolean> updateFromPeer;
+
 	/**
 	 * Parameter used to set traces meanwhile the execution.
 	 */
@@ -129,12 +148,16 @@ public class BGP4Parameters {
 	BGP4Parameters(){
 		confFile="BGP4Parameters.xml";
 		peersToConnect =new LinkedList<String>();
+		setSendToPeer(new LinkedList<Boolean>());
+		setUpdateFromPeer(new LinkedList<Boolean>());
 	}
 	/**
 	 * Constructor 
 	 */
 	BGP4Parameters(String confFile){
 		peersToConnect =new LinkedList<String>();
+		setSendToPeer(new LinkedList<Boolean>());
+		setUpdateFromPeer(new LinkedList<Boolean>());
 		if (confFile!=null){
 			this.confFile=confFile;
 		}else {
@@ -153,14 +176,31 @@ public class BGP4Parameters {
 			
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
+			
 
 			DefaultHandler handler = new DefaultHandler() {
+				boolean peer = false;
+				boolean send = false;
+				boolean receive = false;
 
 				String tempVal;
 
 				public void startElement(String uri, String localName,
 						String qName, Attributes attributes)
 								throws SAXException {
+					
+					if (qName.equalsIgnoreCase("configPeer")){
+						log.info("Found peer configuration");
+					}
+					else if (qName.equalsIgnoreCase("peer")){
+						peer = true;
+					}
+					else if (qName.equalsIgnoreCase("export")){
+						send = true;
+					}
+					else if (qName.equalsIgnoreCase("import")){
+						receive = true;
+					}
 						
 				}
 
@@ -221,12 +261,11 @@ public class BGP4Parameters {
 					else if (qName.equalsIgnoreCase("delay")){
 						delay = Long.parseLong(tempVal.trim());
 					}
+					/*
 					else if (qName.equalsIgnoreCase("peer")){
 						String peerBGP_IPaddress = tempVal.trim();
-						peersToConnect.add(peerBGP_IPaddress);
-						
-					}
-					
+						peersToConnect.add(peerBGP_IPaddress);					
+					}*/					
 					else if (qName.equalsIgnoreCase("TopologyFile")) {
 						topologyFile=tempVal.trim();
 					}
@@ -242,15 +281,35 @@ public class BGP4Parameters {
 					else if (qName.equalsIgnoreCase("localBGPPort")){
 						localBGPPort = Integer.parseInt(tempVal.trim());
 					}
-					
+					else if (qName.equalsIgnoreCase("configPeer")){
+						log.info("peers....." + peersToConnect.toString());
+						log.info("sendToPeer" + sendToPeer.toString());
+						log.info("updateFromPeer" + updateFromPeer.toString());
+
+					}
+				}	
 				
-				}		   
 
 				public void characters(char[] ch, int start, int length) throws SAXException {
 					tempVal = new String(ch,start,length);
+					
+					if(peer){
+						String peerBGP_IPaddress = new String(ch, start, length);
+						peersToConnect.add(peerBGP_IPaddress);
+						peer = false;
+					}
+					else if(send){
+						String sendInfo = new String(ch, start, length);
+						sendToPeer.add(Boolean.parseBoolean(sendInfo.trim()));
+						send = false;
+					}
+					else if(receive){
+						String update_from = new String(ch, start, length);
+						updateFromPeer.add(Boolean.parseBoolean(update_from.trim()));
+						receive = false;
+					}
 				}
 			};
-
 			saxParser.parse(confFile, handler);     
 
 		}catch (Exception e) {
@@ -391,5 +450,17 @@ public class BGP4Parameters {
 	}
 	public int getLocalBGPPort() {
 		return localBGPPort;
+	}
+	public LinkedList<Boolean> getSendToPeer() {
+		return sendToPeer;
+	}
+	public void setSendToPeer(LinkedList<Boolean> sendToPeer) {
+		this.sendToPeer = sendToPeer;
+	}
+	public LinkedList<Boolean> getUpdateFromPeer() {
+		return updateFromPeer;
+	}
+	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
+		this.updateFromPeer = updateFromPeer;
 	}
 }
