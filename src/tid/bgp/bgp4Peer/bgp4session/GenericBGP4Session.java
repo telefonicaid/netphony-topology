@@ -22,9 +22,7 @@ import tid.bgp.bgp4Peer.pruebas.BGP4Exception;
 import tid.util.UtilsFunctions;
 import tid.bgp.bgp4.update.fields.PathAttribute;
 import tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
-import tid.bgp.bgp4.update.fields.pathAttributes.AFICodesJuniper;
 import tid.bgp.bgp4.update.fields.pathAttributes.SAFICodes;
-import tid.bgp.bgp4.update.fields.pathAttributes.SAFICodesJuniper;
 
 
 
@@ -151,6 +149,12 @@ import tid.bgp.bgp4.update.fields.pathAttributes.SAFICodesJuniper;
 		 * Initial number of the session ID (internal use only)
 		 */
 		public static long sessionIdCounter=0;
+		
+		/**
+		 * 
+		 */
+		protected Boolean updateFrom;
+		protected Boolean sendTo;
 		
 		/**
 		 * Session ID (internal use only)
@@ -915,6 +919,22 @@ import tid.bgp.bgp4.update.fields.pathAttributes.SAFICodesJuniper;
 
 		public void setBGPIdentifier(Inet4Address bGPIdentifier) {
 			BGPIdentifier = bGPIdentifier;
+		}
+
+		public Boolean getUpdateFrom() {
+			return updateFrom;
+		}
+
+		public void setUpdateFrom(Boolean updateFrom) {
+			this.updateFrom = updateFrom;
+		}
+
+		public Boolean getSendTo() {
+			return sendTo;
+		}
+
+		public void setSendTo(Boolean sendTo) {
+			this.sendTo = sendTo;
 		}
 
 		public int getMyAutonomousSystem() {

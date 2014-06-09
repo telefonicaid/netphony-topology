@@ -29,7 +29,7 @@ public class UpdateDispatcher {
 		upt.start();
 		log=Logger.getLogger("BGP4Server");
 	}
-	public void dispathRequests(BGP4Update updateMessage){
+	public void dispatchRequests(BGP4Update updateMessage){
 		log.info("Adding update message to the queue");
 		updateList.add(updateMessage);
 	}
