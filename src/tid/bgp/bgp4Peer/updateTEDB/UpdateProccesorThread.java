@@ -691,7 +691,12 @@ public class UpdateProccesorThread extends Thread {
 			NodeTable.put(IGPID, node_info);
 
 		simpleTEDB.setNodeTable(NodeTable);
-
+		if (this.multiTedb!=null) {
+			if (node_info.getIpv4Address()!=null){
+				this.multiTedb.addReachabilityIPv4(as_number, node_info.getIpv4Address(), 32);
+			}
+			
+		}
 		log.info("Node Table:" + NodeTable.toString());
 		log.info("Node Information Table Updated....");
 
