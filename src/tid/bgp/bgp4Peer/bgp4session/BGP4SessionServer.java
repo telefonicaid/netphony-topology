@@ -8,9 +8,9 @@ import java.net.SocketException;
 import java.util.Timer;
 import java.util.logging.Logger;
 
-import tid.bgp.bgp4.messages.BGP4Message;
-import tid.bgp.bgp4.messages.BGP4MessageTypes;
-import tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4.messages.BGP4Message;
+import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
+import es.tid.bgp.bgp4.messages.BGP4Update;
 import tid.bgp.bgp4Peer.pruebas.BGP4Exception;
 import tid.bgp.bgp4Peer.pruebas.BGP4Parameters;
 import tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;

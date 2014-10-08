@@ -10,20 +10,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import tid.bgp.bgp4.messages.BGP4Open;
-import tid.bgp.bgp4.messages.BGP4Update;
-import tid.bgp.bgp4.open.BGP4OptionalParameter;
-import tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
-import tid.bgp.bgp4.update.fields.LinkNLRI;
-import tid.bgp.bgp4.update.fields.NodeNLRI;
-import tid.bgp.bgp4.update.fields.PathAttribute;
-import tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Attribute;
-import tid.bgp.bgp4.update.fields.pathAttributes.OriginAttribute;
-import tid.bgp.bgp4.update.fields.pathAttributes.PathAttributesTypeCode;
-import tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
-import tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
-import tid.bgp.bgp4.update.tlv.RemoteNodeDescriptorsTLV;
-import tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
+import es.tid.bgp.bgp4.messages.BGP4Open;
+import es.tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4.open.BGP4OptionalParameter;
+import es.tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
+import es.tid.bgp.bgp4.update.fields.LinkNLRI;
+import es.tid.bgp.bgp4.update.fields.NodeNLRI;
+import es.tid.bgp.bgp4.update.fields.PathAttribute;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Attribute;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.OriginAttribute;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.PathAttributesTypeCode;
+import es.tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
+import es.tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
+import es.tid.bgp.bgp4.update.tlv.RemoteNodeDescriptorsTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
 
 public class PruebaCodificacionMensajes {
 

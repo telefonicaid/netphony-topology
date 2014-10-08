@@ -10,19 +10,19 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.logging.Logger;
 
-import tid.bgp.bgp4.messages.BGP4Keepalive;
-import tid.bgp.bgp4.messages.BGP4Message;
-import tid.bgp.bgp4.messages.BGP4MessageTypes;
-import tid.bgp.bgp4.messages.BGP4Open;
-import tid.bgp.bgp4.open.BGP4CapabilitiesOptionalParameter;
-import tid.bgp.bgp4.open.BGP4OptionalParameter;
-import tid.bgp.bgp4.open.BGP4OptionalParametersTypes;
-import tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
+import es.tid.bgp.bgp4.messages.BGP4Keepalive;
+import es.tid.bgp.bgp4.messages.BGP4Message;
+import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
+import es.tid.bgp.bgp4.messages.BGP4Open;
+import es.tid.bgp.bgp4.open.BGP4CapabilitiesOptionalParameter;
+import es.tid.bgp.bgp4.open.BGP4OptionalParameter;
+import es.tid.bgp.bgp4.open.BGP4OptionalParametersTypes;
+import es.tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
+import es.tid.bgp.bgp4.update.fields.PathAttribute;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.SAFICodes;
 import tid.bgp.bgp4Peer.pruebas.BGP4Exception;
 import tid.util.UtilsFunctions;
-import tid.bgp.bgp4.update.fields.PathAttribute;
-import tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
-import tid.bgp.bgp4.update.fields.pathAttributes.SAFICodes;
 
 
 

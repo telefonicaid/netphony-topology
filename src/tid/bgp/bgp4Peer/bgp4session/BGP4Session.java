@@ -1,6 +1,6 @@
 package tid.bgp.bgp4Peer.bgp4session;
 
-import tid.bgp.bgp4.messages.BGP4Message;
+import es.tid.bgp.bgp4.messages.BGP4Message;
 
 
 /**

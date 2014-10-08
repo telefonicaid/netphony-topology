@@ -2,9 +2,9 @@ package tid.bgp.bgp4Peer.updateTEDB;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
-import tid.bgp.bgp4.messages.BGP4Update;
-import tid.bgp.bgp4Peer.tedb.IntraTEDBS;
 
+import es.tid.bgp.bgp4.messages.BGP4Update;
+import tid.bgp.bgp4Peer.tedb.IntraTEDBS;
 import tid.pce.tedb.MultiDomainTEDB;
 import tid.pce.tedb.SimpleTEDB;
 import tid.pce.tedb.TEDB;

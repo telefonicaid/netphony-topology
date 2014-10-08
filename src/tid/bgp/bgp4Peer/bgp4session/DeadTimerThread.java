@@ -2,7 +2,7 @@ package tid.bgp.bgp4Peer.bgp4session;
 
 import java.util.logging.Logger;
 
-import tid.pce.pcep.objects.ObjectParameters;
+import es.tid.pce.pcep.objects.ObjectParameters;
 import tid.pce.pcepsession.PCEPSession;
 
 /**
