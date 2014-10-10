@@ -3,7 +3,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import tid.bgp.bgp4.messages.BGP4Keepalive;
+import es.tid.bgp.bgp4.messages.BGP4Keepalive;
 
 
 public class KeepAliveThread extends Thread {
