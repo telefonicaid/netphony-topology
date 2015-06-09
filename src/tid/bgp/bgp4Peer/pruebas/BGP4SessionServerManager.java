@@ -6,13 +6,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.logging.Logger;
 
-import tid.bgp.bgp4Peer.bgp4session.BGP4SessionServer;
+import tid.bgp.bgp4Peer.bgp4session.BGP4PeerInitiatedSession;
 import tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 import tid.pce.tedb.TEDB;
 
 public class BGP4SessionServerManager implements Runnable {
-	private BGP4SessionServer bgp4SessionServer;
+	private BGP4PeerInitiatedSession bgp4SessionServer;
 	private Logger log;
 	BGP4SessionsInformation bgp4SessionsInformation;
 	int bgp4Port;
@@ -76,7 +76,7 @@ public class BGP4SessionServerManager implements Runnable {
 		}
 		while (listening) {	
 			try {
-				bgp4SessionServer = new BGP4SessionServer(serverSocket.accept(),bgp4SessionsInformation,ud,holdTime,BGPIdentifier,version,myAutonomousSystem,noDelay,keepAliveTimer);		
+				bgp4SessionServer = new BGP4PeerInitiatedSession(serverSocket.accept(),bgp4SessionsInformation,ud,holdTime,BGPIdentifier,version,myAutonomousSystem,noDelay,keepAliveTimer);		
 				bgp4SessionServer.start();			
 			}catch (Exception e) {
 				e.printStackTrace();

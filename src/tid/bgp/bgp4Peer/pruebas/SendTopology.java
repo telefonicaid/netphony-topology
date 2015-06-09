@@ -302,7 +302,7 @@ public class SendTopology implements Runnable {
 		while (sessions.hasMoreElements()){	
 			log.info("Sending a BGP4 update message");
 			GenericBGP4Session session = sessions.nextElement();
-			String destination = session.getRemotePeerId().getHostAddress();
+			String destination = session.getRemotePeerIP().getHostAddress();
 			log.info("update learnt from:" + update.getLearntFrom());
 			try{
 				if (!destination.equals(update.getLearntFrom())){

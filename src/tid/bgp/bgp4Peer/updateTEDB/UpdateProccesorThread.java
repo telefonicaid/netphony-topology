@@ -143,7 +143,7 @@ public class UpdateProccesorThread extends Thread {
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
 				updateMsg= updateList.take();
-				log.info("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
+				log.finest("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
 				String learntFrom = updateMsg.getLearntFrom();
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
 				ArrayList<PathAttribute> pathAttributeListUtil = new ArrayList<PathAttribute>();			
@@ -153,20 +153,20 @@ public class UpdateProccesorThread extends Thread {
 					att = pathAttributeList.get(i);
 					int typeCode = att.getTypeCode();
 					switch (typeCode){
-					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_LINKSTATE:
+					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_BGP_LS_ATTRIBUTE:
 						att_ls = att;
 						break;
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI:
 						att_mpreach = att;
 						break;
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_ASPATH:
-						log.info("We don't use ASPATH");
+						//log.info("We don't use ASPATH");
 						break;	
 					case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_ORIGIN:
-						log.info("We don't use ORIGIN");
+						//log.info("We don't use ORIGIN");
 						break;	
 					default:
-						log.info("Attribute typecode " + typeCode +"unknown");
+						//log.info("Attribute typecode " + typeCode +"unknown");
 						break;
 					}
 
@@ -179,23 +179,18 @@ public class UpdateProccesorThread extends Thread {
 					pathAttributeListUtil.add(att_mpreach);
 
 				if (pathAttributeListUtil != null){
-					log.info("There is path attribute List");
 					for (int i=0;i<pathAttributeListUtil.size();i++){
 						att = pathAttributeListUtil.get(i);
-						log.info("Taking the first element of the path att list");
 						int typeCode = att.getTypeCode();
-						log.info("Type Code is "+ typeCode);
 						switch (typeCode){	
 						// cuando encontramos el link state attribute rellenamos las tlvs que nos llegan para luego
 						// meterlas en la te_info o en la node_info
-						case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_LINKSTATE:
-							log.info("Link State Attribute found");		
+						case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_BGP_LS_ATTRIBUTE:
 							processAttributeLinkState((LinkStateAttribute) att);
 							continue;
 							// cuando procesamos el mp_reach distinguimos entre nodo y link...
 							// prefijo aun por hacer
 						case PathAttributesTypeCode.PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI:
-							log.info("PATH_ATTRIBUTE_TYPECODE_MP_REACH_NLRI Attribute found");
 							int afi;
 							afi = ((MP_Reach_Attribute)att).getAddressFamilyIdentifier();
 							if (afi == AFICodes.AFI_BGP_LS){
@@ -203,15 +198,12 @@ public class UpdateProccesorThread extends Thread {
 								int nlriType =  nlri.getNLRIType();
 								switch (nlriType){					
 								case NLRITypes.Link_NLRI:
-									log.info("Link NLRI found");
 									processLinkNLRI((LinkNLRI)(nlri), learntFrom);					
 									continue;
 								case NLRITypes.Node_NLRI:
-									log.info("Node NLRI found");
 									fillNodeInformation((NodeNLRI)(nlri), learntFrom);
 									continue;
 								case NLRITypes.Prefix_v4_NLRI://POR HACER...
-									log.info("Prefix NLRI found");
 									fillPrefixNLRI((PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
 									continue;
 								default:
@@ -259,8 +251,6 @@ public class UpdateProccesorThread extends Thread {
 	 * @param availableLabels
 	 */
 	private void processAttributeLinkState(LinkStateAttribute lsAtt){
-
-		log.info("entramos a llenar los atributos....");
 
 		if (lsAtt.getMaximumLinkBandwidthTLV() != null){
 			maximumLinkBandwidthTLV = lsAtt.getMaximumLinkBandwidthTLV();
@@ -360,22 +350,22 @@ public class UpdateProccesorThread extends Thread {
 			switch (subTLVType){	
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AUTONOMOUS_SYSTEM:
 				localDomainID = ((AutonomousSystemNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAS_ID();
-				log.info("AUTONOMOUS_SYSTEM found in LINK_NLRI(local_node). as_local "+localDomainID);
+				//log.info("AUTONOMOUS_SYSTEM found in LINK_NLRI(local_node). as_local "+localDomainID);
 				continue;
 
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AREA_ID:
 				areaID = ((AreaIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAREA_ID();
-				log.info("AREA_ID found in LINK_NLRI(local_node). area_id "+areaID);
+				//log.info("AREA_ID found in LINK_NLRI(local_node). area_id "+areaID);
 				continue;
 
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_BGP_LS_IDENTIFIER:
 				bgplsID = ((BGPLSIdentifierNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getBGPLS_ID();
-				log.info("BGPLS IDENTIFIER found in LINK_NLRI(local_node). bgpls_id "+bgplsID);
+				//log.info("BGPLS IDENTIFIER found in LINK_NLRI(local_node). bgpls_id "+bgplsID);
 				continue;
 
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_IGP_ROUTER_ID:
 				LocalNodeIGPId = ((IGPRouterIDNodeDescriptorSubTLV)nodeDescriptorsSubTLV.get(i)).getIpv4AddressOSPF();
-				log.info("IGP ROUTER ID found in LINK_NLRI(local_node). igp_id "+LocalNodeIGPId);
+				//log.info("IGP ROUTER ID found in LINK_NLRI(local_node). igp_id "+LocalNodeIGPId);
 				continue;		
 			default:
 				log.finest("Attribute Code unknown");
@@ -388,21 +378,21 @@ public class UpdateProccesorThread extends Thread {
 			switch (subTLVType){	
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AUTONOMOUS_SYSTEM:
 				remoteDomainID = ((AutonomousSystemNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAS_ID();
-				log.info("AUTONOMOUS_SYSTEM found in LINK_NLRI(remote_node). as_remote "+remoteDomainID);
+				//log.info("AUTONOMOUS_SYSTEM found in LINK_NLRI(remote_node). as_remote "+remoteDomainID);
 				continue;
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AREA_ID:
 				areaID = ((AreaIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAREA_ID();
-				log.info("AREA_ID found in LINK_NLRI(remote_node). area_id "+areaID);
+				//log.info("AREA_ID found in LINK_NLRI(remote_node). area_id "+areaID);
 				continue;
 
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_BGP_LS_IDENTIFIER:
 				bgplsID = ((BGPLSIdentifierNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getBGPLS_ID();
-				log.info("BGPLS IDENTIFIER found in LINK_NLRI(remote_node). bgpls_id "+bgplsID);
+				//log.info("BGPLS IDENTIFIER found in LINK_NLRI(remote_node). bgpls_id "+bgplsID);
 				continue;
 
 			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_IGP_ROUTER_ID:
 				RemoteNodeIGPId = ((IGPRouterIDNodeDescriptorSubTLV)nodeDescriptorsSubTLV.get(i)).getIpv4AddressOSPF();
-				log.info("IGP ROUTER ID found in LINK_NLRI(remote_node). igp_id "+RemoteNodeIGPId);
+				//log.info("IGP ROUTER ID found in LINK_NLRI(remote_node). igp_id "+RemoteNodeIGPId);
 				continue;
 
 			default:
@@ -411,12 +401,12 @@ public class UpdateProccesorThread extends Thread {
 		}
 
 		/**Creamos el grafo*/
-		log.info("Let's see if our link is intradomain or interdomain...");
-		log.info("as_local "+localDomainID);
-		log.info("as_remote "+remoteDomainID);
+		//Let's see if our link is intradomain or interdomain...
+		//log.info("as_local "+localDomainID);
+		//log.info("as_remote "+remoteDomainID);
 
 		if(localDomainID.equals(remoteDomainID)){
-			log.info("INTRADOMAIN...");
+			//log.info("INTRADOMAIN...");
 			IntraDomainEdge intraEdge = new IntraDomainEdge();
 			if (linkNLRI.getLinkIdentifiersTLV() != null){				
 				intraEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
@@ -428,10 +418,10 @@ public class UpdateProccesorThread extends Thread {
 			}
 
 			/**Actualizando TED*/
-			log.info("lET'S SEE WHAT DO WE HAVE TO UPDATE...");
+			//log.info("lET'S SEE WHAT DO WE HAVE TO UPDATE...");
 
 
-			log.info("Found Vertex:"+LocalNodeIGPId.toString());
+			//log.info("Found Vertex:"+LocalNodeIGPId.toString());
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(LocalNodeIGPId))){
 				log.info("Adding Local Vertex... " + LocalNodeIGPId.toString());
 				simpleTEDB.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
@@ -439,7 +429,7 @@ public class UpdateProccesorThread extends Thread {
 			else{ 
 				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
 			}
-			log.info("Found Vertex: "+RemoteNodeIGPId.toString());
+			//log.info("Found Vertex: "+RemoteNodeIGPId.toString());
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
 				log.info("Adding Remote Vertex... " + RemoteNodeIGPId.toString());
 				simpleTEDB.getNetworkGraph().addVertex(RemoteNodeIGPId);
@@ -493,7 +483,7 @@ public class UpdateProccesorThread extends Thread {
 			interEdge.setDomain_dst_router(remoteDomainID);
 
 			/**Actualizando TED*/
-			log.info("Updating Interdomain list...");
+			//log.info("Updating Interdomain list...");
 			te_info =  createTE_Info();
 			interEdge.setTE_info(te_info);
 			interEdge.setLearntFrom(learntFrom);
