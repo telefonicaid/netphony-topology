@@ -7,7 +7,7 @@ import tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import tid.bgp.bgp4Peer.pruebas.BGP4Parameters;
 import tid.bgp.bgp4Peer.pruebas.SendTopology;
 import tid.bgp.bgp4Peer.tedb.IntraTEDBS;
-
+import tid.pce.tedb.DomainTEDB;
 import tid.pce.tedb.MultiDomainTEDB;
 import tid.pce.tedb.SimpleTEDB;
 import tid.pce.tedb.TEDB;
@@ -30,12 +30,13 @@ public class BGP4ManagementServer extends Thread {
 	 */
 	private IntraTEDBS intraTEDB;
 	private SimpleTEDB simpleTEDB;
+	private DomainTEDB readDomainTEDB;
 	/**
 	 * Class to send the topology. It is needes to set the parameters sendTopology to true or false.
 	 */
 	private SendTopology sendTopology;
 	
-	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, IntraTEDBS intraTEDB,SimpleTEDB simpleTEDB, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
+	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, IntraTEDBS intraTEDB,SimpleTEDB simpleTEDB, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology, DomainTEDB readDomainTEDB){
 		log =Logger.getLogger("BGP4Server");
 		this.BGP4ManagementPort = BGP4ManagementPort;
 		this.multiTEDB=multiTEDB;
@@ -43,6 +44,7 @@ public class BGP4ManagementServer extends Thread {
 		this.bgp4SessionsInformation =bgp4SessionsInformation;
 		this.sendTopology=sendTopology;
 		this.simpleTEDB=simpleTEDB;
+		this.readDomainTEDB=readDomainTEDB;
 	}
 	/**
 	 * RUN
@@ -62,7 +64,7 @@ public class BGP4ManagementServer extends Thread {
 		
 		   try {
 	        	while (listening) {
-	        		new BGP4ManagementSession(serverSocket.accept(),multiTEDB,intraTEDB,bgp4SessionsInformation, sendTopology).start();
+	        		new BGP4ManagementSession(serverSocket.accept(),multiTEDB,intraTEDB,bgp4SessionsInformation, sendTopology, readDomainTEDB).start();
 	        	}
 	        	serverSocket.close();
 	        } catch (Exception e) {

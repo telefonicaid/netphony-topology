@@ -168,7 +168,7 @@ public class BGPPeer {
 	 * @param args
 	 */
 	public void configure(String nameParametersFile){
-		//First of all, read the parameters		
+		//First of all, read the parameters	
 		if (nameParametersFile != null){
 			params=new BGP4Parameters(nameParametersFile);
 		}else{
@@ -250,7 +250,7 @@ public class BGPPeer {
 	 */
 	public void startManagementServer(){
 		logServer.info("Initializing Management Server");	
-		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),writeMultiTEDB,intraTEDB, simpleTEDB,bgp4SessionsInformation,sendTopologyTask);	
+		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),writeMultiTEDB,intraTEDB, simpleTEDB,bgp4SessionsInformation,sendTopologyTask,readDomainTEDB);	
 		bms.start();
 	}
 	/**

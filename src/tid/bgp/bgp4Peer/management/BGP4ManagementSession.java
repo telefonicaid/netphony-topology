@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import tid.bgp.bgp4Peer.pruebas.SendTopology;
 import tid.bgp.bgp4Peer.tedb.IntraTEDBS;
+import tid.pce.tedb.DomainTEDB;
 import tid.pce.tedb.MultiDomainTEDB;
 import tid.pce.tedb.TEDB;
 
@@ -42,6 +43,8 @@ public class BGP4ManagementSession extends Thread {
 	 * Topology database for intradomain Links. It owns several domains.
 	 */
 	private IntraTEDBS intraTEDB;
+	
+	private DomainTEDB readDomainTEDB;
 	/**
 	 * The infomation of all the active sessions
 	 */
@@ -59,13 +62,14 @@ public class BGP4ManagementSession extends Thread {
 	 * @param bgp4SessionsInformation
 	 * @param sendTopology
 	 */
-	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, IntraTEDBS intraTEDB,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
+	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, IntraTEDBS intraTEDB,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology, DomainTEDB readDomainTEDB){
 		this.socket=s;
 		log=Logger.getLogger("BGP4Server");
 		this.multiTEDB=multiTEDB;
 		this.intraTEDB=intraTEDB;
 		this.bgp4SessionsInformation= bgp4SessionsInformation;
 		this.sendTopology=sendTopology;
+		this.readDomainTEDB=readDomainTEDB;
 	}
 	
 	public void run(){
@@ -125,6 +129,9 @@ public class BGP4ManagementSession extends Thread {
 						out.println(multiTEDB.printTopology());
 					if (intraTEDB != null)
 						out.print(intraTEDB.printTopology());
+					if (readDomainTEDB != null)
+						out.print(readDomainTEDB.printTopology());
+					
 				}
 				else if (command.equals("set traces on")) {
 					log.setLevel(Level.ALL);		
