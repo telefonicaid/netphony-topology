@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
+import es.tid.of.DataPathID;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 
 /**
