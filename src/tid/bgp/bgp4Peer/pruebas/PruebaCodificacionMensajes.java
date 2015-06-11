@@ -161,7 +161,7 @@ public class PruebaCodificacionMensajes {
 		open.encode();
 		
 		byte[] bytes = open.getBytes();
-		tid.util.UtilsFunctions.printByte(bytes, "Open Mesage");
+		//tid.util.UtilsFunctions.printByte(bytes, "Open Mesage");
 		
 //		System.out.println("Longitud: "+bytes.length+ "->"+ bytes[18]);
 //		BGP4Open openReceived= new BGP4Open(bytes);
@@ -204,7 +204,7 @@ public class PruebaCodificacionMensajes {
 		open.encode();
 		//System.out.println(open.toString());
 		byte[] bytes = open.getBytes();
-		tid.util.UtilsFunctions.printByte(bytes, "Open Mesage");
+		//tid.util.UtilsFunctions.printByte(bytes, "Open Mesage");
 		
 		//System.out.println("Longitud: "+bytes.length+ "->"+ bytes[18]);
 		BGP4Open openReceived= new BGP4Open(bytes);
