@@ -9,11 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
-import es.tid.bgp.bgp4Peer.pruebas.SendTopology;
+import es.tid.bgp.bgp4Peer.peer.SendTopology;
 import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.TEDB;
 
 /**
  * 

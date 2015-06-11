@@ -11,8 +11,8 @@ import java.util.logging.Logger;
 import es.tid.bgp.bgp4.messages.BGP4Message;
 import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
 import es.tid.bgp.bgp4.messages.BGP4Update;
-import es.tid.bgp.bgp4Peer.pruebas.BGP4Exception;
-import es.tid.bgp.bgp4Peer.pruebas.BGP4Parameters;
+import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
+import es.tid.bgp.bgp4Peer.peer.BGP4Parameters;
 import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 
 /**

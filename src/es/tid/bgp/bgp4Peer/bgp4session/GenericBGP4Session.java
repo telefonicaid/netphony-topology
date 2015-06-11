@@ -16,7 +16,7 @@ import es.tid.bgp.bgp4.open.BGP4CapabilitiesOptionalParameter;
 import es.tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.SAFICodes;
-import es.tid.bgp.bgp4Peer.pruebas.BGP4Exception;
+import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
 
 
 /**
