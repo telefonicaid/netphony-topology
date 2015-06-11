@@ -3,7 +3,7 @@ package tid.bgp.bgp4Peer.bgp4session;
 import java.util.logging.Logger;
 
 import es.tid.pce.pcep.objects.ObjectParameters;
-import tid.pce.pcepsession.PCEPSession;
+
 
 /**
  * BGP4 DeadTimer management Thread
