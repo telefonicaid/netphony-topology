@@ -1,29 +1,13 @@
-package es.tid.bgp.bgp4Peer.pruebas;
+package es.tid.bgp.bgp4Peer.peer;
 
 
 import java.util.LinkedList;
-import java.util.Stack;
 import java.util.logging.Logger;
-
-
-
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
-
-
-
-
-
-import org.eclipse.jetty.util.log.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import es.tid.tedb.Layer;
-
-
 
 /**
  * Parameters to configure the BGP4 session

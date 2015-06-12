@@ -3,6 +3,8 @@ package es.tid.tedb;
 import java.net.Inet4Address;
 import java.util.LinkedList;
 
+import es.tid.of.DataPathID;
+
 public class Node_Info {
 
 	//we specify we we learn the topology from

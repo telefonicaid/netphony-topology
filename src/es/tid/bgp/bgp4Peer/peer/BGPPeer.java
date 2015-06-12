@@ -1,4 +1,4 @@
-package es.tid.bgp.bgp4Peer.pruebas;
+package es.tid.bgp.bgp4Peer.peer;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
