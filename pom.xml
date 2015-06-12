@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.tid.netphony</groupId>
   <artifactId>topology</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.1</version>
   <packaging>jar</packaging>
   <name>Netphony TED and BGP-LS peer</name>
   <description>Traffic Engineering Database and BGP-LS peer</description>
@@ -19,13 +19,33 @@
       <artifactId>slf4j-api</artifactId>
       <version>1.7.7</version>
     </dependency>
-  </dependencies>
-   <dependencies>
     <dependency>
       <groupId>es.tid.netphony</groupId>
       <artifactId>network-protocols</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.jgrapht</groupId>
+  <artifactId>jgrapht-core</artifactId>
+  <version>0.9.1</version>
+   </dependency>
+   <dependency>
+	<groupId>com.google.code.gson</groupId>
+	<artifactId>gson</artifactId>
+	<version>2.2.2</version>
+</dependency>
+   <dependency>
+	<groupId>com.googlecode.json-simple</groupId>
+	<artifactId>json-simple</artifactId>
+	<version>1.1.1</version>
+</dependency>
+<dependency>
+	<groupId>com.metaparadigm</groupId>
+	<artifactId>json-rpc</artifactId>
+	<version>1.0</version>
+</dependency>
+
+   
   </dependencies>
   <build>
     <sourceDirectory>${basedir}/src</sourceDirectory>

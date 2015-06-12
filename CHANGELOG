@@ -1,2 +1,5 @@
+v1.1.1
+- Added configuration instructions of the standalone BGP Peer 
+- Added dependencies to pom.xml
 v1.1.0
 First Public Release

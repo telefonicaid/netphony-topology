@@ -6,7 +6,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.logging.Logger;
 
-import es.tid.bgp.bgp4Peer.pruebas.BGP4Exception;
+import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
 
 
 /**

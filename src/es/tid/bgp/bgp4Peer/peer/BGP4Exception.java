@@ -1,4 +1,4 @@
-package es.tid.bgp.bgp4Peer.pruebas;
+package es.tid.bgp.bgp4Peer.peer;
 
 public class BGP4Exception extends Exception {
 

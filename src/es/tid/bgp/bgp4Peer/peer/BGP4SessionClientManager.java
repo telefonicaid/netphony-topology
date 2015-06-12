@@ -1,15 +1,12 @@
-package es.tid.bgp.bgp4Peer.pruebas;
+package es.tid.bgp.bgp4Peer.peer;
 
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
 import java.util.logging.Logger;
-
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionClient;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionExistsException;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
-import es.tid.bgp.bgp4Peer.bgp4session.GenericBGP4Session;
 import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 
 /**
