@@ -66,8 +66,7 @@ public class SimpleTEDB implements DomainTEDB{
 
 	private Lock TEDBlock;
 
-	private Hashtable<Inet4Address , Node_Info> NodeTable;
-	private Hashtable<DataPathID , Node_Info> NodeTableDataPath;
+	private Hashtable<Object , Node_Info> NodeTable;
 
 	private boolean multidomain=false;//By default, the TED has only one domain
 	Logger log;
@@ -76,8 +75,7 @@ public class SimpleTEDB implements DomainTEDB{
 		registeredAlgorithms= new ArrayList<TEDListener>();
 		registeredAlgorithmssson= new ArrayList<SSONListener>();
 		TEDBlock=new ReentrantLock();
-		NodeTable = new Hashtable<Inet4Address, Node_Info>();
-		NodeTableDataPath = new Hashtable<DataPathID, Node_Info>();
+		NodeTable = new Hashtable<Object, Node_Info>();
 	}
 
 	public SimpleDirectedWeightedGraph<Object,IntraDomainEdge> getDuplicatedNetworkGraph(){
@@ -160,25 +158,17 @@ public class SimpleTEDB implements DomainTEDB{
 			 *  Preguntar a Oscar
 			 */
 			while (itervertex.hasNext()) {
-				try {
-					Inet4Address ip = (Inet4Address) itervertex.next();
-					Node_Info ni = new Node_Info();
-					ni.setIpv4AddressLocalNode(ip);
-					ni.setIpv4Address(ip);//de momento asumimos que aprendemos ospf
-					ni.setAs_number(domain);
-					//ni.setSid(sid);
-					ni.setLearntFrom("Fom XML");
-					NodeTable.put(ip, ni);
-				} catch (Exception e) {
-					DataPathID dp = (DataPathID) itervertex.next();
-					Node_Info ni = new Node_Info();
-					ni.setDataPathLocalNode(dp); 
-					//ni.setIpv4Address(ip);//de momento asumimos que aprendemos ospf
-					ni.setAs_number(domain);
-					//ni.setSid(sid);
-					ni.setLearntFrom("Fom XML");
-					NodeTableDataPath.put(dp, ni);
+				Object address = itervertex.next();
+				Node_Info ni = new Node_Info();
+				if (address instanceof Inet4Address){
+					ni.setIpv4AddressLocalNode((Inet4Address)address);
+					ni.setIpv4Address((Inet4Address)address);//de momento asumimos que aprendemos ospf					
+				} else if (address instanceof DataPathID) {
+					ni.setDataPathLocalNode((DataPathID)address); 
 				}
+				ni.setLearntFrom("Fom XML");
+				ni.setAs_number(domain);
+				NodeTable.put(address, ni);	
 			}
 
 			Iterator<IntraDomainEdge> iteredge=networkGraph.edgeSet().iterator();
@@ -571,11 +561,11 @@ public class SimpleTEDB implements DomainTEDB{
 		return networkGraph.containsVertex(vertex);
 	}
 
-	public Hashtable<Inet4Address, Node_Info> getNodeTable() {
+	public Hashtable<Object, Node_Info> getNodeTable() {
 		return NodeTable;
 	}
 
-	public void setNodeTable(Hashtable<Inet4Address, Node_Info> nodeTable) {
+	public void setNodeTable(Hashtable<Object, Node_Info> nodeTable) {
 		NodeTable = nodeTable;
 	}
 
