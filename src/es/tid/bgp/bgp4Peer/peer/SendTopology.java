@@ -125,7 +125,7 @@ public class SendTopology implements Runnable {
 	 * This function sends a BGP4 update message (encoded in a NodeNLRI) for each node in the set 
 	 * @param vertexIt
 	 */
-	private void sendNodeNLRI(Set<Object> vertexSet, Hashtable<Inet4Address , Node_Info> NodeTable){
+	private void sendNodeNLRI(Set<Object> vertexSet, Hashtable<Object , Node_Info> NodeTable){
 		Iterator<Object> vertexIt = vertexSet.iterator();	
 		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
 		while (vertexIt.hasNext()){		

@@ -602,7 +602,7 @@ public class UpdateProccesorThread extends Thread {
 		int IGP_type = 0;
 		Inet4Address IGPID = null;
 		Node_Info node_info = new Node_Info();
-		Hashtable<Inet4Address , Node_Info> NodeTable;
+		Hashtable<Object , Node_Info> NodeTable;
 		//ArrayList<Inet4Address> address = new ArrayList<Inet4Address>();
 		for (int i = 0;i<nodeDescriptorsSubTLV.size();i++){
 			int subTLVType = nodeDescriptorsSubTLV.get(i).getSubTLVType();

@@ -104,6 +104,7 @@ public class FileTEDBUpdater {
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
 
+
 		//First, create the graph
 		SimpleDirectedWeightedGraph<Object, IntraDomainEdge> graph = new SimpleDirectedWeightedGraph<Object, IntraDomainEdge>(IntraDomainEdge.class);
 
@@ -163,16 +164,8 @@ public class FileTEDBUpdater {
 						String router_id = getCharacterDataFromElement(router_id_e);
 
 						log.info("Adding router_id " + router_id);
-
-						try { //Router_type: DatapathID
-							router_id_addr = (Inet4Address) Inet4Address.getByName(router_id);
-							graph.addVertex(router_id_addr);
-						} catch (Exception e) { //Router_type: DatapathID
-							router_id_addr =  (DataPathID) DataPathID.getByName(router_id);
-							log.info("router_id_addr: "+router_id_addr);
-							graph.addVertex(router_id_addr);
-						}
-
+						router_id_addr = EdgeUtils.getEdge(router_id);
+						graph.addVertex(router_id_addr);
 
 						log.info("About to look for SID");
 						NodeList SID_aux = element.getElementsByTagName("sid");
@@ -327,13 +320,7 @@ public class FileTEDBUpdater {
 							NodeList source_router_id = source_router_el.getElementsByTagName("router_id");
 							Element source_router_id_el = (Element) source_router_id.item(0);
 							String s_r_id = getCharacterDataFromElement(source_router_id_el);
-							try { // s_router_id_addr type : Inet4Address
-								s_router_id_addr = (Inet4Address) Inet4Address.getByName(s_r_id);
-								log.info("s_router_id_addr Inet4Address:: "+s_router_id_addr);
-							} catch (Exception e1) { // s_router_id_addr type : DataPathID
-								s_router_id_addr = (DataPathID) DataPathID.getByName(s_r_id);
-								log.info("s_router_id_addr DataPathID:: "+s_router_id_addr);
-							}
+							s_router_id_addr= EdgeUtils.getEdge(s_r_id);
 
 							NodeList source_if_id_nl = source_router_el.getElementsByTagName("if_id");
 							Element source_if_id_el = (Element) source_if_id_nl.item(0);
@@ -363,13 +350,7 @@ public class FileTEDBUpdater {
 							NodeList dest_router_id_nl = dest_el.getElementsByTagName("router_id");
 							Element dest_router_id_el = (Element) dest_router_id_nl.item(0);
 							String d_r_id = getCharacterDataFromElement(dest_router_id_el);
-							try {// d_router_id_addr type : Inet4Address
-								d_router_id_addr = (Inet4Address) Inet4Address.getByName(d_r_id);
-								log.info("d_router_id_addr Inet4Address:: "+d_router_id_addr.toString());	
-							} catch (Exception e1) {  // d_router_id_addr type : DataPathID
-								d_router_id_addr = (DataPathID) DataPathID.getByName(d_r_id);
-								log.info("d_router_id_addr DataPathID:: "+d_router_id_addr);
-							}
+							d_router_id_addr= EdgeUtils.getEdge(d_r_id);
 
 							//Anyadimos los SID
 							if (SIDS.get(s_router_id_addr)!=null && SIDS.get(d_router_id_addr)!=null)
@@ -574,38 +555,6 @@ public class FileTEDBUpdater {
 								}
 							}
 
-							/*
-							NodeList unreserved_wlans_nl = element.getElementsByTagName("unreserved_wlans");
-							if (unreserved_wlans_nl!=null){
-								int num_u_b=unreserved_wlans_nl.getLength();
-								UnreservedBandwidth unreservedBandwidth;
-								if (num_u_b>0){
-									if(edge.getTE_info()==null){
-										TE_Information tE_info= new TE_Information();
-										if (commonBitmapLabelSet){
-											if(lambdaEnd!=Integer.MAX_VALUE)
-												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
-											else
-												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n);
-										}
-										edge.setTE_info(tE_info);
-									}
-									unreservedBandwidth =new UnreservedBandwidth();
-									(edge.getTE_info()).setUnreservedBandwidth(unreservedBandwidth);
-									for(int k=0;k<num_u_b;++k){
-										Element unreserved_bandwidth_el = (Element) unreserved_bandwidth_nl.item(k);
-										String s_unreserved_bandwidth = getCharacterDataFromElement(unreserved_bandwidth_el);
-
-										String s_priority=unreserved_bandwidth_el.getAttributeNode("priority").getValue();
-										Integer priority = Integer.valueOf(s_priority);
-										float unreserved_bandwidth=Float.parseFloat(s_unreserved_bandwidth);	
-
-										(unreservedBandwidth.getUnreservedBandwidth())[priority]=unreserved_bandwidth;
-									}
-								}
-							}
-							 */
-
 							if(edge.getTE_info()==null){
 								TE_Information tE_info= new TE_Information();							
 								edge.setTE_info(tE_info);
@@ -682,7 +631,7 @@ public class FileTEDBUpdater {
 									graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(graph.getEdge(s_router_id_addr, d_router_id_addr).getNumberFibers()+1);
 								}else{
 									log.info("s_router_id_addr: "+s_router_id_addr.toString()+"; d_router_id_addr: "+d_router_id_addr.toString()+"; edge: "+edge);
-									graph.addEdge((DataPathID)s_router_id_addr, (DataPathID)d_router_id_addr, edge);
+									graph.addEdge(s_router_id_addr, d_router_id_addr, edge);
 									graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(1);
 								}
 							}catch(Exception e){
