@@ -16,6 +16,8 @@ public class Node {
 	String dataPathID;
 	/**Router Vendor Type*/
 	String routerType;
+	String controllerIP;
+	String controllerPort;
 	/**IOS version*/
 	String rotuerModel;
 	ArrayList<String> unnumberedIntfList=null;
@@ -43,6 +45,18 @@ public class Node {
 	}
 	public void setRouterType(String routerType) {
 		this.routerType = routerType;
+	}
+	public Object getControllerIP() {
+		return controllerIP;
+	}
+	public void setControllerIP(String controllerIP) {
+		this.controllerIP = controllerIP;
+	}
+	public Object getControllerPort() {
+		return controllerPort;
+	}
+	public void setControllerPort(String controllerPort) {
+		this.controllerPort = controllerPort;
 	}
 	public String getRotuerModel() {
 		return rotuerModel;
@@ -179,4 +193,5 @@ public class Node {
 		intfList = new ArrayList<Intf> ();
 		address = new ArrayList<String> ();
 	}
+	
 }
