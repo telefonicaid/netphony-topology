@@ -557,10 +557,10 @@ public class UpdateProccesorThread extends Thread {
 		}
 		
 		if(this.transceiverClassAndAppATLV!=null){
-			TransceiverClassAndAppAttribTLV transceiverClassAndAppATLV = new TransceiverClassAndAppAttribTLV();
-			transceiverClassAndAppATLV.setTrans_class(transceiverClassAndAppATLV.getTrans_class());
-			transceiverClassAndAppATLV.setTrans_app_code(transceiverClassAndAppATLV.getTrans_app_code());	
-			te_info.setTrans(transceiverClassAndAppATLV);
+			TransceiverClassAndAppAttribTLV tap = new TransceiverClassAndAppAttribTLV();
+			tap.setTrans_class(transceiverClassAndAppATLV.getTrans_class());
+			tap.setTrans_app_code(transceiverClassAndAppATLV.getTrans_app_code());	
+			te_info.setTrans(tap);
 		}
 		
 		if (availableLabels!= null){
