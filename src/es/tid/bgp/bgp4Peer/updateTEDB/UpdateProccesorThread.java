@@ -366,33 +366,10 @@ public class UpdateProccesorThread extends Thread {
 			}
 		}
 		//no haria falta este for pero bueno, lo dejamos como recuerdo de @mcs
-		nodeDescriptorsSubTLV = linkNLRI.getRemoteNodeDescriptorsTLV().getNodeDescriptorsSubTLVList();
-		for (int i = 0;i<nodeDescriptorsSubTLV.size();i++){
-			int subTLVType = nodeDescriptorsSubTLV.get(i).getSubTLVType();
-			switch (subTLVType){	
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AUTONOMOUS_SYSTEM:
-				remoteDomainID = ((AutonomousSystemNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAS_ID();
-				//log.info("AUTONOMOUS_SYSTEM found in LINK_NLRI(remote_node). as_remote "+remoteDomainID);
-				continue;
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AREA_ID:
-				areaID = ((AreaIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAREA_ID();
-				//log.info("AREA_ID found in LINK_NLRI(remote_node). area_id "+areaID);
-				continue;
-
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_BGP_LS_IDENTIFIER:
-				bgplsID = ((BGPLSIdentifierNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getBGPLS_ID();
-				//log.info("BGPLS IDENTIFIER found in LINK_NLRI(remote_node). bgpls_id "+bgplsID);
-				continue;
-
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_IGP_ROUTER_ID:
-				RemoteNodeIGPId = ((IGPRouterIDNodeDescriptorSubTLV)nodeDescriptorsSubTLV.get(i)).getIpv4AddressOSPF();
-				//log.info("IGP ROUTER ID found in LINK_NLRI(remote_node). igp_id "+RemoteNodeIGPId);
-				continue;
-
-			default:
-				log.finest("Attribute Code unknown");
-			}
-		}
+		remoteDomainID=linkNLRI.getRemoteNodeDescriptorsTLV().getAutonomousSystemSubTLV().getAS_ID();
+		areaID =linkNLRI.getRemoteNodeDescriptorsTLV().getAreaID().getAREA_ID();
+		bgplsID=linkNLRI.getRemoteNodeDescriptorsTLV().getBGPLSIDSubTLV().getBGPLS_ID();
+		RemoteNodeIGPId = linkNLRI.getRemoteNodeDescriptorsTLV().getIGPRouterID().getIpv4AddressOSPF();
 
 		/**Creamos el grafo*/
 		//Let's see if our link is intradomain or interdomain...
