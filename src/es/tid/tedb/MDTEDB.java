@@ -20,7 +20,7 @@ public class MDTEDB implements MultiDomainTEDB {
 	private DirectedWeightedMultigraph<Object,InterDomainEdge> networkDomainGraph;
 	public SimpleDirectedWeightedGraph<Object,IntraDomainEdge> networkGraph;
 	
-	private LinkedList<InterDomainEdge> interDomainLinks;  
+	//private LinkedList<InterDomainEdge> interDomainLinks;  
 		
 	public SimpleTEDB simple_ted;
 	
@@ -37,7 +37,7 @@ public class MDTEDB implements MultiDomainTEDB {
 		log=Logger.getLogger("PCEServer");
 		networkDomainGraph=new DirectedWeightedMultigraph<Object,InterDomainEdge> (InterDomainEdge.class);
 		addBidirectional=true;//FIXME: ESTO ES UN APA�O TEMPORAL
-		interDomainLinks = new LinkedList<InterDomainEdge>();
+		//interDomainLinks = new LinkedList<InterDomainEdge>();
 	}
 	
 	public DirectedWeightedMultigraph<Object,InterDomainEdge> getDuplicatedMDNetworkGraph(){
@@ -61,7 +61,7 @@ public class MDTEDB implements MultiDomainTEDB {
 	
 	public void initializeFromFileInterDomainLinks(String file){
 		//Cargamos los interdomain Links en una Lista
-		interDomainLinks=FileTEDBUpdater.readInterDomainLinks(file);
+		//interDomainLinks=FileTEDBUpdater.readInterDomainLinks(file);
 		
 		//FIXME: Faltaría cargar el grafo
 		//Ahora tenemos que cargar el grafo
@@ -130,13 +130,6 @@ public class MDTEDB implements MultiDomainTEDB {
 				newInterDomainEdge.setTE_info(te_info);
 			networkDomainGraph.addEdge(localDomainID, remoteDomainID, newInterDomainEdge);
 			log.info("Edge between "+localDomainID+" and "+remoteDomainID+" added");
-			//InterDomainEdge newInterDomainEdge2 =new InterDomainEdge();
-			//newInterDomainEdge2.setSrc_router_id(remoteRouterASBR);
-			//newInterDomainEdge2.setDst_router_id(localRouterASBR);
-			//newInterDomainEdge.setSrc_if_id(remoteRouterASBRIf);
-			//newInterDomainEdge.setDst_if_id(localRouterASBRIf);
-			//networkDomainGraph.addEdge(remoteDomainID, localDomainID, newInterDomainEdge2);
-			//log.info("Edge between "+remoteDomainID+" and "+localDomainID+" added");
 
 		}
 	}
@@ -182,28 +175,28 @@ public class MDTEDB implements MultiDomainTEDB {
 		return topoString;
 	}
 	
-	public String printMD2Topology(){
-		String topoString;
-		Set<Object> vetexSet= networkDomainGraph.vertexSet();
-		Iterator <Object> vertexIterator=vetexSet.iterator();
-		topoString="Domains: \r\n";
-		while (vertexIterator.hasNext()){
-			Object vertex= vertexIterator.next();
-			topoString=topoString+"\t"+vertex.toString()+"\r\n";
-		}
-		topoString=topoString+"Interdomain list: \r\n";
-		Iterator <InterDomainEdge> edgeIterator=interDomainLinks.iterator();
-		while (edgeIterator.hasNext()){
-			InterDomainEdge edge= edgeIterator.next();
-			topoString=topoString+"\t"+edge.toString()+"\r\n";
-		}
-		
-		return topoString;
-	}
+//	public String printMD2Topology(){
+//		String topoString;
+//		Set<Object> vetexSet= networkDomainGraph.vertexSet();
+//		Iterator <Object> vertexIterator=vetexSet.iterator();
+//		topoString="Domains: \r\n";
+//		while (vertexIterator.hasNext()){
+//			Object vertex= vertexIterator.next();
+//			topoString=topoString+"\t"+vertex.toString()+"\r\n";
+//		}
+//		topoString=topoString+"Interdomain list: \r\n";
+//		Iterator <InterDomainEdge> edgeIterator=interDomainLinks.iterator();
+//		while (edgeIterator.hasNext()){
+//			InterDomainEdge edge= edgeIterator.next();
+//			topoString=topoString+"\t"+edge.toString()+"\r\n";
+//		}
+//		
+//		return topoString;
+//	}
 	
 	//Check resources SSON and WSON
 	public boolean CheckLocalResources(long ifID, Object ip){
-		Iterator<InterDomainEdge> iteredges = interDomainLinks.iterator();
+		Iterator<InterDomainEdge> iteredges = networkDomainGraph.edgeSet().iterator();								
 		InterDomainEdge link;
 		while (iteredges.hasNext())
 		{
@@ -223,10 +216,8 @@ public class MDTEDB implements MultiDomainTEDB {
 		return printMDTopology();
 	}
 
-	@Override
 	public LinkedList<InterDomainEdge> getInterDomainLinks() {
-		// TODO Auto-generated method stub
-		return null;
+		return new LinkedList<InterDomainEdge>(networkDomainGraph.edgeSet());
 	}
 
 	@Override

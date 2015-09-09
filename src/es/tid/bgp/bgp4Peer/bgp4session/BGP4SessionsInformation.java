@@ -37,23 +37,19 @@ public class BGP4SessionsInformation {
 	
 	public synchronized void addSession(long sessionId, GenericBGP4Session session) throws BGP4Exception{
 		Enumeration <GenericBGP4Session > sessions = sessionList.elements();
-		log.info("adding session with id "+sessionId+" --> "+session.toString());
-		//Comprobar si ya existe la session con ese peer
-		while (sessions.hasMoreElements()){
-			GenericBGP4Session existedSession = sessions.nextElement();
-			log.info("Existed Session id: "+existedSession.getSessionId()+" - New session id: "+ sessionId);
-			if (existedSession.getSessionId() != sessionId){
-				if (session.equals(existedSession)){
-					log.info("Existe la sesion!!");
-					throw new BGP4Exception();//si no existe throw new BGP4Exception();
-				}
-			}
+		log.info("Looking to add session with id "+sessionId+" --> "+session.toString());
+		log.info("There are "+sessionList.size()+" sessions");
+		//Check if there is already a session with the remote peer.
+		//Only one session allowed with each remote peer
+		GenericBGP4Session existingSession=sessionListByPeerIP.get(session.remotePeerIP);
+		if (existingSession!=null){
+			log.info("Session with id "+existingSession.getSessionId()+" against "+session.remotePeerIP.getHostAddress()+" already exists");
+			throw new BGP4Exception();//si no existe throw new BGP4Exception();
 		}
-		//si existe
+		//If there is no existing session with the peer
 		sessionList.put(new Long(sessionId),session);
-		log.info("Registering new session with Peer "+session.getPeerIP() +" with ID "+sessionId);
 		sessionListByPeerIP.put(session.getPeerIP() , session);
-		
+		log.info("Registering new session with Peer "+session.getPeerIP() +" with ID "+sessionId);
 	}
 	
 	public synchronized void deleteSession(long sessionId){
@@ -61,6 +57,8 @@ public class BGP4SessionsInformation {
 		if (ses!=null) {
 			Inet4Address ip=sessionList.get(sessionId).getPeerIP();
 			sessionList.remove(new Long(sessionId));
+			sessionListByPeerIP.remove(ses.getPeerIP());
+			log.info("Deleted Session with id "+sessionId +" with peer "+ses.getPeerIP().getHostAddress());
 		}else {
 			log.info("SESSION WAS NOT REGISTERED NULL");
 		}

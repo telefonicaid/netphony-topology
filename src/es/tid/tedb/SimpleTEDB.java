@@ -24,6 +24,8 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
  *
  */
 public class SimpleTEDB implements DomainTEDB{
+	
+	private Inet4Address domainID;
 
 	/**
 	 * List of algorithms that will be notified when there are significant changes in the TED
@@ -113,7 +115,7 @@ public class SimpleTEDB implements DomainTEDB{
 	}
 
 	public void initializeFromFile(String file, String layer, boolean multidomain, int lambdaIni, int lambdaEnd, boolean isSSON,boolean readOnlyInterDomainLinks, boolean isWLAN){
-		Inet4Address domain=FileTEDBUpdater.getDomainIDfromSimpleDomain(file);
+		domainID=FileTEDBUpdater.getDomainIDfromSimpleDomain(file);
 		if (readOnlyInterDomainLinks){
 			log.info("Read Only Inter Domain Links");
 			networkGraph = new SimpleDirectedWeightedGraph<Object, IntraDomainEdge>(IntraDomainEdge.class);
@@ -167,7 +169,7 @@ public class SimpleTEDB implements DomainTEDB{
 					ni.setDataPathLocalNode((DataPathID)address); 
 				}
 				ni.setLearntFrom("Fom XML");
-				ni.setAs_number(domain);
+				ni.setAs_number(domainID);
 				NodeTable.put(address, ni);	
 			}
 
@@ -181,10 +183,10 @@ public class SimpleTEDB implements DomainTEDB{
 					Node_Info origin = new Node_Info();
 					Node_Info destination = new Node_Info();
 					origin.setIpv4AddressLocalNode(ipSource);
-					origin.setAs_number(domain);
+					origin.setAs_number(domainID);
 					origin.setLearntFrom("FromXML");
 					destination.setIpv4AddressLocalNode(ipDest);
-					destination.setAs_number(domain);
+					destination.setAs_number(domainID);
 					destination.setLearntFrom("FromXML");
 					id.setLocal_Node_Info(origin);
 					id.setRemote_Node_Info(destination);
@@ -197,10 +199,10 @@ public class SimpleTEDB implements DomainTEDB{
 					Node_Info origin = new Node_Info();
 					Node_Info destination = new Node_Info();
 					origin.setDataPathLocalNode(dpSource);
-					origin.setAs_number(domain);
+					origin.setAs_number(domainID);
 					origin.setLearntFrom("FromXML");
 					destination.setDataPathLocalNode(dpDest);
-					destination.setAs_number(domain);
+					destination.setAs_number(domainID);
 					destination.setLearntFrom("FromXML");
 					id.setLocal_Node_Info(origin);
 					id.setRemote_Node_Info(destination);
@@ -233,7 +235,7 @@ public class SimpleTEDB implements DomainTEDB{
 				Node_Info origin = new Node_Info();
 				Node_Info destination = new Node_Info();
 				origin.setIpv4AddressLocalNode(ipSource);
-				origin.setAs_number(domain);
+				origin.setAs_number(domainID);
 				origin.setLearntFrom("FromXML");
 				destination.setIpv4AddressLocalNode(ipDest);
 				destination.setAs_number((Inet4Address) id.domain_dst_router);
@@ -247,7 +249,7 @@ public class SimpleTEDB implements DomainTEDB{
 				Node_Info origin = new Node_Info();
 				Node_Info destination = new Node_Info();
 				origin.setDataPathLocalNode(dpSource);
-				origin.setAs_number(domain);
+				origin.setAs_number(domainID);
 				origin.setLearntFrom("FromXML");
 				destination.setDataPathLocalNode(dpDest);
 				destination.setAs_number((Inet4Address) id.domain_dst_router);
@@ -685,5 +687,11 @@ public class SimpleTEDB implements DomainTEDB{
 			topoString=topoString+"\t"+edge.toString()+"\r\n";
 		}		
 		return topoString;
+	}
+
+	@Override
+	public Inet4Address getDomainID() {
+		// TODO Auto-generated method stub
+		return domainID;
 	}
 }

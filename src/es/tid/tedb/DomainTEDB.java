@@ -1,6 +1,7 @@
 package es.tid.tedb;
 
 
+import java.net.Inet4Address;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -8,6 +9,8 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 
 
 public interface DomainTEDB extends TEDB {
+	
+	public Inet4Address getDomainID();
 	 
 	
 	public boolean belongsToDomain(Object addr);

@@ -79,6 +79,8 @@ public class BGP4SessionClientManager implements Runnable{
 					bgp4SessionInformation.notifySessionStart(peerIP);	
 					log.severe("Session with BGP-LS peer"+peer +" dead, trying to establish new session");
 					bgp4SessionClient= new BGP4SessionClient(bgp4SessionInformation,ud,peer,bgp4Port,holdTime,BGPIdentifier,version,myAutonomousSystem,localBGP4Address, localBGP4Port,keepAliveTimer);
+					bgp4SessionClient.setSendTo(sendTo);
+					bgp4SessionClient.setUpdateFrom(updateFrom);
 					bgp4SessionClient.start();
 				} catch(BGP4SessionExistsException e){
 					log.info("Checked that there is already a peer initiated session with "+this.peerIP);

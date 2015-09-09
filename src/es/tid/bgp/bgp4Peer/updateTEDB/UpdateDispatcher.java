@@ -1,5 +1,7 @@
 package es.tid.bgp.bgp4Peer.updateTEDB;
 
+import java.net.Inet4Address;
+import java.util.Hashtable;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
@@ -23,9 +25,9 @@ public class UpdateDispatcher {
 	private UpdateProccesorThread upt;
 
 	
-	public UpdateDispatcher(MultiDomainTEDB multiTedb,SimpleTEDB simpleTEDB ){
+	public UpdateDispatcher(MultiDomainTEDB multiTedb,Hashtable<Inet4Address,SimpleTEDB> intraTEDBs ){
 		this.updateList=new LinkedBlockingQueue<BGP4Update>();
-		this.upt=new UpdateProccesorThread(updateList, multiTedb,simpleTEDB );		
+		this.upt=new UpdateProccesorThread(updateList, multiTedb,intraTEDBs );		
 		upt.start();
 		log=Logger.getLogger("BGP4Server");
 	}

@@ -92,6 +92,12 @@ public class BGP4Parameters {
 	 */
 	int keepAliveTimer=30;
 	
+	/**
+	 * Time between topology updates
+	 */
+	long sendTopoDelay=30000;
+	
+	
 	
 	public int getKeepAliveTimer() {
 		return keepAliveTimer;
@@ -248,6 +254,9 @@ public class BGP4Parameters {
 					}
 					else if (qName.equalsIgnoreCase("delay")){
 						delay = Long.parseLong(tempVal.trim());
+					}
+					else if (qName.equalsIgnoreCase("sendTopoDelay")){
+						sendTopoDelay = Long.parseLong(tempVal.trim());
 					}
 					/*
 					else if (qName.equalsIgnoreCase("peer")){
@@ -451,4 +460,12 @@ public class BGP4Parameters {
 	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
 		this.updateFromPeer = updateFromPeer;
 	}
+	public long getSendTopoDelay() {
+		return sendTopoDelay;
+	}
+	public void setSendTopoDelay(long sendTopoDelay) {
+		this.sendTopoDelay = sendTopoDelay;
+	}
+	
+	
 }
