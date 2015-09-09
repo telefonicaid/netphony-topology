@@ -4,7 +4,9 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAt
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IPv4RouterIDLocalNodeLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IPv4RouterIDRemoteNodeLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.LinkProtectionTypeLinkAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MetricLinkAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.TransceiverClassAndAppAttribTLV;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AdministrativeGroup;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.IPv4RemoteASBRID;
@@ -55,6 +57,10 @@ public class TE_Information {
 	private MetricLinkAttribTLV metric;
 	
 	private AvailableLabels availableLabels;
+	
+	private MF_OTPAttribTLV mfOTF;
+	
+	private TransceiverClassAndAppAttribTLV trans;
 	
 	private int NumberWLANs = 15;
 	
@@ -482,6 +488,15 @@ public class TE_Information {
 		if(defaultTEMetric!=null){
 			ret=ret+defaultTEMetric.toString()+"\r\n";
 		}
+		
+		if(this.mfOTF !=null){
+			ret=ret+mfOTF.toString()+"\r\n";
+		}
+		
+		
+		if(this.trans !=null){
+			ret=ret+trans.toString()+"\r\n";
+		}
 		return ret;
 	}
 
@@ -531,4 +546,24 @@ public class TE_Information {
 	public void setDefaultTEMetric(DefaultTEMetricLinkAttribTLV defaultTEMetric) {
 		this.defaultTEMetric = defaultTEMetric;
 	}
+
+	public MF_OTPAttribTLV getMfOTF() {
+		return mfOTF;
+	}
+
+	public void setMfOTF(MF_OTPAttribTLV mfOTF) {
+		this.mfOTF = mfOTF;
+	}
+
+	public TransceiverClassAndAppAttribTLV getTrans() {
+		return trans;
+	}
+
+	public void setTrans(TransceiverClassAndAppAttribTLV trans) {
+		this.trans = trans;
+	}
+	
+	
+	
+	
 }

@@ -354,6 +354,12 @@ String topoString="";
 		
 	}
 
+	@Override
+	public Inet4Address getDomainID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	
 	

@@ -144,6 +144,8 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 			}
 		}finally{
 			log.severe("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
+			cancelDeadTimer();
+			cancelKeepAlive();
 			this.FSMstate=BGP4StateSession.BGP4_STATE_IDLE;
 			endSession();
 		}
@@ -160,6 +162,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 	@Override
 	protected void endSession() {
 		// TODO Auto-generated method stub
+		log.info("Ending session with id "+this.getSessionId());
 		BGP4SessionsInformation.deleteSession(this.getSessionId());
 	}
 

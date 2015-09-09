@@ -19,10 +19,18 @@ public class InterDomainEdge extends DefaultWeightedEdge {
 	public Object src_router_id;
 	
 	public Object dst_router_id;
+	
+
+	/**
+	 * Source route domain
+	 */
+	public Object domain_src_router;
+	
 	/**
 	 * Destination router domain
 	 */
 	public Object domain_dst_router;
+	
 	
 	public TE_Information TE_info;
 	public InterDomainEdge(){
@@ -187,5 +195,13 @@ public class InterDomainEdge extends DefaultWeightedEdge {
 		//	}	
 		//}
 	}
+	public Object getDomain_src_router() {
+		return domain_src_router;
+	}
+	public void setDomain_src_router(Object domain_src_router) {
+		this.domain_src_router = domain_src_router;
+	}
+	
+	
 
 }

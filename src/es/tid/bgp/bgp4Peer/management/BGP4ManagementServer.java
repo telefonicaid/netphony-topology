@@ -1,6 +1,8 @@
 package es.tid.bgp.bgp4Peer.management;
 
+import java.net.Inet4Address;
 import java.net.ServerSocket;
+import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
@@ -26,23 +28,21 @@ public class BGP4ManagementServer extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains.
 	 */
-	private IntraTEDBS intraTEDB;
-	private SimpleTEDB simpleTEDB;
-	private DomainTEDB readDomainTEDB;
+	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+
 	/**
 	 * Class to send the topology. It is needes to set the parameters sendTopology to true or false.
 	 */
 	private SendTopology sendTopology;
 	
-	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, IntraTEDBS intraTEDB,SimpleTEDB simpleTEDB, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology, DomainTEDB readDomainTEDB){
+	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,SimpleTEDB> intraTEDBs, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology, DomainTEDB readDomainTEDB){
 		log =Logger.getLogger("BGP4Server");
 		this.BGP4ManagementPort = BGP4ManagementPort;
 		this.multiTEDB=multiTEDB;
-		this.intraTEDB=intraTEDB;
+		this.intraTEDBs=intraTEDBs;
 		this.bgp4SessionsInformation =bgp4SessionsInformation;
 		this.sendTopology=sendTopology;
-		this.simpleTEDB=simpleTEDB;
-		this.readDomainTEDB=readDomainTEDB;
+
 	}
 	/**
 	 * RUN
@@ -62,7 +62,7 @@ public class BGP4ManagementServer extends Thread {
 		
 		   try {
 	        	while (listening) {
-	        		new BGP4ManagementSession(serverSocket.accept(),multiTEDB,intraTEDB,bgp4SessionsInformation, sendTopology, readDomainTEDB).start();
+	        		new BGP4ManagementSession(serverSocket.accept(),multiTEDB,intraTEDBs,bgp4SessionsInformation, sendTopology).start();
 	        	}
 	        	serverSocket.close();
 	        } catch (Exception e) {

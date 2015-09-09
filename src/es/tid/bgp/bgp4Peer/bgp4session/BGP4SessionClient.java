@@ -49,22 +49,27 @@ public class BGP4SessionClient extends GenericBGP4Session{
 		this.updateDispatcher=updateDispatcher;
 		this.localBGP4Address=localBGP4Address;
 		this.localBGP4Port=localBGP4Port;
+		try {
+			this.remotePeerIP = (Inet4Address) Inet4Address.getByName(peerBGP_IPaddress);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	/**
-	 * Initiates a Session between the Domain PCE and the peer PCC
+	 * Initiates a Session between the local BGP Peer and the remote BGP Peer
 	 */
 	public void run() {
 		try {
 			this.remotePeerIP=(Inet4Address)InetAddress.getByName(peerBGP_IPaddress);
 		} catch (UnknownHostException e) {
 			log.severe("Error with IP address not valid "+peerBGP_IPaddress);
-			endSession();
+			//endSession();
 			return;
 		}
 	
-		//int holdTime,long BGPIdentifier,int myAutonomousSystem,int version
-		log.info("Opening new BGP4 Session with host "+ peerBGP_IPaddress + " on port " + peerBGP_port +" local " + localBGP4Address);
+		log.info("Opening new BGP4 Session with host "+ this.remotePeerIP.getHostAddress() + " on port " + this.peerBGP_port +" local " + this.localBGP4Address);
 		log.fine("Do we want to update from peer?" + updateFrom);
 		log.fine("Do we want to send to peer?" + sendTo);
 		try {
@@ -78,7 +83,8 @@ public class BGP4SessionClient extends GenericBGP4Session{
 			
 		} catch (IOException e) {
 			log.severe("Couldn't get I/O for connection to " + peerBGP_IPaddress + " on port " + peerBGP_port +"exception: "+e.getMessage());
-			endSession();
+			//As there is not yet a session added (it is added in the beginning of initializeBGP4Session());
+			//endSession();
 			return;
 		}			
 
@@ -168,6 +174,8 @@ public class BGP4SessionClient extends GenericBGP4Session{
 		}finally{
 			//log.severe("SESSION "+ internalSessionID+" IS KILLED");
 			log.severe("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
+			cancelDeadTimer();
+			cancelKeepAlive();
 			this.FSMstate=BGP4StateSession.BGP4_STATE_IDLE;
 			endSession();
 		}

@@ -663,7 +663,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 //								if (open_received.getOptionalParameterLength() != 0){
 //									log.info("Tiene parametros opcionales");
 //								}
-								this.BGP4SessionsInformation.addSession(this.getSessionId(), this);
+								//this.BGP4SessionsInformation.addSession(this.getSessionId(), this);
 								BGP4Keepalive p_ka= new BGP4Keepalive();
 								//log.info("Sending Keepalive message");
 								sendBGP4Message(p_ka);										//Creates the Keep Wait Timer to wait for a KA to acknowledge the OPEN sent
@@ -685,19 +685,6 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 								}										
 							}
 						}								
-						//								} catch (PCEPProtocolViolationException e1) {
-						//									log.warning("Malformed OPEN, INFORM ERROR and close");
-						//									PCEPError perror=new PCEPError();
-						//									PCEPErrorObject perrorObject=new PCEPErrorObject();
-						//									perrorObject.setErrorType(ObjectParameters.ERROR_ESTABLISHMENT);
-						//									perrorObject.setErrorValue(ObjectParameters.ERROR_ESTABLISHMENT_INVALID_OPEN_MESSAGE);
-						//									ErrorConstruct error_c=new ErrorConstruct();
-						//									error_c.getErrorObjList().add(perrorObject);
-						//									perror.setError(error_c);
-						//									log.info("Sending Error and ending PCEPSession");
-						//									sendPCEPMessage(perror);						
-						//									killSession();
-						//								}//Fin del catch de la exception PCEP
 					}
 					else{
 						log.info("Ignore OPEN message, already one received!!");
@@ -861,7 +848,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 		return sb.toString();
 	}
 
-	public void newSessionId(){
+	public synchronized void newSessionId(){
 		this.sessionId=GenericBGP4Session.sessionIdCounter+1;
 		sessionIdCounter=sessionIdCounter+1;
 	}

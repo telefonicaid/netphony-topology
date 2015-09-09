@@ -26,6 +26,7 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IPv4RouterIDLocalNode
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IPv4RouterIDRemoteNodeLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IS_IS_AreaIdentifierNodeAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.LinkProtectionTypeLinkAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MetricLinkAttribTLV;
@@ -35,6 +36,7 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.OSPFForwardingAddress
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.PrefixMetricPrefixAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.RouteTagPrefixAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.TransceiverClassAndAppAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AreaIDNodeDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
@@ -77,16 +79,19 @@ public class UpdateProccesorThread extends Thread {
 	private LinkedBlockingQueue<BGP4Update> updateList;
 
 	/** LINK ATTRIBUTE TLVs */
-	MaximumLinkBandwidthLinkAttribTLV maximumLinkBandwidthTLV= new MaximumLinkBandwidthLinkAttribTLV();
-	MaxReservableBandwidthLinkAttribTLV maxReservableBandwidthTLV= new MaxReservableBandwidthLinkAttribTLV();
-	UnreservedBandwidthLinkAttribTLV unreservedBandwidthTLV= new UnreservedBandwidthLinkAttribTLV();
-	AdministrativeGroupLinkAttribTLV administrativeGroupTLV = new AdministrativeGroupLinkAttribTLV();
-	LinkProtectionTypeLinkAttribTLV linkProtectionTLV = new LinkProtectionTypeLinkAttribTLV();
-	MetricLinkAttribTLV metricTLV = new MetricLinkAttribTLV();
-	IPv4RouterIDLocalNodeLinkAttribTLV iPv4RouterIDLocalNodeLATLV = new IPv4RouterIDLocalNodeLinkAttribTLV();
-	IPv4RouterIDRemoteNodeLinkAttribTLV iPv4RouterIDRemoteNodeLATLV = new IPv4RouterIDRemoteNodeLinkAttribTLV();
-	DefaultTEMetricLinkAttribTLV TEMetricTLV = new DefaultTEMetricLinkAttribTLV();
-
+	MaximumLinkBandwidthLinkAttribTLV maximumLinkBandwidthTLV;
+	MaxReservableBandwidthLinkAttribTLV maxReservableBandwidthTLV;
+	UnreservedBandwidthLinkAttribTLV unreservedBandwidthTLV;
+	AdministrativeGroupLinkAttribTLV administrativeGroupTLV;
+	LinkProtectionTypeLinkAttribTLV linkProtectionTLV;
+	MetricLinkAttribTLV metricTLV;
+	IPv4RouterIDLocalNodeLinkAttribTLV iPv4RouterIDLocalNodeLATLV;
+	IPv4RouterIDRemoteNodeLinkAttribTLV iPv4RouterIDRemoteNodeLATLV;
+	DefaultTEMetricLinkAttribTLV TEMetricTLV;	
+	TransceiverClassAndAppAttribTLV transceiverClassAndAppATLV;
+	MF_OTPAttribTLV mF_OTP_ATLV;
+	
+	
 	/** NODE ATTRIBUTE TLVs 
 	 * Ipv4 of local node link attribute TLV also used
 	 * 
@@ -114,37 +119,40 @@ public class UpdateProccesorThread extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains and.
 	 */
-	private IntraTEDBS intraTEDB;
+	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
 
 	private LinkedList<UpdateLink> updateLinks;
 
-	private SimpleTEDB simpleTEDB;
 	private TE_Information te_info;
 
 
-
-	//Coleccion de mensajes update
-
-	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,MultiDomainTEDB multiTedb ,SimpleTEDB simpleTEDB /*, IntraTEDBS intraTEDB*/){
+	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
+			MultiDomainTEDB multiTedb ,Hashtable<Inet4Address,SimpleTEDB> intraTEDBs ){
+		log=Logger.getLogger("BGP4Server");
 		running=true;
 		this.updateList=updateList;
 		this.multiTedb = multiTedb;
-		log=Logger.getLogger("BGP4Server");
-		log.info("In constructor::: simpleTEDB::"+simpleTEDB);
-		this.simpleTEDB=simpleTEDB;
+		
+		this.intraTEDBs=intraTEDBs;
 		this.availableLabels= new AvailableLabels();
 		this.updateLinks=new LinkedList<UpdateLink>();
 	}
+	
+	/**
+	 * Starts processing updates
+	 */
 	public void run(){	
 		BGP4Update updateMsg;
 		while (running) {
 			try {
+				clearAttributes();
 				PathAttribute att_ls = null;
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
 				updateMsg= updateList.take();
 				log.finest("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
 				String learntFrom = updateMsg.getLearntFrom();
+				log.fine("APRENDIDO DE "+learntFrom);
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
 				ArrayList<PathAttribute> pathAttributeListUtil = new ArrayList<PathAttribute>();			
 
@@ -233,22 +241,6 @@ public class UpdateProccesorThread extends Thread {
 	}
 	/**
 	 * Function which process the attribute link State. It updates the fields passed by argument. 
-	 * @param lsAtt
-	 * @param maximumLinkBandwidthTLV
-	 * @param maxReservableBandwidthTLV
-	 * @param unreservedBandwidthTLV
-	 * @param nodeNameTLV 
-	 * @param nodeFlagBitsTLV 
-	 * @param tEMetricTLV 
-	 * @param iPv4RouterIDRemoteNodeLATLV 
-	 * @param iPv4RouterIDLocalNodeLATLV 
-	 * @param metricTLV 
-	 * @param linkProtectionTLV 
-	 * @param administrativeGroupTLV 
-	 * @param areaIDTLV 
-	 * @param oSPFRouteTypeTLV 
-	 * @param iPReachabiltyTLV 
-	 * @param availableLabels
 	 */
 	private void processAttributeLinkState(LinkStateAttribute lsAtt){
 
@@ -301,14 +293,16 @@ public class UpdateProccesorThread extends Thread {
 		if(lsAtt.getSidLabelTLV()!=null){
 			sidTLV = lsAtt.getSidLabelTLV();
 		}
-		/**if(lsAtt.getIPv4RouterIDLocalNodeNATLV()!=null){
-			IPv4RouterIDLocalNodeNodeAttribTLV = lsAtt.getIPv4RouterIDLocalNodeNATLV();
-			log.info("foundddddddddd16");
-		}*/
-		/**if(lsAtt.getIPv4RouterIDLocalNodeNATLV()!=null)
-			IPv4RouterIDLocalNodeNodeAttribTLV = lsAtt.getIPv4RouterIDLocalNodeNATLV();*/
+
 		if (lsAtt.getAvailableLabels() != null){
 			this.availableLabels =lsAtt.getAvailableLabels();
+		}
+		if (lsAtt.getMF_OTP() != null){
+			this.mF_OTP_ATLV =lsAtt.getMF_OTP();
+		}
+		
+		if (lsAtt.getTransceiverClassAndApp() != null){
+			this.transceiverClassAndAppATLV =lsAtt.getTransceiverClassAndApp();
 		}
 
 	}
@@ -408,14 +402,18 @@ public class UpdateProccesorThread extends Thread {
 		if(localDomainID.equals(remoteDomainID)){
 			//log.info("INTRADOMAIN...");
 			IntraDomainEdge intraEdge = new IntraDomainEdge();
+			
 			if (linkNLRI.getLinkIdentifiersTLV() != null){				
 				intraEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
-			}					
-
-			if (simpleTEDB.getNetworkGraph() == null){					
-				simpleTEDB.createGraph();
 			}
+			SimpleTEDB simpleTEDB=intraTEDBs.get(localDomainID);
+			if (simpleTEDB==null){
+				simpleTEDB = new SimpleTEDB();
+				simpleTEDB.createGraph();
+				this.intraTEDBs.put(localDomainID, simpleTEDB);
+			}
+			
 
 			/**Actualizando TED*/
 			//log.info("lET'S SEE WHAT DO WE HAVE TO UPDATE...");
@@ -439,7 +437,7 @@ public class UpdateProccesorThread extends Thread {
 				log.info("Remote Vertex: "+RemoteNodeIGPId.toString() +" already present in TED...");
 			}
 
-			te_info =  createTE_Info();
+			te_info =  createTE_Info(simpleTEDB);
 			intraEdge.setTE_info(te_info);
 			intraEdge.setLearntFrom(learntFrom);
 
@@ -481,35 +479,24 @@ public class UpdateProccesorThread extends Thread {
 			interEdge.setSrc_router_id(LocalNodeIGPId);
 			interEdge.setDst_router_id(RemoteNodeIGPId);
 			interEdge.setDomain_dst_router(remoteDomainID);
+			interEdge.setDomain_src_router(localDomainID);
 
 			/**Actualizando TED*/
 			//log.info("Updating Interdomain list...");
-			te_info =  createTE_Info();
+			//FIXME: See what to do to create SSON Info
+			SimpleTEDB simpleTEDB=new SimpleTEDB();
+			te_info =  createTE_Info(simpleTEDB);
 			interEdge.setTE_info(te_info);
 			interEdge.setLearntFrom(learntFrom);
 
-			/**
-			if(simpleTEDB.getInterdomainLink(LocalNodeIGPId, RemoteNodeIGPId)!= null){
-				log.info("entro al update interdomain!!!");
-				log.info("Origen: " + interEdge.getSrc_router_id() + "Destino: " + interEdge.getDst_router_id());
-				log.info("Edge: " + interEdge.toString());
-				InterDomainEdge edge = simpleTEDB.getInterdomainLink(LocalNodeIGPId, RemoteNodeIGPId);
-				//edge.setTE_info(te_info);
-				//int index = simpleTEDB.getInterDomainLinks().indexOf(interEdge);
-				if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
-					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyBytesBitMap(((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
-					if (((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved()!=null)
-						((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyReservedBytesBitMap(((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved());
-				}
-			}*/	
-			
+		//FIXME: ADD I-D links to the Simple TEDBs
+		/**	
 			if(simpleTEDB.getInterdomainLink(LocalNodeIGPId, RemoteNodeIGPId) == null){
 				simpleTEDB.getInterDomainLinks().add(interEdge);
 				InterDomainEdge edge = simpleTEDB.getInterdomainLink(LocalNodeIGPId, RemoteNodeIGPId);
 				((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
 			}
-			
-			//simpleTEDB.getInterDomainLinks().add(interEdge);
+			*/
 			log.info("Adding interdomain link tu multited...");
 			multiTedb.addInterdomainLink(localDomainID, LocalNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier(), remoteDomainID, RemoteNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier(), te_info);
 
@@ -517,54 +504,66 @@ public class UpdateProccesorThread extends Thread {
 		}
 	} 
 
-	private TE_Information createTE_Info(){
+	private TE_Information createTE_Info(SimpleTEDB simpleTEDB){
 		TE_Information te_info = new TE_Information();
-		if (maximumLinkBandwidthTLV.getTLVValueLength() != 0){
+		if (maximumLinkBandwidthTLV!=null){
 			MaximumBandwidth maximumBandwidth = new MaximumBandwidth();
 			maximumBandwidth.setMaximumBandwidth(maximumLinkBandwidthTLV.getMaximumBandwidth());
 			te_info.setMaximumBandwidth(maximumBandwidth);
 		}
-		if (maxReservableBandwidthTLV.getTLVValueLength() != 0){
+		if (maxReservableBandwidthTLV!=null){
 			MaximumReservableBandwidth maximumReservableBandwidth = new MaximumReservableBandwidth();
 			maximumReservableBandwidth.setMaximumReservableBandwidth(maxReservableBandwidthTLV.getMaximumReservableBandwidth());
 			te_info.setMaximumReservableBandwidth(maximumReservableBandwidth);
 		}
-		if (unreservedBandwidthTLV.getTLVValueLength() != 0){
+		if (unreservedBandwidthTLV!=null){
 			UnreservedBandwidth unreservedBandwidth = new UnreservedBandwidth();
 			unreservedBandwidth.setUnreservedBandwidth(unreservedBandwidthTLV.getUnreservedBandwidth());
 			te_info.setUnreservedBandwidth(unreservedBandwidth);
 		}
-		if(iPv4RouterIDLocalNodeLATLV.getTLVValueLength() != 0){
+		if(iPv4RouterIDLocalNodeLATLV!=null){
 			IPv4RouterIDLocalNodeLinkAttribTLV iPv4RouterIDLocalNode = new IPv4RouterIDLocalNodeLinkAttribTLV();
 			iPv4RouterIDLocalNode.setIpv4Address(iPv4RouterIDLocalNodeLATLV.getIpv4Address());
 			te_info.setiPv4LocalNode(iPv4RouterIDLocalNode);
 		}
-		if(iPv4RouterIDRemoteNodeLATLV.getTLVValueLength()!=0){
+		if(iPv4RouterIDRemoteNodeLATLV!=null){
 			IPv4RouterIDRemoteNodeLinkAttribTLV iPv4RouterIDRemoteNode = new IPv4RouterIDRemoteNodeLinkAttribTLV();
 			iPv4RouterIDRemoteNode.setIpv4Address(iPv4RouterIDRemoteNodeLATLV.getIpv4Address());
 			te_info.setiPv4RemoteNode(iPv4RouterIDRemoteNode);
 		}
-		if(metricTLV.getTLVValueLength()!=0){
+		if(metricTLV!=null){
 			MetricLinkAttribTLV metric = new MetricLinkAttribTLV();
 			metric.setMetric(metricTLV.getMetric());
 			te_info.setMetric(metric);
 		}
-		if(TEMetricTLV.getTLVValueLength()!=0){
+		if(TEMetricTLV!=null){
 			TrafficEngineeringMetric teMetric = new TrafficEngineeringMetric();
 			teMetric.setLinkMetric((long)TEMetricTLV.getLinkMetric());
 			te_info.setTrafficEngineeringMetric(teMetric);
 		}
-		if(administrativeGroupTLV.getTLVValueLength()!=0){
+		if(administrativeGroupTLV!=null){
 			AdministrativeGroup adminGroup = new AdministrativeGroup();
 			adminGroup.setAdministrativeGroup(administrativeGroupTLV.getAdministrativeGroup());
 			te_info.setAdministrativeGroup(adminGroup);
 		}
-		if(linkProtectionTLV.getTLVValueLength()!=0){
+		if(linkProtectionTLV!=null){
 			LinkProtectionTypeLinkAttribTLV linkProtection = new LinkProtectionTypeLinkAttribTLV();
 			linkProtection.setProtection_type(linkProtectionTLV.getProtection_type());
 			te_info.setLinkProtectionBGPLS(linkProtection);
 		}
-		if (availableLabels.getTLVValueLength()!= 0){
+		if(this.mF_OTP_ATLV!=null){
+			MF_OTPAttribTLV mF_OTP_ATLV = this.mF_OTP_ATLV.duplicate();
+			te_info.setMfOTF(mF_OTP_ATLV);
+		}
+		
+		if(this.transceiverClassAndAppATLV!=null){
+			TransceiverClassAndAppAttribTLV transceiverClassAndAppATLV = new TransceiverClassAndAppAttribTLV();
+			transceiverClassAndAppATLV.setTrans_class(transceiverClassAndAppATLV.getTrans_class());
+			transceiverClassAndAppATLV.setTrans_app_code(transceiverClassAndAppATLV.getTrans_app_code());	
+			te_info.setTrans(transceiverClassAndAppATLV);
+		}
+		
+		if (availableLabels!= null){
 			if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
 				if(simpleTEDB.getSSONinfo()==null){
 					log.info("NEW SSON INFO");
@@ -589,6 +588,8 @@ public class UpdateProccesorThread extends Thread {
 			}
 			te_info.setAvailableLabels(availableLabels);
 		}
+		
+		
 		return te_info;
 	}
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
@@ -640,46 +641,51 @@ public class UpdateProccesorThread extends Thread {
 		}
 
 		log.info("Let's fill in the node information table with the node's attributes...");
-		if(iPv4RouterIDLocalNodeLATLV.getTLVValueLength() != 0){
-			log.info("adding ipv4 of local node to table......");
+		if(iPv4RouterIDLocalNodeLATLV != null){
+			log.fine("adding ipv4 of local node to table......");
 			node_info.setIpv4AddressLocalNode(iPv4RouterIDLocalNodeLATLV.getIpv4Address());
 		}
-		if(nodeFlagBitsTLV.getTLVValueLength() != 0){
-			log.info("adding flags of local node to table...");
+		if(nodeFlagBitsTLV!= null){
+			log.fine("adding flags of local node to table...");
 			node_info.setAbr_bit(nodeFlagBitsTLV.isAbr_bit());
 			node_info.setAttached_bit(nodeFlagBitsTLV.isAttached_bit());
 			node_info.setExternal_bit(nodeFlagBitsTLV.isExternal_bit());
 			node_info.setOverload_bit(nodeFlagBitsTLV.isOverload_bit());
 		}
 
-		if(nodeNameTLV.getTLVValueLength() != 0){
-			log.info("adding name of local node to table....");
+		if(nodeNameTLV != null){
+			log.fine("adding name of local node to table....");
 			node_info.setName(nodeNameTLV.getName());
 		}
 
-		if(areaIDTLV.getTLVValueLength() != 0){
-			log.info("adding areaID of local node to table....");
+		if(areaIDTLV != null){
+			log.fine("adding areaID of local node to table....");
 			node_info.setIpv4areaIDs(areaIDTLV.getIpv4areaIDs());
 		}
 
-		if(sidTLV.getTLVValueLength() != 0){
-			log.info("adding SID of local node to table....");
+		if(sidTLV != null){
+			log.fine("adding SID of local node to table....");
 			node_info.setSID(sidTLV.getSid());
 		}
 		//.... finally we set the 'learnt from' attribute
 		node_info.setLearntFrom(learntFrom);
 		log.info("learnt from: " +learntFrom);
-		NodeTable = simpleTEDB.getNodeTable();
-
-		//if the table already contains the node it replaces it
+		
+		SimpleTEDB simpleTEDB=intraTEDBs.get(as_number);
+		if (simpleTEDB==null){
+			simpleTEDB = new SimpleTEDB();
+			simpleTEDB.createGraph();
+			this.intraTEDBs.put(as_number, simpleTEDB);
+		}
+		NodeTable =simpleTEDB.getNodeTable();
 		if(NodeTable!=null){
 			if(NodeTable.containsKey(IGPID))
 				NodeTable.remove(IGPID);
-		}
+			}
 
-		if(node_info != null)
-			NodeTable.put(IGPID, node_info);
-
+		
+		NodeTable.put(IGPID, node_info);
+	
 		simpleTEDB.setNodeTable(NodeTable);
 		if (this.multiTedb!=null) {
 			if (node_info.getIpv4Address()!=null){
@@ -690,6 +696,22 @@ public class UpdateProccesorThread extends Thread {
 		log.info("Node Table:" + NodeTable.toString());
 		log.info("Node Information Table Updated....");
 
+	}
+	
+	
+	private void clearAttributes(){
+		maximumLinkBandwidthTLV= null;
+		maxReservableBandwidthTLV= null;
+		unreservedBandwidthTLV= null;
+		administrativeGroupTLV = null;
+		linkProtectionTLV =null;
+		metricTLV = null;
+		iPv4RouterIDLocalNodeLATLV = null;
+		iPv4RouterIDRemoteNodeLATLV = null;
+		TEMetricTLV = null;				
+		transceiverClassAndAppATLV = null;
+		 mF_OTP_ATLV = null;
+		
 	}
 
 

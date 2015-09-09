@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.Inet4Address;
 import java.net.Socket;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,6 +16,7 @@ import es.tid.bgp.bgp4Peer.peer.SendTopology;
 import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.MultiDomainTEDB;
+import es.tid.tedb.SimpleTEDB;
 
 /**
  * 
@@ -41,9 +45,8 @@ public class BGP4ManagementSession extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains.
 	 */
-	private IntraTEDBS intraTEDB;
+	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
 	
-	private DomainTEDB readDomainTEDB;
 	/**
 	 * The infomation of all the active sessions
 	 */
@@ -61,14 +64,13 @@ public class BGP4ManagementSession extends Thread {
 	 * @param bgp4SessionsInformation
 	 * @param sendTopology
 	 */
-	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, IntraTEDBS intraTEDB,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology, DomainTEDB readDomainTEDB){
+	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,SimpleTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
 		this.socket=s;
 		log=Logger.getLogger("BGP4Server");
 		this.multiTEDB=multiTEDB;
-		this.intraTEDB=intraTEDB;
+		this.intraTEDBs=intraTEDBs;
 		this.bgp4SessionsInformation= bgp4SessionsInformation;
 		this.sendTopology=sendTopology;
-		this.readDomainTEDB=readDomainTEDB;
 	}
 	
 	public void run(){
@@ -126,10 +128,13 @@ public class BGP4ManagementSession extends Thread {
 					//Print intradomain and interDomain links
 					if (multiTEDB != null)
 						out.println(multiTEDB.printTopology());
-					if (intraTEDB != null)
-						out.print(intraTEDB.printTopology());
-					if (readDomainTEDB != null)
-						out.print(readDomainTEDB.printTopology());
+					Enumeration<Inet4Address> domainTedbs=intraTEDBs.keys();
+					while (domainTedbs.hasMoreElements()){		
+						Inet4Address domainID=domainTedbs.nextElement();
+						SimpleTEDB ted=intraTEDBs.get(domainID);
+						out.println("Intradomain TEDB with ID "+domainID);
+						out.println(ted.printTopology());
+					}
 					
 				}
 				else if (command.equals("set traces on")) {

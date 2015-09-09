@@ -401,4 +401,11 @@ public class MultiLayerTEDB implements DomainTEDB {
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	@Override
+	public Inet4Address getDomainID() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

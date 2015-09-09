@@ -3,6 +3,7 @@ package es.tid.bgp.bgp4Peer.peer;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -46,14 +47,21 @@ public class BGPPeer {
 	private BGP4SessionsInformation bgp4SessionsInformation;
 	
 	/**
-	 * Topology database for interDomain Links.
+	 * Topology database only for interDomain Links.
 	 */
-	private MultiDomainTEDB writeMultiTEDB;
+	private MultiDomainTEDB multiDomainTEDB;
+	
 	/**
-	 * Topology database for intradomain Links. It owns several domains.
+	 * Table with domainID - TEDB.
+	 * The BGP-LS Peer can have several domains
 	 */
-	private IntraTEDBS intraTEDB;
-	private SimpleTEDB simpleTEDB;
+	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+	
+	/**
+	 * Full TEDB with all Links
+	 */
+	
+	private SimpleTEDB fullTEDB;
 	
 	/**
 	 * Class to send periodically the topology
@@ -149,9 +157,10 @@ public class BGPPeer {
 			System.exit(1);
 		}
 		logParser.info("Inizializing BGP4 Peer");
+		 intraTEDBs=new Hashtable<Inet4Address,SimpleTEDB>();
 		// Create Thread executor
 		//FIXME: Actualizar n�mero de threads que se crean
-		executor = new ScheduledThreadPoolExecutor(10);//1 para el servidor, 1 para el que lanza y vigila los clientes
+		executor = new ScheduledThreadPoolExecutor(20);//1 para el servidor, 1 para el que lanza y vigila los clientes
 		// Information about all the sessions of the PCE
 		bgp4SessionsInformation = new BGP4SessionsInformation();
 		//Create the task to send the topology. It has to be created because you can start sending the topology in the management (wirting): send topology on.
@@ -160,19 +169,17 @@ public class BGPPeer {
 	
 	
 	public void setWriteMultiTEDB(MultiDomainTEDB multiTEDB) {
-		this.writeMultiTEDB = multiTEDB;
+		this.multiDomainTEDB = multiTEDB;
 	}
 
-	public void setIntraTEDB(IntraTEDBS intraTEDB) {
-		this.intraTEDB = intraTEDB;
-	}
+
 	
 	public void setReadDomainTEDB(DomainTEDB readDomainTEDB) {
 		this.readDomainTEDB = readDomainTEDB;
 	}
 	public void createUpdateDispatcher(){
 		//Updater dispatcher
-		ud = new UpdateDispatcher(writeMultiTEDB,simpleTEDB);
+		ud = new UpdateDispatcher(multiDomainTEDB,intraTEDBs);
 	}
 	/**
 	 * Function to create the TEDBs of the peer.
@@ -181,10 +188,10 @@ public class BGPPeer {
 	 */
 	public void  createTEDB (String nameParametersFile){
 		//Topology database
-		writeMultiTEDB = new MDTEDB();
+		multiDomainTEDB = new MDTEDB();
 		
 		if (params.getLearnTopology().equals("fromXML")){	
-			writeMultiTEDB.initializeFromFile(params.getTopologyFile());
+			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
 			//intraTEDB.initializeFromFile(params.getTopologyFile());		
 		}
 		
@@ -196,7 +203,7 @@ public class BGPPeer {
 	 */
 	public void startManagementServer(){
 		logServer.info("Initializing Management Server");	
-		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),writeMultiTEDB,intraTEDB, simpleTEDB,bgp4SessionsInformation,sendTopologyTask,readDomainTEDB);	
+		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),multiDomainTEDB,intraTEDBs,bgp4SessionsInformation,sendTopologyTask,readDomainTEDB);	
 		bms.start();
 	}
 	/**
@@ -245,7 +252,7 @@ public class BGPPeer {
 				e.printStackTrace();
 				return;
 			}
-			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,writeMultiTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer() );
+			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer() );
 			executor.execute(bgp4SessionServer);
 		}else{
 			logServer.severe("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
@@ -254,8 +261,8 @@ public class BGPPeer {
 	}
 	
 	public void startSendTopology(){
-		sendTopologyTask.configure(readDomainTEDB, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks());
-		executor.scheduleWithFixedDelay(sendTopologyTask, 0,params.getDelay(), TimeUnit.MILLISECONDS);
+		sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
+		executor.scheduleWithFixedDelay(sendTopologyTask, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 	}
 	public UpdateDispatcher getUd() {
 		return ud;
@@ -263,12 +270,17 @@ public class BGPPeer {
 	public void setUd(UpdateDispatcher ud) {
 		this.ud = ud;
 	}
-	public SimpleTEDB getSimpleTEDB() {
-		return simpleTEDB;
+
+	public void addSimpleTEDB(SimpleTEDB simpleTEDB, Inet4Address domainID) {
+		
+		this.intraTEDBs.put(domainID, simpleTEDB);
 	}
+	
 	public void setSimpleTEDB(SimpleTEDB simpleTEDB) {
-		this.simpleTEDB = simpleTEDB;
+		
+		this.intraTEDBs.put(simpleTEDB.getDomainID(), simpleTEDB);
 	}
+	
 	public LinkedList<Boolean> getSendToPeer() {
 		return sendToPeer;
 	}
