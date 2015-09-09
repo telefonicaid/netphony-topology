@@ -90,8 +90,8 @@ public class UpdateProccesorThread extends Thread {
 	DefaultTEMetricLinkAttribTLV TEMetricTLV;	
 	TransceiverClassAndAppAttribTLV transceiverClassAndAppATLV;
 	MF_OTPAttribTLV mF_OTP_ATLV;
-	
-	
+
+
 	/** NODE ATTRIBUTE TLVs 
 	 * Ipv4 of local node link attribute TLV also used
 	 * 
@@ -132,12 +132,12 @@ public class UpdateProccesorThread extends Thread {
 		running=true;
 		this.updateList=updateList;
 		this.multiTedb = multiTedb;
-		
+
 		this.intraTEDBs=intraTEDBs;
 		this.availableLabels= new AvailableLabels();
 		this.updateLinks=new LinkedList<UpdateLink>();
 	}
-	
+
 	/**
 	 * Starts processing updates
 	 */
@@ -300,7 +300,7 @@ public class UpdateProccesorThread extends Thread {
 		if (lsAtt.getMF_OTP() != null){
 			this.mF_OTP_ATLV =lsAtt.getMF_OTP();
 		}
-		
+
 		if (lsAtt.getTransceiverClassAndApp() != null){
 			this.transceiverClassAndAppATLV =lsAtt.getTransceiverClassAndApp();
 		}
@@ -336,40 +336,31 @@ public class UpdateProccesorThread extends Thread {
 		Inet4Address RemoteNodeIGPId = null;
 
 		//Local Node descriptors 
-		nodeDescriptorsSubTLV = linkNLRI.getLocalNodeDescriptors().getNodeDescriptorsSubTLVList();
-
-		//no haria falta este for pero bueno, lo dejamos como recuerdo de @mcs
-		for (int i = 0;i<nodeDescriptorsSubTLV.size();i++){
-			int subTLVType = nodeDescriptorsSubTLV.get(i).getSubTLVType();
-			switch (subTLVType){	
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AUTONOMOUS_SYSTEM:
-				localDomainID = ((AutonomousSystemNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAS_ID();
-				//log.info("AUTONOMOUS_SYSTEM found in LINK_NLRI(local_node). as_local "+localDomainID);
-				continue;
-
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AREA_ID:
-				areaID = ((AreaIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAREA_ID();
-				//log.info("AREA_ID found in LINK_NLRI(local_node). area_id "+areaID);
-				continue;
-
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_BGP_LS_IDENTIFIER:
-				bgplsID = ((BGPLSIdentifierNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getBGPLS_ID();
-				//log.info("BGPLS IDENTIFIER found in LINK_NLRI(local_node). bgpls_id "+bgplsID);
-				continue;
-
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_IGP_ROUTER_ID:
-				LocalNodeIGPId = ((IGPRouterIDNodeDescriptorSubTLV)nodeDescriptorsSubTLV.get(i)).getIpv4AddressOSPF();
-				//log.info("IGP ROUTER ID found in LINK_NLRI(local_node). igp_id "+LocalNodeIGPId);
-				continue;		
-			default:
-				log.finest("Attribute Code unknown");
-			}
+		if (linkNLRI.getLocalNodeDescriptors().getAutonomousSystemSubTLV()!=null){
+			localDomainID=linkNLRI.getLocalNodeDescriptors().getAutonomousSystemSubTLV().getAS_ID();
 		}
-		//no haria falta este for pero bueno, lo dejamos como recuerdo de @mcs
-		remoteDomainID=linkNLRI.getRemoteNodeDescriptorsTLV().getAutonomousSystemSubTLV().getAS_ID();
-		areaID =linkNLRI.getRemoteNodeDescriptorsTLV().getAreaID().getAREA_ID();
-		bgplsID=linkNLRI.getRemoteNodeDescriptorsTLV().getBGPLSIDSubTLV().getBGPLS_ID();
-		RemoteNodeIGPId = linkNLRI.getRemoteNodeDescriptorsTLV().getIGPRouterID().getIpv4AddressOSPF();
+		if (linkNLRI.getLocalNodeDescriptors().getAreaID()!=null) {
+			areaID=linkNLRI.getLocalNodeDescriptors().getAreaID().getAREA_ID();
+		}
+		if (linkNLRI.getLocalNodeDescriptors().getBGPLSIDSubTLV()!=null) {
+			bgplsID=linkNLRI.getLocalNodeDescriptors().getBGPLSIDSubTLV().getBGPLS_ID();
+		}
+		if (linkNLRI.getLocalNodeDescriptors().getIGPRouterID()!=null){
+			LocalNodeIGPId=linkNLRI.getLocalNodeDescriptors().getIGPRouterID().getIpv4AddressOSPF();
+		}
+
+		if (linkNLRI.getRemoteNodeDescriptorsTLV().getAutonomousSystemSubTLV()!=null) {
+			remoteDomainID=linkNLRI.getRemoteNodeDescriptorsTLV().getAutonomousSystemSubTLV().getAS_ID();
+		}
+		if (linkNLRI.getRemoteNodeDescriptorsTLV().getAreaID()!=null) {
+			areaID =linkNLRI.getRemoteNodeDescriptorsTLV().getAreaID().getAREA_ID();
+		}
+		if (linkNLRI.getRemoteNodeDescriptorsTLV().getBGPLSIDSubTLV()!=null) {
+			bgplsID=linkNLRI.getRemoteNodeDescriptorsTLV().getBGPLSIDSubTLV().getBGPLS_ID();
+		}
+		if (linkNLRI.getRemoteNodeDescriptorsTLV().getIGPRouterID()!=null) {
+			RemoteNodeIGPId = linkNLRI.getRemoteNodeDescriptorsTLV().getIGPRouterID().getIpv4AddressOSPF();
+		}
 
 		/**Creamos el grafo*/
 		//Let's see if our link is intradomain or interdomain...
@@ -379,7 +370,7 @@ public class UpdateProccesorThread extends Thread {
 		if(localDomainID.equals(remoteDomainID)){
 			//log.info("INTRADOMAIN...");
 			IntraDomainEdge intraEdge = new IntraDomainEdge();
-			
+
 			if (linkNLRI.getLinkIdentifiersTLV() != null){				
 				intraEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
@@ -390,7 +381,7 @@ public class UpdateProccesorThread extends Thread {
 				simpleTEDB.createGraph();
 				this.intraTEDBs.put(localDomainID, simpleTEDB);
 			}
-			
+
 
 			/**Actualizando TED*/
 			//log.info("lET'S SEE WHAT DO WE HAVE TO UPDATE...");
@@ -427,7 +418,7 @@ public class UpdateProccesorThread extends Thread {
 				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
 				IntraDomainEdge edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(intraEdge.getTE_info().getAvailableLabels()!=null)
-				((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
+					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
 
 			}
 			else{
@@ -466,14 +457,14 @@ public class UpdateProccesorThread extends Thread {
 			interEdge.setTE_info(te_info);
 			interEdge.setLearntFrom(learntFrom);
 
-		//FIXME: ADD I-D links to the Simple TEDBs
-		/**	
+			//FIXME: ADD I-D links to the Simple TEDBs
+			/**	
 			if(simpleTEDB.getInterdomainLink(LocalNodeIGPId, RemoteNodeIGPId) == null){
 				simpleTEDB.getInterDomainLinks().add(interEdge);
 				InterDomainEdge edge = simpleTEDB.getInterdomainLink(LocalNodeIGPId, RemoteNodeIGPId);
 				((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
 			}
-			*/
+			 */
 			log.info("Adding interdomain link tu multited...");
 			multiTedb.addInterdomainLink(localDomainID, LocalNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier(), remoteDomainID, RemoteNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier(), te_info);
 
@@ -532,14 +523,14 @@ public class UpdateProccesorThread extends Thread {
 			MF_OTPAttribTLV mF_OTP_ATLV = this.mF_OTP_ATLV.duplicate();
 			te_info.setMfOTF(mF_OTP_ATLV);
 		}
-		
+
 		if(this.transceiverClassAndAppATLV!=null){
 			TransceiverClassAndAppAttribTLV tap = new TransceiverClassAndAppAttribTLV();
 			tap.setTrans_class(transceiverClassAndAppATLV.getTrans_class());
 			tap.setTrans_app_code(transceiverClassAndAppATLV.getTrans_app_code());	
 			te_info.setTrans(tap);
 		}
-		
+
 		if (availableLabels!= null){
 			if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
 				if(simpleTEDB.getSSONinfo()==null){
@@ -565,15 +556,12 @@ public class UpdateProccesorThread extends Thread {
 			}
 			te_info.setAvailableLabels(availableLabels);
 		}
-		
-		
+
+
 		return te_info;
 	}
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
 		log.info("Let's fill in the node information.....");
-
-		ArrayList<NodeDescriptorsSubTLV> nodeDescriptorsSubTLV;
-		nodeDescriptorsSubTLV =  nodeNLRI.getLocalNodeDescriptors().getNodeDescriptorsSubTLVList();
 		Inet4Address as_number = null;
 		Inet4Address areaID= null ;
 		Inet4Address bgplsID = null;
@@ -581,39 +569,25 @@ public class UpdateProccesorThread extends Thread {
 		Inet4Address IGPID = null;
 		Node_Info node_info = new Node_Info();
 		Hashtable<Object , Node_Info> NodeTable;
-		//ArrayList<Inet4Address> address = new ArrayList<Inet4Address>();
-		for (int i = 0;i<nodeDescriptorsSubTLV.size();i++){
-			int subTLVType = nodeDescriptorsSubTLV.get(i).getSubTLVType();
-			switch (subTLVType){	
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AUTONOMOUS_SYSTEM:
-				as_number = ((AutonomousSystemNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAS_ID();
-				log.info("adding AS number of local node to table......"+as_number.toString());
-				node_info.setAs_number(as_number);
-				continue;
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_AREA_ID:
-				areaID = ((AreaIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getAREA_ID();
-				log.info("adding AreaID of local node to table......"+areaID.toString());
-				node_info.setArea_id(areaID);
-				continue;
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_BGP_LS_IDENTIFIER:
-				bgplsID = ((BGPLSIdentifierNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getBGPLS_ID();
-				log.info("adding BGPLS identifier of local node to table......"+bgplsID.toString());
-				node_info.setBgpls_ident(bgplsID);
-				continue;
-			case NodeDescriptorsSubTLVTypes.NODE_DESCRIPTORS_SUBTLV_TYPE_IGP_ROUTER_ID:
-				IGP_type = ((IGPRouterIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getIGP_router_id_type();
-				switch(IGP_type){
-				case 3:
-					IGPID = ((IGPRouterIDNodeDescriptorSubTLV) nodeDescriptorsSubTLV.get(i)).getIpv4AddressOSPF();
-					log.info("adding IGP ID of local node to table......"+IGPID.toString());
-					node_info.setIpv4Address(IGPID);
-					continue;
-				default:
-					log.info("añadir este tipo de IGP Identifier por implementar ");
-				}
-				continue;
+		if (nodeNLRI.getLocalNodeDescriptors().getAutonomousSystemSubTLV()!=null){
+			as_number=nodeNLRI.getLocalNodeDescriptors().getAutonomousSystemSubTLV().getAS_ID();
+		}
+		if (nodeNLRI.getLocalNodeDescriptors().getAreaID()!=null){
+			areaID=nodeNLRI.getLocalNodeDescriptors().getAreaID().getAREA_ID();
+		}
+		if (nodeNLRI.getLocalNodeDescriptors().getBGPLSIDSubTLV()!=null){
+			bgplsID=nodeNLRI.getLocalNodeDescriptors().getBGPLSIDSubTLV().getBGPLS_ID();
+		}
+		if (nodeNLRI.getLocalNodeDescriptors().getIGPRouterID()!=null){
+			IGP_type=nodeNLRI.getLocalNodeDescriptors().getIGPRouterID().getIGP_router_id_type();
+			switch(IGP_type){
+			case 3:
+				IGPID = nodeNLRI.getLocalNodeDescriptors().getIGPRouterID().getIpv4AddressOSPF();
+				log.info("adding IGP ID of local node to table......"+IGPID.toString());
+				node_info.setIpv4Address(IGPID);
+				break;
 			default:
-				log.finest("Attribute Code unknown");
+				log.info("añadir este tipo de IGP Identifier por implementar ");
 			}
 		}
 
@@ -647,7 +621,7 @@ public class UpdateProccesorThread extends Thread {
 		//.... finally we set the 'learnt from' attribute
 		node_info.setLearntFrom(learntFrom);
 		log.info("learnt from: " +learntFrom);
-		
+
 		SimpleTEDB simpleTEDB=intraTEDBs.get(as_number);
 		if (simpleTEDB==null){
 			simpleTEDB = new SimpleTEDB();
@@ -658,24 +632,24 @@ public class UpdateProccesorThread extends Thread {
 		if(NodeTable!=null){
 			if(NodeTable.containsKey(IGPID))
 				NodeTable.remove(IGPID);
-			}
+		}
 
-		
+
 		NodeTable.put(IGPID, node_info);
-	
+
 		simpleTEDB.setNodeTable(NodeTable);
 		if (this.multiTedb!=null) {
 			if (node_info.getIpv4Address()!=null){
 				this.multiTedb.addReachabilityIPv4(as_number, node_info.getIpv4Address(), 32);
 			}
-			
+
 		}
 		log.info("Node Table:" + NodeTable.toString());
 		log.info("Node Information Table Updated....");
 
 	}
-	
-	
+
+
 	private void clearAttributes(){
 		maximumLinkBandwidthTLV= null;
 		maxReservableBandwidthTLV= null;
@@ -687,8 +661,8 @@ public class UpdateProccesorThread extends Thread {
 		iPv4RouterIDRemoteNodeLATLV = null;
 		TEMetricTLV = null;				
 		transceiverClassAndAppATLV = null;
-		 mF_OTP_ATLV = null;
-		
+		mF_OTP_ATLV = null;
+
 	}
 
 

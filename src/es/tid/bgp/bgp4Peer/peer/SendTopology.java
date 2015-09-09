@@ -378,24 +378,22 @@ public class SendTopology implements Runnable {
 		nodeNLRI.setProtocolID(ProtocolIDCodes.Unknown_Protocol_ID);	
 		nodeNLRI.setRoutingUniverseIdentifier(identifier);
 		LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
-		ArrayList<NodeDescriptorsSubTLV> nodeDescriptorsSubTLVList = new ArrayList<NodeDescriptorsSubTLV>();
 
 		//igp router id
 		if(node_info.getIpv4AddressLocalNode()!=null){
 			IGPRouterIDNodeDescriptorSubTLV igpRouterIDLNSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
 			igpRouterIDLNSubTLV.setIpv4AddressOSPF(node_info.getIpv4AddressLocalNode());	
 			igpRouterIDLNSubTLV.setIGP_router_id_type(IGPRouterIDNodeDescriptorSubTLV.IGP_ROUTER_ID_TYPE_OSPF_NON_PSEUDO);
-			nodeDescriptorsSubTLVList.add(igpRouterIDLNSubTLV);
+			localNodeDescriptors.setIGPRouterID(igpRouterIDLNSubTLV);
+			
 		}
 
 		//as number
 		if(node_info.getAs_number()!=null){
 			AutonomousSystemNodeDescriptorSubTLV asNodeDescrSubTLV = new AutonomousSystemNodeDescriptorSubTLV();
 			asNodeDescrSubTLV.setAS_ID(node_info.getAs_number());
-			nodeDescriptorsSubTLVList.add(asNodeDescrSubTLV);
+			localNodeDescriptors.setAutonomousSystemSubTLV(asNodeDescrSubTLV);
 		}
-
-		localNodeDescriptors.setNodeDescriptorsSubTLVList(nodeDescriptorsSubTLVList);
 		nodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
 		BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
 		ra.setLsNLRI(nodeNLRI);
@@ -532,7 +530,6 @@ public class SendTopology implements Runnable {
 			as_remote.setAS_ID(domainList.get(1));
 			remoteNodeDescriptors.setAutonomousSystemSubTLV(as_remote);	
 		}
-		localNodeDescriptors.setNodeDescriptorsSubTLVList(sourceDescriptorsSubTLVList);
 		//Complete Dummy TLVs
 //		AreaIDNodeDescriptorSubTLV areaID= new AreaIDNodeDescriptorSubTLV();
 //		areaID.setAREA_ID(AREA_ID)
