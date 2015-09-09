@@ -28,6 +28,7 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidt
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AreaIDNodeDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterIDNodeDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4InterfaceAddressLinkDescriptorsSubTLV;
@@ -521,7 +522,7 @@ public class SendTopology implements Runnable {
 		IGPRouterIDNodeDescriptorSubTLV igpRouterIDDNSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
 		igpRouterIDDNSubTLV.setIpv4AddressOSPF(addressList.get(1));	
 		igpRouterIDDNSubTLV.setIGP_router_id_type(IGPRouterIDNodeDescriptorSubTLV.IGP_ROUTER_ID_TYPE_OSPF_NON_PSEUDO);
-		dstDescriptorsSubTLVList.add(igpRouterIDDNSubTLV);
+		remoteNodeDescriptors.setIGPRouterID(igpRouterIDDNSubTLV);
 		//2.1.2. AS
 		if (domainList != null){
 			AutonomousSystemNodeDescriptorSubTLV as_local = new AutonomousSystemNodeDescriptorSubTLV();
@@ -529,10 +530,14 @@ public class SendTopology implements Runnable {
 			sourceDescriptorsSubTLVList.add(as_local);
 			AutonomousSystemNodeDescriptorSubTLV as_remote = new AutonomousSystemNodeDescriptorSubTLV();
 			as_remote.setAS_ID(domainList.get(1));
-			dstDescriptorsSubTLVList.add(as_remote);	
+			remoteNodeDescriptors.setAutonomousSystemSubTLV(as_remote);	
 		}
 		localNodeDescriptors.setNodeDescriptorsSubTLVList(sourceDescriptorsSubTLVList);
-		remoteNodeDescriptors.setNodeDescriptorsSubTLVList(dstDescriptorsSubTLVList);
+		//Complete Dummy TLVs
+//		AreaIDNodeDescriptorSubTLV areaID= new AreaIDNodeDescriptorSubTLV();
+//		areaID.setAREA_ID(AREA_ID)
+//		remoteNodeDescriptors.setAreaID(areaID);
+//		remoteNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
 		linkNLRI.setLocalNodeDescriptors(localNodeDescriptors);
 		linkNLRI.setRemoteNodeDescriptorsTLV(remoteNodeDescriptors);
 
