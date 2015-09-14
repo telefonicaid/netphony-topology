@@ -77,8 +77,6 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 			return;
 		}
 		log.info("BGP4 Session initiated from "+this.remotePeerIP+"succesfully established!!");	
-		log.fine("Hold time is "+this.holdTime);
-		log.fine("KeepAlive local "+this.keepAliveTimer);
 		this.deadTimerT=new DeadTimerThread(this, this.holdTime);
 		startDeadTimer();	
 		this.keepAliveT=new KeepAliveThread(out, this.keepAliveTimer);
@@ -115,7 +113,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 						break;
 
 					case BGP4MessageTypes.MESSAGE_KEEPALIVE:
-						log.info("KEEPALIVE message received from "+this.remotePeerIP);
+						log.fine("KEEPALIVE message received from "+this.remotePeerIP);
 						//The Keepalive message allows to reset the deadtimer
 						break;
 
@@ -124,9 +122,9 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 						break;
 
 					case BGP4MessageTypes.MESSAGE_UPDATE:
-						log.info("UPDATE message from "+this.remotePeerIP);						
+						log.fine("UPDATE message from "+this.remotePeerIP);						
 						BGP4Update bgp4Update = new BGP4Update(msg);
-						log.info(bgp4Update.toString());
+						log.fine(bgp4Update.toString());
 						bgp4Update.setLearntFrom(this.getRemotePeerIP().toString());
 						updateDispatcher.dispatchRequests(bgp4Update);
 						break;
@@ -162,7 +160,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 	@Override
 	protected void endSession() {
 		// TODO Auto-generated method stub
-		log.info("Ending session with id "+this.getSessionId());
+		log.severe("Ending session with id "+this.getSessionId()+" from peer "+this.remotePeerIP);
 		BGP4SessionsInformation.deleteSession(this.getSessionId());
 	}
 

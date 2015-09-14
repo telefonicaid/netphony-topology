@@ -6,7 +6,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
-
 import es.tid.bgp.bgp4.messages.BGP4Update;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkStateNLRI;
@@ -38,16 +37,9 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.RouteTagPrefixAttribT
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.TransceiverClassAndAppAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AreaIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.BGPLSIdentifierNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterIDNodeDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLVTypes;
-import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AdministrativeGroup;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LinkProtectionType;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumReservableBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
@@ -446,8 +438,11 @@ public class UpdateProccesorThread extends Thread {
 			//terminamos de caracterizar el interedge...
 			interEdge.setSrc_router_id(LocalNodeIGPId);
 			interEdge.setDst_router_id(RemoteNodeIGPId);
+			
 			interEdge.setDomain_dst_router(remoteDomainID);
+			
 			interEdge.setDomain_src_router(localDomainID);
+			
 
 			/**Actualizando TED*/
 			//log.info("Updating Interdomain list...");
@@ -571,6 +566,7 @@ public class UpdateProccesorThread extends Thread {
 		Hashtable<Object , Node_Info> NodeTable;
 		if (nodeNLRI.getLocalNodeDescriptors().getAutonomousSystemSubTLV()!=null){
 			as_number=nodeNLRI.getLocalNodeDescriptors().getAutonomousSystemSubTLV().getAS_ID();
+			node_info.setAs_number(as_number);
 		}
 		if (nodeNLRI.getLocalNodeDescriptors().getAreaID()!=null){
 			areaID=nodeNLRI.getLocalNodeDescriptors().getAreaID().getAREA_ID();
@@ -621,7 +617,9 @@ public class UpdateProccesorThread extends Thread {
 		//.... finally we set the 'learnt from' attribute
 		node_info.setLearntFrom(learntFrom);
 		log.info("learnt from: " +learntFrom);
-
+		if (as_number==null){
+			log.severe("OSCAR: as_number ES NULL");
+		}
 		SimpleTEDB simpleTEDB=intraTEDBs.get(as_number);
 		if (simpleTEDB==null){
 			simpleTEDB = new SimpleTEDB();
