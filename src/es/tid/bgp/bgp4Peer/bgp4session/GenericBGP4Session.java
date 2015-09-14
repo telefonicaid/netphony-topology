@@ -146,7 +146,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 	 * 
 	 */
 	protected Boolean updateFrom;
-	protected Boolean sendTo;
+	protected boolean sendTo;
 
 	/**
 	 * Session ID (internal use only)
@@ -778,11 +778,11 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 		this.updateFrom = updateFrom;
 	}
 
-	public Boolean getSendTo() {
+	public Boolean getSendTo(){
 		return sendTo;
 	}
 
-	public void setSendTo(Boolean sendTo) {
+	public void setSendTo(boolean sendTo) {
 		this.sendTo = sendTo;
 	}
 

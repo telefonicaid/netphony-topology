@@ -252,7 +252,7 @@ public class BGPPeer {
 				e.printStackTrace();
 				return;
 			}
-			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer() );
+			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer(),sendToPeer, peersToConnect );
 			executor.execute(bgp4SessionServer);
 		}else{
 			logServer.severe("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
@@ -293,4 +293,6 @@ public class BGPPeer {
 	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
 		this.updateFromPeer = updateFromPeer;
 	}
+	
+	
 }

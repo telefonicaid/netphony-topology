@@ -126,6 +126,8 @@ public class MDTEDB implements MultiDomainTEDB {
 			newInterDomainEdge.setDst_router_id(remoteRouterASBR);
 			newInterDomainEdge.setSrc_if_id(localRouterASBRIf);
 			newInterDomainEdge.setDst_if_id(remoteRouterASBRIf);
+			newInterDomainEdge.setDomain_dst_router(remoteDomainID);
+			newInterDomainEdge.setDomain_src_router(localDomainID);
 			if (te_info != null)
 				newInterDomainEdge.setTE_info(te_info);
 			networkDomainGraph.addEdge(localDomainID, remoteDomainID, newInterDomainEdge);
