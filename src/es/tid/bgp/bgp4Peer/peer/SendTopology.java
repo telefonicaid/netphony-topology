@@ -24,6 +24,7 @@ import es.tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
 import es.tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
 import es.tid.bgp.bgp4.update.tlv.RemoteNodeDescriptorsTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
@@ -203,6 +204,7 @@ public class SendTopology implements Runnable {
 				float maximumReservableBandwidth = 0; 	
 				//GMPLS
 				AvailableLabels availableLabels = null;
+				MF_OTPAttribTLV mfOTP = null;
 
 				int metric = 0;
 
@@ -224,6 +226,10 @@ public class SendTopology implements Runnable {
 						availableLabels = te_info.getAvailableLabels();
 					if(te_info.getDefaultTEMetric()!=null){
 						metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
+						log.info("Metric en el metodo sendLinkNLRI es: " + metric);
+					}
+					if(te_info.getMfOTF()!=null){
+						mfOTP =  te_info.getMfOTF();
 					}
 
 				}else{
@@ -234,7 +240,7 @@ public class SendTopology implements Runnable {
 				domainList.add((Inet4Address)edge.getDomain_src_router());
 				domainList.add((Inet4Address)edge.getDomain_dst_router());
 
-				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric, domainList, false);
+				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric, domainList, false, mfOTP);
 				log.fine("Update message Created");	
 				sendMessage(update);				
 			}
@@ -269,9 +275,11 @@ public class SendTopology implements Runnable {
 			float[] unreservedBandwidth = null;
 			float maximumReservableBandwidth = 0; 
 			int metric = 0;
+	
 			//GMPLS
 			AvailableLabels availableLabels = null;
-
+			MF_OTPAttribTLV mfOTP = null;
+			
 
 			TE_Information te_info = ((IntraDomainEdge) edge).getTE_info();
 			if (te_info != null){
@@ -292,6 +300,10 @@ public class SendTopology implements Runnable {
 				}
 				if(te_info.getDefaultTEMetric()!=null){
 					metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
+					log.info("Metric en el metodo sendLinkNLRI 2 es: " + metric);
+				}
+				if(te_info.getMfOTF()!=null){
+					mfOTP =  te_info.getMfOTF();
 				}
 			}else{
 				log.info("TE_Info es null");
@@ -299,7 +311,7 @@ public class SendTopology implements Runnable {
 			ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);	
 			domainList.add(domainID);
 			domainList.add(domainID);
-			BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric, domainList, true);
+			BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric, domainList, true, mfOTP);
 			update.setLearntFrom(edge.getLearntFrom());
 			sendMessage(update);
 
@@ -439,7 +451,7 @@ public class SendTopology implements Runnable {
 	 * @param intradomain
 	 * @return
 	 */
-	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,  float maximumBandwidth, float[] unreservedBandwidth, float maximumReservableBandwidth , AvailableLabels availableLabels, int metric, ArrayList<Inet4Address> domainList, boolean intradomain ){
+	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,  float maximumBandwidth, float[] unreservedBandwidth, float maximumReservableBandwidth , AvailableLabels availableLabels, int metric, ArrayList<Inet4Address> domainList, boolean intradomain, MF_OTPAttribTLV mfOTP ){
 		BGP4Update update= new BGP4Update();	
 		//1. Path Attributes
 		ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
@@ -510,9 +522,17 @@ public class SendTopology implements Runnable {
 		if (metric != 0){
 			DefaultTEMetricLinkAttribTLV defaultMetric = new DefaultTEMetricLinkAttribTLV();
 			defaultMetric.setLinkMetric(metric);
+			log.info("Metric en el metodo createMsgUpdateLinkNLRI es: " + metric);
 			linkStateAttribute.setTEMetricTLV(defaultMetric);
 			linkStateNeeded=true;
 		}
+		
+		//1.2.6 MF_OPT
+		if (mfOTP != null){
+			MF_OTPAttribTLV mfOTPTLV = mfOTP.duplicate();
+			linkStateNeeded=true;
+		}
+		
 		if (linkStateNeeded){
 			pathAttributes.add(linkStateAttribute);
 		}
@@ -703,7 +723,7 @@ public class SendTopology implements Runnable {
 		//Create the domain List
 		ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
 
-		return createMsgUpdateLinkNLRI(addressList,localRemoteIfList,23,maxBandwidth,unBandwidth,maximumReservableBandwidth,al, 0, domainList, intradomain);
+		return createMsgUpdateLinkNLRI(addressList,localRemoteIfList,23,maxBandwidth,unBandwidth,maximumReservableBandwidth,al, 0, domainList, intradomain, null);
 
 	}
 
