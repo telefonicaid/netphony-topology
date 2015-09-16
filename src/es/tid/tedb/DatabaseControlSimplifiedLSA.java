@@ -21,21 +21,21 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 
 public class DatabaseControlSimplifiedLSA {
 
-	protected Inet4Address advertisingRouter;
+	public Inet4Address advertisingRouter;
 	
-	protected Inet4Address linkId;
+	public Inet4Address linkId;
 	
-	protected long linkLocalIdentifier;
+	public long linkLocalIdentifier;
 	
-	protected long linkRemoteIdentifier;
+	public long linkRemoteIdentifier;
 	
-	protected String bitmapLabelSet;
+	public String bitmapLabelSet;
 	
-	protected float maximumBandwidth;
+	public float maximumBandwidth;
 	
-	protected float unreservedBandwidth;
+	public float unreservedBandwidth;
 	
-	protected float maximumReservableBandwidth;
+	public float maximumReservableBandwidth;
 	
 	//protected LinkedList<Inet4Address> labelSet;
 	
