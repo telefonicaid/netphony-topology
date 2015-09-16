@@ -132,6 +132,19 @@ public class BGP4Parameters {
 	 */
 	private boolean sendIntradomainLinks=false;
 	
+	
+	/**
+	 * 
+	 */
+	// ************ RUBEN *******************
+	/*
+	private boolean saveIntradomainLinks=false;
+	*/
+	// **************************************
+	/**
+	 * 
+	 */
+	
 	/**
 	 * Instance identifier for NodeNLRI (Types defined in class InstanceIDTypes)
 	 */
@@ -436,9 +449,23 @@ public class BGP4Parameters {
 	public boolean isSendIntradomainLinks() {
 		return sendIntradomainLinks;
 	}
+	
 	public void setSendIntradomainLinks(boolean sendIntradomainLinks) {
 		this.sendIntradomainLinks = sendIntradomainLinks;
 	}
+	
+	// ************ RUBEN *******************
+	/*
+	public boolean isSaveIntradomainLinks() {
+		return saveIntradomainLinks;
+	}
+	
+	public void setSaveIntradomainLinks(boolean saveIntradomainLinks) {
+		this.saveIntradomainLinks = saveIntradomainLinks;
+	}	
+	*/
+	// **************************************
+	
 	public String getLocalBGPAddress() {
 		return localBGPAddress;
 	}

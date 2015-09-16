@@ -78,6 +78,19 @@ public class BGPPeer {
 	 */
 	private SendTopology sendTopologyTask;
 	/**
+	 * 
+	 */
+	// ************ RUBEN *******************
+	/*
+	private boolean saveTopology;
+	
+	private SaveTopologyinDB saveTopologyDB;
+	*/
+	// **************************************
+	/**
+	 * 
+	 */
+	/**
 	 * List of peers to establish connection.
 	 */
 	private LinkedList<String> peersToConnect;
@@ -264,6 +277,19 @@ public class BGPPeer {
 		sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
 		executor.scheduleWithFixedDelay(sendTopologyTask, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 	}
+	
+	
+	
+	// ************ RUBEN *******************
+	/*
+	public void startSaveTopology(){
+		saveTopologyDB.configure(intraTEDBs, bgp4SessionsInformation, saveTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
+		executor.scheduleWithFixedDelay(saveTopologyDB, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
+		
+	}
+	*/		
+	// **************************************
+	
 	public UpdateDispatcher getUd() {
 		return ud;
 	}
