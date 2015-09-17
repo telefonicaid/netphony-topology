@@ -155,7 +155,7 @@ public class SaveTopologyinDB implements Runnable {
 	}
 
 	/**
-	 * This function sends a BGP4 update message (encoded in a LinkNLRI) for each link in the list
+	 * This function write a BGP4 update message in Data Base for each link in the list
 	 * @param interdomainLinks
 	 */
 	private void writeLinkDB(LinkedList<InterDomainEdge> interdomainLinks){
@@ -181,7 +181,6 @@ public class SaveTopologyinDB implements Runnable {
 		
 		if (te_info != null){
 			
-			
 			if (te_info.getLinkLocalRemoteIdentifiers() != null){
 				dcsl.linkLocalIdentifier = te_info.getLinkLocalRemoteIdentifiers().getLinkLocalIdentifier();
 			}
@@ -194,16 +193,15 @@ public class SaveTopologyinDB implements Runnable {
 				dcsl.maximumBandwidth = te_info.getMaximumBandwidth().getMaximumBandwidth();
 			}
 			
-		//	if (te_info.getUnreservedBandwidth() != null){
-		//		dcsl.unreservedBandwidth = te_info.getUnreservedBandwidth().getUnreservedBandwidth();
-		//	}
+			if (te_info.getUnreservedBandwidth() != null) {
+			//	dcsl.unreservedBandwidth = te_info.getUnreservedBandwidth().getUnreservedBandwidth();
+			}
+		
 			
 			if (te_info.getMaximumReservableBandwidth() != null)
 				dcsl.maximumReservableBandwidth = te_info.getMaximumReservableBandwidth().getMaximumReservableBandwidth();
 			
-			//if (te_info.getUnreservedBandwidth() != null)
-			//	dcsl.unreservedBandwidth =  te_info.getUnreservedBandwidth().getUnreservedBandwidth();
-			
+						
 //			//GMPLS
 //			if (te_info.getAvailableLabels() != null)
 //				availableLabels = te_info.getAvailableLabels();

@@ -539,8 +539,9 @@ public class SendTopology implements Runnable {
 		
 		if (te_metric != 0){
 			DefaultTEMetricLinkAttribTLV defaultMetric = new DefaultTEMetricLinkAttribTLV();
-			defaultMetric.setLinkMetric(metric);
-			log.info("Metric en el metodo createMsgUpdateLinkNLRI es: " + metric);
+			//defaultMetric.setLinkMetric(metric);
+			defaultMetric.setLinkMetric(te_metric);
+			log.info("Metric en el metodo createMsgUpdateLinkNLRI es: " + te_metric);
 			linkStateAttribute.setTEMetricTLV(defaultMetric);
 			linkStateNeeded=true;
 		}
@@ -548,6 +549,7 @@ public class SendTopology implements Runnable {
 		//1.2.6 MF_OPT
 		if (mfOTP != null){
 			MF_OTPAttribTLV mfOTPTLV = mfOTP.duplicate();
+			log.info("SENDING MFOTP OSCAR");
 			linkStateAttribute.setMF_OTPAttribTLV(mfOTPTLV);
 			linkStateNeeded=true;
 		}
