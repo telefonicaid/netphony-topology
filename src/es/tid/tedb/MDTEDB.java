@@ -37,6 +37,7 @@ public class MDTEDB implements MultiDomainTEDB {
 		log=Logger.getLogger("PCEServer");
 		networkDomainGraph=new DirectedWeightedMultigraph<Object,InterDomainEdge> (InterDomainEdge.class);
 		addBidirectional=true;//FIXME: ESTO ES UN APA�O TEMPORAL
+		reachability=new LinkedList<ReachabilityEntry>();
 		//interDomainLinks = new LinkedList<InterDomainEdge>();
 	}
 	

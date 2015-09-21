@@ -1,10 +1,14 @@
 package es.tid.bgp.bgp4Peer.peer;
 
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -97,7 +101,11 @@ public class BGP4Parameters {
 	 */
 	long sendTopoDelay=30000;
 	
+	private boolean saveTopologyDB=false;
 	
+	private Inet4Address topologyDBIP;
+	
+	private int topologyDBport;
 	
 	public int getKeepAliveTimer() {
 		return keepAliveTimer;
@@ -237,6 +245,20 @@ public class BGP4Parameters {
 					
 					else if (qName.equalsIgnoreCase("setTraces")) {
 						setTraces=Boolean.parseBoolean(tempVal.trim());
+					} 
+					else if (qName.equalsIgnoreCase("saveTopologyDB")) {
+						saveTopologyDB=Boolean.parseBoolean(tempVal.trim());
+					}
+					else if (qName.equalsIgnoreCase("topologyDBIP")) {
+						try {
+							topologyDBIP =(Inet4Address)Inet4Address.getByName(tempVal.trim());
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else if (qName.equalsIgnoreCase("topologyDBport")) {
+						topologyDBport=Integer.parseInt(tempVal.trim());
 					}
 					else if (qName.equalsIgnoreCase("sendTopology")) {
 						sendTopology=Boolean.parseBoolean(tempVal.trim());
@@ -493,6 +515,26 @@ public class BGP4Parameters {
 	public void setSendTopoDelay(long sendTopoDelay) {
 		this.sendTopoDelay = sendTopoDelay;
 	}
+	public boolean isSaveTopologyDB() {
+		return saveTopologyDB;
+	}
+	public void setSaveTopologyDB(boolean saveTopologyDB) {
+		this.saveTopologyDB = saveTopologyDB;
+	}
+	public Inet4Address getTopologyDBIP() {
+		return topologyDBIP;
+	}
+	public void setTopologyDBIP(Inet4Address topologyDBIP) {
+		this.topologyDBIP = topologyDBIP;
+	}
+	public int getTopologyDBport() {
+		return topologyDBport;
+	}
+	public void setTopologyDBport(int topologyDBport) {
+		this.topologyDBport = topologyDBport;
+	}
+	
+	
 	
 	
 }

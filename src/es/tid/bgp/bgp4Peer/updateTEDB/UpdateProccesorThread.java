@@ -534,7 +534,7 @@ public class UpdateProccesorThread extends Thread {
 					ssonInfo.setCs(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getChannelSpacing());
 					ssonInfo.setGrid(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getGrid());
 					ssonInfo.setNumLambdas(((BitmapLabelSet)this.availableLabels.getLabelSet()).getNumLabels());
-					ssonInfo.setCommonAvailableLabels(this.availableLabels);
+					ssonInfo.setCommonAvailableLabels(this.availableLabels.dublicate());
 					ssonInfo.setnMin(0);
 					simpleTEDB.setSSONinfo(ssonInfo);
 				}
@@ -544,12 +544,12 @@ public class UpdateProccesorThread extends Thread {
 					wsonInfo.setCs(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getChannelSpacing());
 					wsonInfo.setGrid(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getGrid());
 					wsonInfo.setNumLambdas(((BitmapLabelSet)this.availableLabels.getLabelSet()).getNumLabels());
-					wsonInfo.setCommonAvailableLabels(this.availableLabels);
+					wsonInfo.setCommonAvailableLabels(this.availableLabels.dublicate());
 					wsonInfo.setnMin(0);
 					simpleTEDB.setWSONinfo(wsonInfo);
 				}
 			}
-			te_info.setAvailableLabels(availableLabels);
+			te_info.setAvailableLabels(availableLabels.dublicate());
 		}
 
 

@@ -13,6 +13,8 @@ public class BGPPeerMain {
 		else
 			bgpPeer.configure();
 		
+		bgpPeer.createTEDB("hola");
+		bgpPeer.createUpdateDispatcher();
 		bgpPeer.startClient();		
 		bgpPeer.startServer();
 		bgpPeer.startManagementServer();
