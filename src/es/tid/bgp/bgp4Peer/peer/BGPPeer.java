@@ -81,11 +81,11 @@ public class BGPPeer {
 	 * 
 	 */
 	// ************ RUBEN *******************
-	/*
+	
 	private boolean saveTopology;
 	
 	private SaveTopologyinDB saveTopologyDB;
-	*/
+	
 	// **************************************
 	/**
 	 * 
@@ -178,6 +178,7 @@ public class BGPPeer {
 		bgp4SessionsInformation = new BGP4SessionsInformation();
 		//Create the task to send the topology. It has to be created because you can start sending the topology in the management (wirting): send topology on.
 		sendTopologyTask = new SendTopology();
+		saveTopologyDB= new SaveTopologyinDB();
 	}
 	
 	
@@ -281,13 +282,15 @@ public class BGPPeer {
 	
 	
 	// ************ RUBEN *******************
-	/*
+	
 	public void startSaveTopology(){
+		//FIXME: Add DB params
 		saveTopologyDB.configure(intraTEDBs, bgp4SessionsInformation, saveTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
+		//FIXME: ADD param to configure the delay
 		executor.scheduleWithFixedDelay(saveTopologyDB, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 		
 	}
-	*/		
+		
 	// **************************************
 	
 	public UpdateDispatcher getUd() {
