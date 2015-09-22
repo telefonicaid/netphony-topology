@@ -345,7 +345,8 @@ public class SimpleTEDB implements DomainTEDB{
 	public void setInterDomainLinks(LinkedList<InterDomainEdge> interDomainLinks) {
 		this.interDomainLinks = interDomainLinks;
 	}
-
+	
+	
 	//	@Override
 	//	public DirectedWeightedMultigraph<Object, InterDomainEdge> getDuplicatedMDNetworkGraph() {
 	//		// TODO Auto-generated method stub
@@ -665,11 +666,7 @@ public class SimpleTEDB implements DomainTEDB{
 		SSONinfo = sSONinfo;
 	}
 
-	@Override
-	public Set<IntraDomainEdge> getIntraDomainLinks() {
-
-		return networkGraph.edgeSet();
-	}
+	
 	public String printBaseTopology(){
 		String topoString;
 		Set<Object> vetexSet= networkGraph.vertexSet();
@@ -693,5 +690,12 @@ public class SimpleTEDB implements DomainTEDB{
 	public Inet4Address getDomainID() {
 		// TODO Auto-generated method stub
 		return domainID;
+	}
+
+	@Override
+	public Set<IntraDomainEdge> getIntraDomainLinks() {
+		// TODO Auto-generated method stub
+		//FIXME
+		return null;
 	}
 }

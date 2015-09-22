@@ -17,5 +17,4 @@ public interface TEDB {
 
 	public LinkedList<InterDomainEdge> getInterDomainLinks();
 
-
 }

@@ -17,6 +17,7 @@ public class BGPPeerMain {
 		bgpPeer.createUpdateDispatcher();
 		bgpPeer.startClient();		
 		bgpPeer.startServer();
+		bgpPeer.startSaveTopology();
 		bgpPeer.startManagementServer();
 		bgpPeer.startSendTopology();
 		
