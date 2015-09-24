@@ -94,7 +94,7 @@ public class SaveTopologyinDB implements Runnable {
 
 	public void configure( Hashtable<Inet4Address,SimpleTEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
 		this.intraTEDBs=intraTEDBs;
-		this.writeTopology= writeTopology;
+		this.writeTopology=writeTopology;
 		this.multiDomainTEDB=multiTED;
 		//rdh.setHost(host);
 		//rdh.setPort(port);
