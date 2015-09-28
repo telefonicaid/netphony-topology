@@ -81,10 +81,6 @@ public class SaveTopologyinDB implements Runnable {
 	
 	
     
-
-
-	
-	
 	RedisDatabaseHandler rdh;
 	
 	public SaveTopologyinDB(){
