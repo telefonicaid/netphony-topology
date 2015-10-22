@@ -91,16 +91,14 @@ public class OSPFSessionServer extends Thread {
 				OSPFv2Packet ospfv2Packet =readOSPFv2Packet(socket);
 				if (ospfv2Packet != null){
 					if (ospfv2Packet.getType() == OSPFPacketTypes.OSPFv2_LINK_STATE_UPDATE){
-						log.info("Queueing packet for redis");
 						ospfv2PacketQueue.add((OSPFv2LinkStateUpdatePacket)ospfv2Packet);
 						
 						/*
 						 * Redis database if requested 
 						 */
 						
+						
 						if(redisOspfv2PacketQueue != null){
-							log.info("Queueing packet for redis");
-							log.info("Accepting OSPF Socket!!");
 							redisOspfv2PacketQueue.add((OSPFv2LinkStateUpdatePacket)ospfv2Packet);
 														
 						}
