@@ -87,7 +87,7 @@ public class OSPFSessionServer extends Thread {
 
 		while(true) {
 			try {
-				log.info("Reading OSPF socket");
+				
 				OSPFv2Packet ospfv2Packet =readOSPFv2Packet(socket);
 				if (ospfv2Packet != null){
 					if (ospfv2Packet.getType() == OSPFPacketTypes.OSPFv2_LINK_STATE_UPDATE){
