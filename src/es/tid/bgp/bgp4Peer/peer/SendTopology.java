@@ -74,7 +74,7 @@ public class SendTopology implements Runnable {
 	private int identifier=1;
 
 	//TEDBs 
-	 private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+	 private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
 	
 	// Multi-domain TEDB to redistribute Multi-domain Topology
 	private MultiDomainTEDB multiDomainTEDB;
@@ -86,6 +86,9 @@ public class SendTopology implements Runnable {
 	private boolean sendIntraDomainLinks=false;
 	
 	
+
+	
+	
 	private Inet4Address localBGPLSIdentifer;
 	private Inet4Address localAreaID;
 	
@@ -93,7 +96,7 @@ public class SendTopology implements Runnable {
 		log = Logger.getLogger("BGP4Parser");
 	}
 
-	public void configure( Hashtable<Inet4Address,SimpleTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
+	public void configure( Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
 		this.intraTEDBs=intraTEDBs;
 		this.bgp4SessionsInformation=bgp4SessionsInformation;
 		this.sendTopology= sendTopology;
@@ -125,7 +128,7 @@ public class SendTopology implements Runnable {
 				}
 				else {
 					log.info("Sending form TEDB");
-					Enumeration<SimpleTEDB> iter = intraTEDBs.elements();
+					Enumeration<DomainTEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						sendLinkNLRI( iter.nextElement().getInterDomainLinks());
 					}
@@ -137,14 +140,15 @@ public class SendTopology implements Runnable {
 					while (iter.hasMoreElements()){						
 						Inet4Address domainID = iter.nextElement();
 						log.info("Sending TED from domain "+domainID);
-						SimpleTEDB ted=intraTEDBs.get(domainID);
-						sendLinkNLRI( ted.getNetworkGraph().edgeSet(),domainID);
-						sendNodeNLRI(ted.getNetworkGraph().vertexSet(), ted.getNodeTable());
+						DomainTEDB ted=intraTEDBs.get(domainID);
+						sendLinkNLRI( ted.getIntraDomainLinks(),domainID);
+						//log.info(" XXXX ted.getNodeTable():"+ted.getNodeTable());
+						sendNodeNLRI( ted.getIntraDomainLinksvertexSet(), ted.getNodeTable());
+						//sendNodeNLRI( ted.getNetworkGraph().vertexSet(), ted.getNodeTable());
 					}
-					
-	
 				}
-							}
+						
+			}
 		}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -161,7 +165,9 @@ public class SendTopology implements Runnable {
 		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
 		while (vertexIt.hasNext()){		
 			Inet4Address node = (Inet4Address)vertexIt.next();
+			//log.info(" XXXX node: "+ node);
 			Node_Info node_info = NodeTable.get(node);
+			//log.info(" XXXX node_info: "+ node_info);
 			if (node_info!=null){
 				log.fine("Sending node: ("+node+")");
 				//Mandamos NodeNLRI
@@ -192,6 +198,8 @@ public class SendTopology implements Runnable {
 				addressList = new ArrayList<Inet4Address>();
 				addressList.add(0,source);
 				addressList.add(1,dst);
+				
+			
 
 				//Link Local Remote Identifiers
 				ArrayList<Long> localRemoteIfList =null;
@@ -209,7 +217,8 @@ public class SendTopology implements Runnable {
 
 				int metric = 0;
 				int te_metric = 0;
-
+				
+				
 				TE_Information te_info = ((InterDomainEdge) edge).getTE_info();
 				if (te_info != null){
 					if (te_info.getLinkLocalRemoteIdentifiers() != null){
@@ -243,10 +252,14 @@ public class SendTopology implements Runnable {
 				}
 				ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
 				//FIXME: chequear
+				
+				
 				domainList.add((Inet4Address)edge.getDomain_src_router());
+				log.info("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
 				domainList.add((Inet4Address)edge.getDomain_dst_router());
-
+				log.info("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
 				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric,te_metric, domainList, false, mfOTP);
+				
 				log.fine("Update message Created");	
 				sendMessage(update);				
 			}

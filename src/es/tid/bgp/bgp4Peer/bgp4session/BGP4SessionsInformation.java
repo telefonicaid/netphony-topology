@@ -38,7 +38,7 @@ public class BGP4SessionsInformation {
 	public synchronized void addSession(long sessionId, GenericBGP4Session session) throws BGP4Exception{
 		Enumeration <GenericBGP4Session > sessions = sessionList.elements();
 		log.info("Looking to add session with id "+sessionId+" --> "+session.toString());
-		log.info("There are "+sessionList.size()+" sessions");
+		
 		//Check if there is already a session with the remote peer.
 		//Only one session allowed with each remote peer
 		GenericBGP4Session existingSession=sessionListByPeerIP.get(session.remotePeerIP);
@@ -50,6 +50,7 @@ public class BGP4SessionsInformation {
 		sessionList.put(new Long(sessionId),session);
 		sessionListByPeerIP.put(session.getPeerIP() , session);
 		log.info("Registering new session with Peer "+session.getPeerIP() +" with ID "+sessionId);
+		
 	}
 	
 	public synchronized void deleteSession(long sessionId){

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import es.tid.bgp.bgp4.messages.BGP4Update;
 import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
+import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.tedb.TEDB;
@@ -25,14 +26,13 @@ public class UpdateDispatcher {
 	private UpdateProccesorThread upt;
 
 	
-	public UpdateDispatcher(MultiDomainTEDB multiTedb,Hashtable<Inet4Address,SimpleTEDB> intraTEDBs ){
+	public UpdateDispatcher(MultiDomainTEDB multiTedb,Hashtable<Inet4Address,DomainTEDB> intraTEDBs ){
 		this.updateList=new LinkedBlockingQueue<BGP4Update>();
 		this.upt=new UpdateProccesorThread(updateList, multiTedb,intraTEDBs );		
 		upt.start();
 		log=Logger.getLogger("BGP4Server");
 	}
 	public void dispatchRequests(BGP4Update updateMessage){
-		log.info("Adding update message to the queue");
 		updateList.add(updateMessage);
 	}
 

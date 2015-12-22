@@ -140,19 +140,8 @@ public class BGP4Parameters {
 	 */
 	private boolean sendIntradomainLinks=false;
 	
-	
-	/**
-	 * 
-	 */
-	// ************ RUBEN *******************
-	/*
-	private boolean saveIntradomainLinks=false;
-	*/
-	// **************************************
-	/**
-	 * 
-	 */
-	
+
+
 	/**
 	 * Instance identifier for NodeNLRI (Types defined in class InstanceIDTypes)
 	 */
@@ -267,6 +256,7 @@ public class BGP4Parameters {
 						sendIntradomainLinks=Boolean.parseBoolean(tempVal.trim());
 						sendTopology = true;//si se envian los intradomain entonces se enviara la topologia entera
 					}
+			
 					
 					else if(qName.equalsIgnoreCase("holdTime")) {
 						holdTime=Integer.parseInt(tempVal.trim());
@@ -476,18 +466,7 @@ public class BGP4Parameters {
 		this.sendIntradomainLinks = sendIntradomainLinks;
 	}
 	
-	// ************ RUBEN *******************
-	/*
-	public boolean isSaveIntradomainLinks() {
-		return saveIntradomainLinks;
-	}
-	
-	public void setSaveIntradomainLinks(boolean saveIntradomainLinks) {
-		this.saveIntradomainLinks = saveIntradomainLinks;
-	}	
-	*/
-	// **************************************
-	
+		
 	public String getLocalBGPAddress() {
 		return localBGPAddress;
 	}

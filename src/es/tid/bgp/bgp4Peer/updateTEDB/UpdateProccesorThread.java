@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
+
 import es.tid.bgp.bgp4.messages.BGP4Update;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkStateNLRI;
@@ -45,6 +46,7 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumReservableBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
@@ -111,7 +113,7 @@ public class UpdateProccesorThread extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains and.
 	 */
-	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
 
 	private LinkedList<UpdateLink> updateLinks;
 
@@ -119,7 +121,7 @@ public class UpdateProccesorThread extends Thread {
 
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
-			MultiDomainTEDB multiTedb ,Hashtable<Inet4Address,SimpleTEDB> intraTEDBs ){
+			MultiDomainTEDB multiTedb ,Hashtable<Inet4Address,DomainTEDB> intraTEDBs ){
 		log=Logger.getLogger("BGP4Server");
 		running=true;
 		this.updateList=updateList;
@@ -367,35 +369,39 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
 			}
-			SimpleTEDB simpleTEDB=intraTEDBs.get(localDomainID);
-			if (simpleTEDB==null){
+			
+			DomainTEDB domainTEDB=intraTEDBs.get(localDomainID);
+			SimpleTEDB simpleTEDB=null;
+			if (domainTEDB instanceof SimpleTEDB){
+				simpleTEDB = (SimpleTEDB) domainTEDB;
+			}else if (domainTEDB==null){
 				simpleTEDB = new SimpleTEDB();
 				simpleTEDB.createGraph();
 				this.intraTEDBs.put(localDomainID, simpleTEDB);
+			}else {
+				log.severe("PROBLEM: TEDB not compatible");
+				return;
 			}
 
 
 			/**Actualizando TED*/
-			//log.info("lET'S SEE WHAT DO WE HAVE TO UPDATE...");
-
-
-			//log.info("Found Vertex:"+LocalNodeIGPId.toString());
+			
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(LocalNodeIGPId))){
-				log.info("Adding Local Vertex... " + LocalNodeIGPId.toString());
+				
 				simpleTEDB.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
 			}
-			else{ 
-				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
-			}
-			//log.info("Found Vertex: "+RemoteNodeIGPId.toString());
+//			else{ 
+//				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
+//			}
+		
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
-				log.info("Adding Remote Vertex... " + RemoteNodeIGPId.toString());
+				
 				simpleTEDB.getNetworkGraph().addVertex(RemoteNodeIGPId);
 
 			}
-			else {
-				log.info("Remote Vertex: "+RemoteNodeIGPId.toString() +" already present in TED...");
-			}
+//			else {
+//				log.info("Remote Vertex: "+RemoteNodeIGPId.toString() +" already present in TED...");
+//			}
 
 			te_info =  createTE_Info(simpleTEDB);
 			intraEdge.setTE_info(te_info);
@@ -414,22 +420,22 @@ public class UpdateProccesorThread extends Thread {
 
 			}
 			else{
-				log.info("Link already present in TED, let's update the available labels...");
+				
 				IntraDomainEdge edge;
 				edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
 					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
-					log.info("Reservation1: " + ((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved()[0]);
+					
 					if (((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved()!=null){
 						((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyReservedBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved());
-						log.info("Reservation2: " + ((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved()[3]);
+						
 					}
 				}
 			}
 		}
 
 		else{
-			log.info("INTERDOMAIN...");
+			log.fine("INTERDOMAIN...");
 			InterDomainEdge interEdge = new InterDomainEdge();
 			if (linkNLRI.getLinkIdentifiersTLV() != null){				
 				interEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
@@ -447,7 +453,7 @@ public class UpdateProccesorThread extends Thread {
 			/**Actualizando TED*/
 			//log.info("Updating Interdomain list...");
 			//FIXME: See what to do to create SSON Info
-			SimpleTEDB simpleTEDB=new SimpleTEDB();
+			DomainTEDB simpleTEDB=new SimpleTEDB();
 			te_info =  createTE_Info(simpleTEDB);
 			interEdge.setTE_info(te_info);
 			interEdge.setLearntFrom(learntFrom);
@@ -460,14 +466,14 @@ public class UpdateProccesorThread extends Thread {
 				((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
 			}
 			 */
-			log.info("Adding interdomain link tu multited...");
+			
 			multiTedb.addInterdomainLink(localDomainID, LocalNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier(), remoteDomainID, RemoteNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier(), te_info);
 
 
 		}
 	} 
 
-	private TE_Information createTE_Info(SimpleTEDB simpleTEDB){
+	private TE_Information createTE_Info(DomainTEDB domainTEDB){
 		TE_Information te_info = new TE_Information();
 		if (maximumLinkBandwidthTLV!=null){
 			MaximumBandwidth maximumBandwidth = new MaximumBandwidth();
@@ -528,25 +534,25 @@ public class UpdateProccesorThread extends Thread {
 
 		if (availableLabels!= null){
 			if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
-				if(simpleTEDB.getSSONinfo()==null){
-					log.info("NEW SSON INFO");
+				if(domainTEDB.getSSONinfo()==null){
+					log.fine("NEW SSON INFO");
 					SSONInformation ssonInfo = new SSONInformation();
 					ssonInfo.setCs(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getChannelSpacing());
 					ssonInfo.setGrid(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getGrid());
 					ssonInfo.setNumLambdas(((BitmapLabelSet)this.availableLabels.getLabelSet()).getNumLabels());
 					ssonInfo.setCommonAvailableLabels(this.availableLabels.dublicate());
 					ssonInfo.setnMin(0);
-					simpleTEDB.setSSONinfo(ssonInfo);
+					domainTEDB.setSSONinfo(ssonInfo);
 				}
-				if(simpleTEDB.getWSONinfo()==null){
-					log.info("NEW WSON INFO");
+				if(domainTEDB.getWSONinfo()==null){
+					log.fine("NEW WSON INFO");
 					WSONInformation wsonInfo = new WSONInformation();
 					wsonInfo.setCs(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getChannelSpacing());
 					wsonInfo.setGrid(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getGrid());
 					wsonInfo.setNumLambdas(((BitmapLabelSet)this.availableLabels.getLabelSet()).getNumLabels());
 					wsonInfo.setCommonAvailableLabels(this.availableLabels.dublicate());
 					wsonInfo.setnMin(0);
-					simpleTEDB.setWSONinfo(wsonInfo);
+					domainTEDB.setWSONinfo(wsonInfo);
 				}
 			}
 			te_info.setAvailableLabels(availableLabels.dublicate());
@@ -556,7 +562,7 @@ public class UpdateProccesorThread extends Thread {
 		return te_info;
 	}
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
-		log.info("Let's fill in the node information.....");
+		
 		Inet4Address as_number = null;
 		Inet4Address areaID= null ;
 		Inet4Address bgplsID = null;
@@ -579,7 +585,7 @@ public class UpdateProccesorThread extends Thread {
 			switch(IGP_type){
 			case 3:
 				IGPID = nodeNLRI.getLocalNodeDescriptors().getIGPRouterID().getIpv4AddressOSPF();
-				log.info("adding IGP ID of local node to table......"+IGPID.toString());
+				
 				node_info.setIpv4Address(IGPID);
 				break;
 			default:
@@ -587,7 +593,7 @@ public class UpdateProccesorThread extends Thread {
 			}
 		}
 
-		log.info("Let's fill in the node information table with the node's attributes...");
+		
 		if(iPv4RouterIDLocalNodeLATLV != null){
 			log.fine("adding ipv4 of local node to table......");
 			node_info.setIpv4AddressLocalNode(iPv4RouterIDLocalNodeLATLV.getIpv4Address());
@@ -620,12 +626,20 @@ public class UpdateProccesorThread extends Thread {
 		if (as_number==null){
 			log.severe("OSCAR: as_number ES NULL");
 		}
-		SimpleTEDB simpleTEDB=intraTEDBs.get(as_number);
-		if (simpleTEDB==null){
+		DomainTEDB domainTEDB=intraTEDBs.get(as_number);
+		
+		SimpleTEDB simpleTEDB=null;
+		if (domainTEDB instanceof SimpleTEDB){
+			simpleTEDB = (SimpleTEDB) domainTEDB;
+		}else if (domainTEDB==null){
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
 			this.intraTEDBs.put(as_number, simpleTEDB);
+		}else {
+			log.severe("PROBLEM: TEDB not compatible");
+			return;
 		}
+					
 		NodeTable =simpleTEDB.getNodeTable();
 		if(NodeTable!=null){
 			if(NodeTable.containsKey(IGPID))

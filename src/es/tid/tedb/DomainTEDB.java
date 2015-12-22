@@ -2,6 +2,7 @@ package es.tid.tedb;
 
 
 import java.net.Inet4Address;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -26,7 +27,9 @@ public interface DomainTEDB extends TEDB {
 
 	public boolean containsVertex(Object vertex);
 	public WSONInformation getWSONinfo();
+	public void setWSONinfo(WSONInformation wSONinfo);
 	public SSONInformation getSSONinfo(); 
+	public void setSSONinfo(SSONInformation sSONinfo);
 	public void notifyWavelengthReservation(LinkedList<Object> sourceVertexList, LinkedList<Object> targetVertexList, int wavelength, boolean bidirectional);
 	public void notifyWavelengthReservationSSON (LinkedList<Object> sourceVertexList, LinkedList<Object> targetVertexList, int wavelength, boolean bidirectional, int m);
 	public void notifyWavelengthEndReservation(LinkedList<Object> sourceVertexList, LinkedList<Object> targetVertexList, int wavelength, boolean bidirectional);
@@ -49,4 +52,20 @@ public interface DomainTEDB extends TEDB {
 			LinkedList<Object> sourceVertexList,
 			LinkedList<Object> targetVertexList, LinkedList<Integer> wlans,
 			boolean bidirectional);
+
+
+	public void createGraph();
+
+
+	public Set<Object> getIntraDomainLinksvertexSet();
+
+
+	public Hashtable<Object, Node_Info> getNodeTable();
+
+
+	
+
+
+	
+
 }
