@@ -68,7 +68,7 @@ import es.tid.tedb.TE_Information;
 public class SaveTopologyinDB implements Runnable {
 	
 	//TEDBs 
-	 private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+	 private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
 	
 	// Multi-domain TEDB to redistribute Multi-domain Topology
 	private MultiDomainTEDB multiDomainTEDB;
@@ -88,7 +88,7 @@ public class SaveTopologyinDB implements Runnable {
 		 rdh= new RedisDatabaseHandler();
 	}
 
-	public void configure( Hashtable<Inet4Address,SimpleTEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
+	public void configure( Hashtable<Inet4Address,DomainTEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
 		this.intraTEDBs=intraTEDBs;
 		this.writeTopology=writeTopology;
 		this.multiDomainTEDB=multiTED;
@@ -115,7 +115,7 @@ public class SaveTopologyinDB implements Runnable {
 				}
 				else {
 					log.info("save form TEDB");
-					Enumeration<SimpleTEDB> iter = intraTEDBs.elements();
+					Enumeration<DomainTEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						writeLinkDBInter( iter.nextElement().getInterDomainLinks());
 					}
@@ -126,8 +126,9 @@ public class SaveTopologyinDB implements Runnable {
 					while (iter.hasMoreElements()){						
 						Inet4Address domainID = iter.nextElement();
 						log.info("Sending TED from domain "+domainID);
-						SimpleTEDB ted=intraTEDBs.get(domainID);
-						writeLinkDB( ted.getNetworkGraph().edgeSet(),domainID);
+						DomainTEDB ted=intraTEDBs.get(domainID);
+						//writeLinkDB( ted.getNetworkGraph().edgeSet(),domainID);
+						writeLinkDB(ted.getIntraDomainLinks(),domainID);
 					}
 					
 							

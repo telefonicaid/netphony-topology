@@ -399,6 +399,7 @@ public class SimpleTEDB implements DomainTEDB{
 		String topoString="";
 
 		int size = interDomainLinks.size();
+		log.info("Size of InterDomainLinks: "+size);
 		topoString="Interdomain Link list: \r\n";
 		for (int i=0;i<size;i++){
 			//por pantalla  
@@ -694,8 +695,12 @@ public class SimpleTEDB implements DomainTEDB{
 
 	@Override
 	public Set<IntraDomainEdge> getIntraDomainLinks() {
-		// TODO Auto-generated method stub
-		//FIXME
-		return null;
+		return this.getNetworkGraph().edgeSet();
 	}
+	
+	public Set<Object> getIntraDomainLinksvertexSet() {
+		return this.getNetworkGraph().vertexSet();
+	}
+	
+	
 }

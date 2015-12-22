@@ -55,7 +55,7 @@ public class BGPPeer {
 	 * Table with domainID - TEDB.
 	 * The BGP-LS Peer can have several domains
 	 */
-	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
 	
 	/**
 	 * Full TEDB with all Links
@@ -63,10 +63,11 @@ public class BGPPeer {
 	
 	private SimpleTEDB fullTEDB;
 	
+	
 	/**
 	 * Class to send periodically the topology
 	 */
-	private DomainTEDB readDomainTEDB;
+	//private DomainTEDB readDomainTEDB;
 	
 	/**
 	 * True: This peer sends the topology to other peers
@@ -80,13 +81,10 @@ public class BGPPeer {
 	/**
 	 * 
 	 */
-	// ************ RUBEN *******************
-	
 	private boolean saveTopology;
 	
 	private SaveTopologyinDB saveTopologyDB;
 	
-	// **************************************
 	/**
 	 * 
 	 */
@@ -144,6 +142,7 @@ public class BGPPeer {
 		params.initialize();
 		peersToConnect = params.getPeersToConnect();
 		sendTopology = params.isSendTopology();
+		saveTopology = params.isSaveTopologyDB();
 		this.setSendToPeer(params.getSendToPeer());
 		this.setUpdateFromPeer(params.getUpdateFromPeer());
 		
@@ -170,7 +169,7 @@ public class BGPPeer {
 			System.exit(1);
 		}
 		logParser.info("Inizializing BGP4 Peer");
-		 intraTEDBs=new Hashtable<Inet4Address,SimpleTEDB>();
+		intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 		// Create Thread executor
 		//FIXME: Actualizar n�mero de threads que se crean
 		executor = new ScheduledThreadPoolExecutor(20);//1 para el servidor, 1 para el que lanza y vigila los clientes
@@ -179,7 +178,9 @@ public class BGPPeer {
 		//Create the task to send the topology. It has to be created because you can start sending the topology in the management (wirting): send topology on.
 		sendTopologyTask = new SendTopology();
 		saveTopologyDB= new SaveTopologyinDB();
-		saveTopologyDB.configure(intraTEDBs, multiDomainTEDB, params.isSaveTopologyDB(), params.getTopologyDBIP().getHostAddress(), params.getTopologyDBport());
+		if (params.isSaveTopologyDB() == true){
+			saveTopologyDB.configure(intraTEDBs, multiDomainTEDB, params.isSaveTopologyDB(), params.getTopologyDBIP().getHostAddress(), params.getTopologyDBport());
+		}
 	}
 	
 	
@@ -192,7 +193,8 @@ public class BGPPeer {
 
 	
 	public void setReadDomainTEDB(DomainTEDB readDomainTEDB) {
-		this.readDomainTEDB = readDomainTEDB;
+		//this.readDomainTEDB = readDomainTEDB;
+		this.intraTEDBs.put(readDomainTEDB.getDomainID(), readDomainTEDB);
 	}
 	public void createUpdateDispatcher(){
 		//Updater dispatcher
@@ -219,8 +221,8 @@ public class BGPPeer {
 	 * Start the session for the management of the BGP4.
 	 */
 	public void startManagementServer(){
-		logServer.info("Initializing Management Server");	
-		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),multiDomainTEDB,intraTEDBs,bgp4SessionsInformation,sendTopologyTask,readDomainTEDB);	
+		logServer.info("Initializing Management Server");																							
+		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),multiDomainTEDB,intraTEDBs,bgp4SessionsInformation,sendTopologyTask);	
 		bms.start();
 	}
 	/**
@@ -284,41 +286,56 @@ public class BGPPeer {
 	
 	
 	
-	// ************ RUBEN *******************
-	
 	public void startSaveTopology(){
 		//FIXME: ADD param to configure the delay
 		executor.scheduleWithFixedDelay(saveTopologyDB, 0,5000, TimeUnit.MILLISECONDS);
 	}
 		
-	// **************************************
+	
+	public SaveTopologyinDB getSaveTopologyDB() {
+		return saveTopologyDB;
+	}
+	
+	public void setSaveTopologyDB(SaveTopologyinDB saveTopologyDB) {
+		this.saveTopologyDB = saveTopologyDB;
+	}
+	
+	public boolean isSaveTopology() {
+		return saveTopology;
+	}
+	
+	public void setSaveTopology(boolean saveTopology) {
+		this.saveTopology = saveTopology;
+	}
 	
 	public UpdateDispatcher getUd() {
 		return ud;
 	}
+	
 	public void setUd(UpdateDispatcher ud) {
 		this.ud = ud;
 	}
 
 	public void addSimpleTEDB(SimpleTEDB simpleTEDB, Inet4Address domainID) {
-		
-		this.intraTEDBs.put(domainID, simpleTEDB);
+			this.intraTEDBs.put(domainID, simpleTEDB);
 	}
 	
 	public void setSimpleTEDB(SimpleTEDB simpleTEDB) {
-		
-		this.intraTEDBs.put(simpleTEDB.getDomainID(), simpleTEDB);
+			this.intraTEDBs.put(simpleTEDB.getDomainID(), simpleTEDB);
 	}
 	
 	public LinkedList<Boolean> getSendToPeer() {
 		return sendToPeer;
 	}
+	
 	public void setSendToPeer(LinkedList<Boolean> sendToPeer) {
 		this.sendToPeer = sendToPeer;
 	}
+	
 	public LinkedList<Boolean> getUpdateFromPeer() {
 		return updateFromPeer;
 	}
+	
 	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
 		this.updateFromPeer = updateFromPeer;
 	}

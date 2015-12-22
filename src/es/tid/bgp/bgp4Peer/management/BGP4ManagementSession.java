@@ -45,7 +45,7 @@ public class BGP4ManagementSession extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains.
 	 */
-	private Hashtable<Inet4Address,SimpleTEDB> intraTEDBs;
+	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
 	
 	/**
 	 * The infomation of all the active sessions
@@ -64,7 +64,7 @@ public class BGP4ManagementSession extends Thread {
 	 * @param bgp4SessionsInformation
 	 * @param sendTopology
 	 */
-	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,SimpleTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
+	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
 		this.socket=s;
 		log=Logger.getLogger("BGP4Server");
 		this.multiTEDB=multiTEDB;
@@ -85,7 +85,20 @@ public class BGP4ManagementSession extends Thread {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (running) {
-				out.print("BGP4:>");
+				//out.print("BGP4:>");
+				
+				
+				
+				out.print("Available commands:\r\n");
+				out.print(" > show topology\r\n");
+				out.print(" > show sessions\r\n");
+				out.print(" > set traces on\r\n");
+				out.print(" > set traces off\r\n");
+				out.print(" > send topology on\r\n");
+				out.print(" > send topology off\r\n");
+				out.print(" > quit\r\n");
+				
+				
 				String command = null;
 				try {
 					command = br.readLine();
@@ -109,17 +122,17 @@ public class BGP4ManagementSession extends Thread {
 					return;
 				}				
 				
-				else if (command.equals("help")){
-					out.print("Available commands:\r\n");
-					out.print(" > show topology\r\n");
-					out.print(" > show sessions\r\n");
-					out.print(" > set traces on\r\n");
-					out.print(" > set traces off\r\n");
-					out.print(" > send topology on\r\n");
-					out.print(" > send topology off\r\n");
-					out.print(" > quit\r\n");
-					
-				}
+//				else if (command.equals("help")){
+//					out.print("Available commands:\r\n");
+//					out.print(" > show topology\r\n");
+//					out.print(" > show sessions\r\n");
+//					out.print(" > set traces on\r\n");
+//					out.print(" > set traces off\r\n");
+//					out.print(" > send topology on\r\n");
+//					out.print(" > send topology off\r\n");
+//					out.print(" > quit\r\n");
+//					
+//				}
 				else if (command.equals("show sessions")){
 					//Print intradomain and interDomain links
 					out.print(bgp4SessionsInformation.toString());
@@ -131,7 +144,7 @@ public class BGP4ManagementSession extends Thread {
 					Enumeration<Inet4Address> domainTedbs=intraTEDBs.keys();
 					while (domainTedbs.hasMoreElements()){		
 						Inet4Address domainID=domainTedbs.nextElement();
-						SimpleTEDB ted=intraTEDBs.get(domainID);
+						DomainTEDB ted=intraTEDBs.get(domainID);
 						out.println("Intradomain TEDB with ID "+domainID);
 						out.println(ted.printTopology());
 					}

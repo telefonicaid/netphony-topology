@@ -408,4 +408,39 @@ public class MultiLayerTEDB implements DomainTEDB {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+	@Override
+	public void setWSONinfo(WSONInformation wSONinfo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void setSSONinfo(SSONInformation sSONinfo) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void createGraph() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Set<Object> getIntraDomainLinksvertexSet() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Hashtable<Object, Node_Info> getNodeTable() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

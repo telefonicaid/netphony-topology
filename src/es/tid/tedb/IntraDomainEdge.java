@@ -271,6 +271,8 @@ public class IntraDomainEdge extends DefaultWeightedEdge {
 		}
 	}
 
+	
+
 	/*
 	@Override
 	public String toString() {
