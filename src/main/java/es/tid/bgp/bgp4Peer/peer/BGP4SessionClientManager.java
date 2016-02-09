@@ -22,23 +22,23 @@ public class BGP4SessionClientManager implements Runnable{
 	private Logger log;
 
 	BGP4SessionsInformation bgp4SessionInformation;
-	//Lista de "peers" configurados (a los que quiero conectarme)
-	private String peer;
+	/**
+	 * peer contains the IP address and port where the peer listens.
+	 */
+	private BGP4LSPeerInfo peer;
 	private Inet4Address peerIP;
 	private String localBGP4Address;
 	private int localBGP4Port; 
-
 	private int holdTime;
 	private int keepAliveTimer;
 	private Inet4Address BGPIdentifier;
 	private int version = 4;
 	private int myAutonomousSystem;
-	private int bgp4Port;
 	private UpdateDispatcher ud;
 	private Boolean updateFrom;
 	private Boolean sendTo;
 
-	public BGP4SessionClientManager(BGP4SessionsInformation bgp4SessionInformation,UpdateDispatcher ud, String peer,int bgp4Port,String my_IPAddress,int  my_bgp4Port , int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, int my_keepAliveTimer){	
+	public BGP4SessionClientManager(BGP4SessionsInformation bgp4SessionInformation,UpdateDispatcher ud, BGP4LSPeerInfo peer,int bgp4Port,String my_IPAddress,int  my_bgp4Port , int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, int my_keepAliveTimer){	
 		log=Logger.getLogger("BGP4Client");
 		this.bgp4SessionInformation=bgp4SessionInformation;
 		this.holdTime=holdTime;
@@ -46,17 +46,14 @@ public class BGP4SessionClientManager implements Runnable{
 		this.version = version;
 		this.myAutonomousSystem=myAutonomousSystem;
 		this.peer = peer;
-		this.bgp4Port = bgp4Port;
 		this.ud=ud;
 		this.localBGP4Address=my_IPAddress;
 		this.localBGP4Port=my_bgp4Port;
 		this.keepAliveTimer = my_keepAliveTimer;
-		try {
-			this.peerIP=(Inet4Address)Inet4Address.getByName(this.peer);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.peerIP=peer.getPeerIP();
+		this.setSendTo(peer.isSendToPeer());
+		this.setUpdateFrom(peer.isUpdateFromPeer());
+		
 	}
 
 	/**
@@ -68,17 +65,17 @@ public class BGP4SessionClientManager implements Runnable{
 		if(bgp4SessionClient != null){
 			if (bgp4SessionClient.isAlive()){
 				if (bgp4SessionClient.isInterrupted()){
-					log.severe("THREAD VIVO... SESION DE BACKUP MUERTA");
+					log.severe("Thread alive... backup session dead");
 
 				}
-				log.fine("Session viva y no interrumpida");
+				log.fine("Session alive and not interrupted");
 				return;	
 			}
 			else{
 				try{
 					bgp4SessionInformation.notifySessionStart(peerIP);	
 					log.severe("Session with BGP-LS peer"+peer +" dead, trying to establish new session");
-					bgp4SessionClient= new BGP4SessionClient(bgp4SessionInformation,ud,peer,bgp4Port,holdTime,BGPIdentifier,version,myAutonomousSystem,localBGP4Address, localBGP4Port,keepAliveTimer);
+					bgp4SessionClient= new BGP4SessionClient(bgp4SessionInformation,ud,peer.getPeerIP(),peer.getPeerPort(),holdTime,BGPIdentifier,version,myAutonomousSystem,localBGP4Address, localBGP4Port,keepAliveTimer);
 					bgp4SessionClient.setSendTo(sendTo);
 					bgp4SessionClient.setUpdateFrom(updateFrom);
 					bgp4SessionClient.start();
@@ -91,8 +88,8 @@ public class BGP4SessionClientManager implements Runnable{
 		} else {
 			try{
 				bgp4SessionInformation.notifySessionStart(peerIP);		
-				log.severe("No Session BGP with peer, trying to establish new session with peer "+ peer);
-				bgp4SessionClient = new BGP4SessionClient(bgp4SessionInformation,ud, peer, bgp4Port, holdTime, BGPIdentifier,
+				log.severe("No Session BGP with peer, trying to establish new session from"+this.localBGP4Address+"with peer "+ peer.getPeerIP()+":"+peer.getPeerPort());
+				bgp4SessionClient = new BGP4SessionClient(bgp4SessionInformation,ud, peer.getPeerIP(), peer.getPeerPort(), holdTime, BGPIdentifier,
 						version,myAutonomousSystem,localBGP4Address, localBGP4Port ,keepAliveTimer);
 				bgp4SessionClient.setSendTo(sendTo);
 				bgp4SessionClient.setUpdateFrom(updateFrom);
@@ -121,7 +118,7 @@ public class BGP4SessionClientManager implements Runnable{
 	}
 
 	public void closeBGP4Session(){
-		log.info("Cierro BGP4Session");
+		log.info("Closing BGP4Session");
 		if (bgp4SessionClient.isAlive()){
 			//FIXME reason for close????
 			bgp4SessionClient.close();

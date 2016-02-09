@@ -1,72 +1,32 @@
 package es.tid.bgp.bgp4Peer.peer;
 
 import java.net.Inet4Address;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.logging.Logger;
-
 import redis.clients.jedis.Jedis;
-import es.tid.bgp.bgp4.messages.BGP4Update;
-import es.tid.bgp.bgp4.update.fields.LinkNLRI;
-import es.tid.bgp.bgp4.update.fields.NodeNLRI;
-import es.tid.bgp.bgp4.update.fields.PathAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.BGP_LS_MP_Reach_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.LinkStateAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.OriginAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.PathAttributesTypeCode;
-import es.tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
-import es.tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
-import es.tid.bgp.bgp4.update.tlv.RemoteNodeDescriptorsTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AreaIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.BGPLSIdentifierNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4InterfaceAddressLinkDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4NeighborAddressLinkDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.LinkLocalRemoteIdentifiersLinkDescriptorSubTLV;
-import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
-import es.tid.bgp.bgp4Peer.bgp4session.GenericBGP4Session;
-import es.tid.ospf.ospfv2.OSPFv2LinkStateUpdatePacket;
-import es.tid.ospf.ospfv2.lsa.LSA;
-import es.tid.ospf.ospfv2.lsa.LSATypes;
-import es.tid.ospf.ospfv2.lsa.OSPFTEv2LSA;
-import es.tid.ospf.ospfv2.lsa.tlv.LinkTLV;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LinkID;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LocalInterfaceIPAddress;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.RemoteInterfaceIPAddress;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.pce.server.RedisDatabaseHandler;
 import es.tid.tedb.DatabaseControlSimplifiedLSA;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.Node_Info;
-import es.tid.tedb.SimpleTEDB;
 import es.tid.tedb.TE_Information;
 
 /**
- * Class to send periodically the topology. It sends the topology to the active BGP4 sessions.
+ * Class to save periodically the topology. It sends the topology to the active BGP4 sessions.
  * @author pac
  *
  */
 public class SaveTopologyinDB implements Runnable {
 	
+	//FIXME: Configure from file
+		private Jedis jedis;
+		private String host="localhost";
+		private int port=6379;
+		
 	//TEDBs 
 	 private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
 	
@@ -77,15 +37,10 @@ public class SaveTopologyinDB implements Runnable {
 
 	private Logger log;
 	
-	Jedis jedis;
-	
-	
-    
-	RedisDatabaseHandler rdh;
 	
 	public SaveTopologyinDB(){
 		log = Logger.getLogger("BGP4Parser");
-		 rdh= new RedisDatabaseHandler();
+		jedis = new Jedis(host,port); 
 	}
 
 	public void configure( Hashtable<Inet4Address,DomainTEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
@@ -95,9 +50,11 @@ public class SaveTopologyinDB implements Runnable {
 		//rdh.setHost(host);
 		//rdh.setPort(port);
 		
-		jedis = new Jedis(host,port);
-		jedis.connect();
-			
+		
+		if (writeTopology){
+			jedis = new Jedis(host,port);
+			jedis.connect();
+		}
 	}
 
 	/**
@@ -105,10 +62,16 @@ public class SaveTopologyinDB implements Runnable {
 	 */
 
 
-	public void run(){	
-		log.info("Going to save Topology in DB");
+	public void run(){		
 		try {
 		if (writeTopology){
+			log.info("Going to save Topology in Redis DB");
+			if (jedis==null){
+				jedis = new Jedis(host,port);
+				jedis.connect();
+			}else if (jedis.isConnected()==false){
+				jedis.connect();
+			}
 			if (multiDomainTEDB!=null){
 					log.info("save Multi-Domain TEDB");
 					writeLinkDBInter( multiDomainTEDB.getInterDomainLinks());
@@ -135,7 +98,7 @@ public class SaveTopologyinDB implements Runnable {
 		}
 		}catch (Exception e) {
 			e.printStackTrace();
-			log.severe("PROBLEM SENDING TOPOLOGY: "+e.toString());
+			log.severe("PROBLEM Writing TOPOLOGY: "+e.toString());
 		}
 
 	}
@@ -154,7 +117,6 @@ public class SaveTopologyinDB implements Runnable {
 				
 				DatabaseControlSimplifiedLSA dcsl =createSimplifiedLSA(edge); 
 				String jsonLSA = dcsl.logJsonSimplifiedLSA();
-				//rdh.write("LSA:"+dcsl.getAdvertisingRouter().getHostAddress()+":"+dcsl.getLinkId().getHostAddress(),jsonLSA);		
 				
 				if (jedis == null)
 					log.info("JEDIS IS NULL");

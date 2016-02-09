@@ -639,7 +639,7 @@ public class FileTEDBUpdater {
 								e.printStackTrace();
 								System.exit(-1);
 							}
-					}
+						}
 					}
 				}
 			}
@@ -649,8 +649,8 @@ public class FileTEDBUpdater {
 		log.info("Info graph edge :: "+graph.edgeSet());
 		return graph;
 	}
-	
-		
+
+
 
 	public static SimpleDirectedWeightedGraph<Object,IntraDomainEdge> readITNetwork(String fileName){
 		Logger log=Logger.getLogger("PCEPServer");
@@ -919,8 +919,13 @@ public class FileTEDBUpdater {
 			return "?";
 		}
 	}
-	//FIXME: Sergio - mirar aqui para leer MD TEDB
-	//Funci�n que ya estaba
+	
+	/**
+	 * Reads the inter-domain Topology from a topology XML file.
+	 * Needs update to work with datapath IDs.
+	 * @param fileName
+	 * @return
+	 */
 	public static DirectedWeightedMultigraph<Object, InterDomainEdge> readMDNetwork(
 			String fileName) {
 		Logger log = Logger.getLogger("PCEPServer");
@@ -936,8 +941,6 @@ public class FileTEDBUpdater {
 		Object s_router_id_addr = null;
 		Object d_router_id_addr = null;
 
-		log.info("3. DirectedWeightedMultigraph");
-
 		File file = new File(fileName);
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
@@ -945,7 +948,7 @@ public class FileTEDBUpdater {
 			Document doc = builder.parse(file);
 
 			NodeList nodes_domains = doc.getElementsByTagName("domain");
-
+			// First pass to read all the nodes and domains
 			for (int j = 0; j < nodes_domains.getLength(); j++) {
 				Element element_domain = (Element) nodes_domains.item(j);
 				NodeList nodes_domain_id = element_domain
@@ -955,7 +958,7 @@ public class FileTEDBUpdater {
 				Inet4Address domain_id = (Inet4Address) Inet4Address
 						.getByName(domain_id_str);
 
-				log.info("Network domain: " + domain_id);
+				log.info("Adding Domain: " + domain_id);
 				graph.addVertex(domain_id);
 				NodeList nodes = element_domain.getElementsByTagName("node");
 				for (int i = 0; i < nodes.getLength(); i++) {
@@ -964,14 +967,16 @@ public class FileTEDBUpdater {
 							.getElementsByTagName("router_id");
 					Element router_id_e = (Element) router_id_node.item(0);
 					String router_id = getCharacterDataFromElement(router_id_e);
-					log.info("El router_id es " + router_id);
+					log.fine("Router_id: " + router_id);
 					try { // router_id_addr type: Inet4Address
 						router_id_addr = (Inet4Address) Inet4Address.getByName(router_id);
 					} catch (Exception e) { // router_id_addr type: DataPathID
 						router_id_addr =  DataPathID.getByName(router_id);
 					}
+					router_id_domain_ed.put(router_id_addr, domain_id);
+					NodeList nl_sid=element.getElementsByTagName("sid");
 
-					Element SID_e = (Element) element.getElementsByTagName("sid");
+					Element SID_e = (Element) nl_sid.item(0);
 					if (SID_e!=null)
 					{	int SID = Integer.parseInt(getCharacterDataFromElement(SID_e));
 					try {
@@ -980,22 +985,18 @@ public class FileTEDBUpdater {
 						SIDSDP.put((DataPathID)router_id_addr,SID);
 					}
 					}
-
-					NodeList domain_id_node = element.getElementsByTagName("domain_id");
-					router_id_domain_ed.put(router_id_addr, domain_id);
-					// graph.addVertex(router_id_addr);
-
 				}
+				
 			}
-
+			log.fine("Domain_ids read");
 			NodeList edges = doc.getElementsByTagName("edge");
 			boolean a =true;
-			
-			
-				
-				
+
+
+
+
 			for (int i = 0; i < edges.getLength(); i++) {
-				log.info("New interdomain edge");
+				log.fine("Looking at edge");
 
 				Element element = (Element) edges.item(i);
 				InterDomainEdge edge = new InterDomainEdge();
@@ -1007,7 +1008,7 @@ public class FileTEDBUpdater {
 				Element source_router_id_el = (Element) source_router_id
 						.item(0);
 				String s_r_id = getCharacterDataFromElement(source_router_id_el);
-				log.info("Edge Source router_id: " + s_r_id);
+				log.fine("Edge Source router_id: " + s_r_id);
 
 				try { // s_router_id_addr type: Inet4Address
 					s_router_id_addr = (Inet4Address) Inet4Address.getByName(s_r_id);
@@ -1015,13 +1016,13 @@ public class FileTEDBUpdater {
 					s_router_id_addr =  DataPathID.getByName(s_r_id);
 				}
 				Inet4Address source_domain_id = router_id_domain_ed.get(s_router_id_addr);
-				log.info("Edge Source domain_id: " + source_domain_id);
+				log.fine("Edge Source domain_id: " + source_domain_id);
 
 				NodeList source_if_id_nl = source_router_el
 						.getElementsByTagName("if_id");
 				Element source_if_id_el = (Element) source_if_id_nl.item(0);
 				String s_source_if_id = getCharacterDataFromElement(source_if_id_el);
-				log.info("Edge Source if_id: " + s_source_if_id);
+				log.fine("Edge Source if_id: " + s_source_if_id);
 				int src_if_id = Integer.parseInt(s_source_if_id);
 
 				NodeList dest_nl = element.getElementsByTagName("destination");
@@ -1030,19 +1031,19 @@ public class FileTEDBUpdater {
 						.getElementsByTagName("router_id");
 				Element dest_router_id_el = (Element) dest_router_id_nl.item(0);
 				String d_r_id = getCharacterDataFromElement(dest_router_id_el);
-				log.info("Edge Destination router_id: " + d_r_id);
+				log.fine("Edge Destination router_id: " + d_r_id);
 				try { // d_router_id_addr type: Inet4Address
 					d_router_id_addr = (Inet4Address) Inet4Address.getByName(d_r_id);
 				} catch (Exception e) { // d_router_id_addr type: DataPathID
 					d_router_id_addr =  DataPathID.getByName(d_r_id);
 				}
 				Inet4Address dest_domain_id = router_id_domain_ed.get(d_router_id_addr);
-				log.info("Destination domain_id: " + dest_domain_id);
+				log.fine("Destination domain_id: " + dest_domain_id);
 
 				NodeList dest_if_id_nl = dest_el.getElementsByTagName("if_id");
 				Element dest_if_id_el = (Element) dest_if_id_nl.item(0);
 				String s_dest_if_id = getCharacterDataFromElement(dest_if_id_el);
-				log.info("Edge Dest if_id: " + s_dest_if_id);
+				log.fine("Edge Dest if_id: " + s_dest_if_id);
 				int dst_if_id = Integer.parseInt(s_dest_if_id);
 
 				//router_id_domain_ed
@@ -1050,18 +1051,20 @@ public class FileTEDBUpdater {
 
 				edge.setSrc_if_id(src_if_id);
 				edge.setDst_if_id(dst_if_id);
-				System.out.println(" XXXX source_domain_id: "+source_domain_id);
 				edge.setDomain_src_router(source_domain_id);
-				System.out.println(" XXXX dest_domain_id: "+dest_domain_id);
 				edge.setDomain_dst_router(dest_domain_id);
 
 				edge.setSrc_router_id(s_router_id_addr);
 				edge.setDst_router_id(d_router_id_addr);
+				if (!source_domain_id.equals(dest_domain_id)) {
+					log.info("Interdomain link added: "+edge.toString());
+					//Only add if the source and destination domains are different
+					graph.addEdge(source_domain_id, dest_domain_id, edge);
+				}
 
-				graph.addEdge(source_domain_id, dest_domain_id, edge);
 			}
-			
-			
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1632,10 +1635,9 @@ public class FileTEDBUpdater {
 		}
 	}
 
-	//FIXME: Sergio --> mirar esto para MD TEDB
-	// MARTA
+	
 	/**
-	 * Send the interDomain links of one domain.
+	 * Read the interdomain Topology from a topology file
 	 */
 	public static LinkedList<InterDomainEdge> readInterDomainLinks(String fileName) {
 
@@ -1646,7 +1648,7 @@ public class FileTEDBUpdater {
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = builder.parse(file);
-			
+
 			NodeList nodes_domains = doc.getElementsByTagName("domain");
 			if (nodes_domains!=null){
 				if (nodes_domains.getLength()>=1){
@@ -1656,13 +1658,12 @@ public class FileTEDBUpdater {
 						Element domain_id_e = (Element) nodes_domain_id.item(0);
 						String domain_id_str=getCharacterDataFromElement(domain_id_e);
 						domain_id= (Inet4Address) Inet4Address.getByName(domain_id_str);
-						log.info(" XXXX nodes_domains!=null ----> domain_id: "+domain_id);
 					}
 				}
 			}
-			
-			
-			
+
+
+
 			Boolean commonBitmapLabelSet = false;
 			NodeList edgeCommon = doc.getElementsByTagName("edgeCommon");
 			int grid=0;
@@ -1726,12 +1727,12 @@ public class FileTEDBUpdater {
 
 				// We only want those routers which have type="interdomain"
 				//if (((String)element.getAttributeNode("type").getValue()).equals("interdomain")) {
-				
+
 				if (element.getAttributeNode("type")!=null) {
-					
+
 
 					if (element.getAttributeNode("type").getValue().equals("interdomain")) {
-												
+
 						// Create a variable InterDomainEdge where we include
 						// the two nodes of the connection.
 						InterDomainEdge connection = new InterDomainEdge();
@@ -1741,7 +1742,7 @@ public class FileTEDBUpdater {
 						NodeList source_router_id = source_router_el.getElementsByTagName("router_id");
 						Element source_router_id_el = (Element) source_router_id.item(0);
 						String s_r_id = getCharacterDataFromElement(source_router_id_el);
-						
+
 						Inet4Address s_router_id_addr = (Inet4Address) Inet4Address.getByName(s_r_id);
 						//Read the source router interface identifier of the connection
 						NodeList source_if_id_nl = source_router_el.getElementsByTagName("if_id");
@@ -1751,24 +1752,24 @@ public class FileTEDBUpdater {
 						int src_if_id = Integer.parseInt(s_source_if_id);
 						NodeList src_domain_nl = source_router_el.getElementsByTagName("domain_id");
 						Inet4Address s_router_domain=null;
-						
+
 						if (src_domain_nl!=null)
 						{
 							if (src_domain_nl.getLength()>=1){
 								Element domain_id_el = (Element) src_domain_nl.item(0);
 								String s_r_domain = getCharacterDataFromElement(domain_id_el).trim();
 								s_router_domain = (Inet4Address) Inet4Address.getByName(s_r_domain);
-								
+
 							}else{
 								s_router_domain= domain_id;
-								
+
 							}
 						}else {
 							s_router_domain= domain_id;
-							
+
 						}
-						
-						
+
+
 
 						//Read the router destination
 						NodeList dest_nl = element.getElementsByTagName("destination");
@@ -1789,7 +1790,7 @@ public class FileTEDBUpdater {
 						log.info("Destination router domain: "+ d_r_domain);
 						Inet4Address d_router_domain= (Inet4Address) Inet4Address.getByName(d_r_domain);
 
-						
+
 						// Include the connection between both nodes
 						connection.setSrc_if_id(src_if_id);
 						connection.setSrc_router_id(s_router_id_addr);

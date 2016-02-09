@@ -30,10 +30,9 @@ public class BGP4SessionServerManager implements Runnable {
 	private Boolean updateFrom;
 	private Boolean sendTo;
 	
-	private  LinkedList<Boolean> sendToPeer;
-	private LinkedList<String> peersToConnect;
+	private LinkedList<BGP4LSPeerInfo> peersToConnect;
 	
-	public BGP4SessionServerManager(BGP4SessionsInformation bgp4SessionInformation, TEDB tedb,UpdateDispatcher ud, int bgp4Port,int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem,boolean noDelay,Inet4Address localAddress ,int mykeepAliveTimer, LinkedList<Boolean> sendToPeer, LinkedList<String> peersToConnect ){
+	public BGP4SessionServerManager(BGP4SessionsInformation bgp4SessionInformation, TEDB tedb,UpdateDispatcher ud, int bgp4Port,int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem,boolean noDelay,Inet4Address localAddress ,int mykeepAliveTimer, LinkedList<BGP4LSPeerInfo> peersToConnect ){
 		log = Logger.getLogger("BGP4Server");
 		this.holdTime=holdTime;
 		this.BGPIdentifier=BGPIdentifier;
@@ -46,7 +45,6 @@ public class BGP4SessionServerManager implements Runnable {
 		this.ud=ud;
 		this.localBGP4Address=localAddress;
 		this.keepAliveTimer = mykeepAliveTimer;
-		this.sendToPeer=sendToPeer;
 		this.peersToConnect=peersToConnect;
 	}
 	
@@ -87,13 +85,13 @@ public class BGP4SessionServerManager implements Runnable {
 				bgp4SessionServer = new BGP4PeerInitiatedSession(sock,bgp4SessionsInformation,ud,holdTime,BGPIdentifier,version,myAutonomousSystem,noDelay,keepAliveTimer);		
 				for (int i =0;i<this.peersToConnect.size();i++){	
 					try {
-						Inet4Address add = (Inet4Address) Inet4Address.getByName(peersToConnect.get(i));
+						Inet4Address add = peersToConnect.get(i).getPeerIP();
 						if (add==null){
-							log.info("OSCAR NULL");
+							log.warning("peer IP address shouldn't be null");
 						}else  {
 							if (add.equals(sock.getInetAddress())){
 								log.info("FOUND "+add);
-								bgp4SessionServer.setSendTo(this.sendToPeer.get(i).booleanValue());						
+								bgp4SessionServer.setSendTo(this.peersToConnect.get(i).isSendToPeer());						
 							}	
 						}
 						
