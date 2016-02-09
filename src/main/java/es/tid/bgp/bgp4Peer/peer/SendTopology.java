@@ -194,7 +194,7 @@ public class SendTopology implements Runnable {
 				InterDomainEdge edge = edgeIt.next();
 				Inet4Address source = (Inet4Address)edge.getSrc_router_id();
 				Inet4Address dst = (Inet4Address)edge.getDst_router_id();
-				log.info("Sending: ("+source.toString() +","+dst.toString()+")");
+				log.info("Sending ID edge: ("+source.toString() +":"+((InterDomainEdge) edge).getSrc_if_id()+","+dst.toString()+")");
 				addressList = new ArrayList<Inet4Address>();
 				addressList.add(0,source);
 				addressList.add(1,dst);
@@ -205,7 +205,7 @@ public class SendTopology implements Runnable {
 				ArrayList<Long> localRemoteIfList =null;
 				localRemoteIfList= new ArrayList<Long> ();
 				localRemoteIfList.add(0,((InterDomainEdge) edge).getSrc_if_id());//te_info.getLinkLocalRemoteIdentifiers().getLinkLocalIdentifier());
-				localRemoteIfList.add(0,((InterDomainEdge) edge).getDst_if_id());//te_info.getLinkLocalRemoteIdentifiers().getLinkRemoteIdentifier());
+				localRemoteIfList.add(1,((InterDomainEdge) edge).getDst_if_id());//te_info.getLinkLocalRemoteIdentifiers().getLinkRemoteIdentifier());
 
 				//MPLS
 				float maximumBandwidth = 0; 
@@ -237,27 +237,27 @@ public class SendTopology implements Runnable {
 						availableLabels = te_info.getAvailableLabels();
 					if(te_info.getDefaultTEMetric()!=null){
 						metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
-						log.info("Metric en el metodo sendLinkNLRI es: " + metric);
+						log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
 					}
 					if(te_info.getTrafficEngineeringMetric()!=null){
 						te_metric = (int) te_info.getTrafficEngineeringMetric().getLinkMetric() ;
-						log.info("Metric en el metodo sendLinkNLRI es: " + metric);
+						log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
 					}
 					if(te_info.getMfOTF()!=null){
 						mfOTP =  te_info.getMfOTF();
 					}
 
 				}else{
-					log.info("TE_Info es null");
+					log.fine("TE_Info es null");
 				}
 				ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
 				//FIXME: chequear
 				
 				
 				domainList.add((Inet4Address)edge.getDomain_src_router());
-				log.info("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
+				log.fine("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
 				domainList.add((Inet4Address)edge.getDomain_dst_router());
-				log.info("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
+				log.fine("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
 				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric,te_metric, domainList, false, mfOTP);
 				
 				log.fine("Update message Created");	

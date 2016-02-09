@@ -31,7 +31,6 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	
 	
 	private boolean no_delay=true;
-	private String peerBGP_IPaddress;
 	private String localBGP4Address;
 	private int localBGP4Port; 
 	/**
@@ -40,41 +39,27 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	 */
 	private UpdateDispatcher updateDispatcher;
 	
-	public BGP4SessionClient(BGP4SessionsInformation bgp4SessionsInformation,UpdateDispatcher updateDispatcher, String peerBGP_IPaddress, int peerBGP_port, int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, String localBGP4Address, int localBGP4Port,int keepAliveTimer){
+	public BGP4SessionClient(BGP4SessionsInformation bgp4SessionsInformation,UpdateDispatcher updateDispatcher, Inet4Address peerBGP_IPaddress, int peerBGP_port, int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, String localBGP4Address, int localBGP4Port,int keepAliveTimer){
 		super(bgp4SessionsInformation, holdTime, BGPIdentifier, version, myAutonomousSystem,keepAliveTimer);
 		timer=new Timer();
 		log = Logger.getLogger("BGP4Client");		
-		this.peerBGP_IPaddress = peerBGP_IPaddress;
 		this.peerBGP_port = peerBGP_port;
 		this.updateDispatcher=updateDispatcher;
 		this.localBGP4Address=localBGP4Address;
 		this.localBGP4Port=localBGP4Port;
-		try {
-			this.remotePeerIP = (Inet4Address) Inet4Address.getByName(peerBGP_IPaddress);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		this.remotePeerIP = peerBGP_IPaddress;
 	}
 	/**
 	 * Initiates a Session between the local BGP Peer and the remote BGP Peer
 	 */
 	public void run() {
-		try {
-			this.remotePeerIP=(Inet4Address)InetAddress.getByName(peerBGP_IPaddress);
-		} catch (UnknownHostException e) {
-			log.severe("Error with IP address not valid "+peerBGP_IPaddress);
-			//endSession();
-			return;
-		}
 	
 		log.info("Opening new BGP4 Session with host "+ this.remotePeerIP.getHostAddress() + " on port " + this.peerBGP_port +" local " + this.localBGP4Address);
 		log.fine("Do we want to update from peer?" + updateFrom);
 		log.fine("Do we want to send to peer?" + sendTo);
 		try {
 			Inet4Address addr = (Inet4Address) Inet4Address.getByName(localBGP4Address);
-			Inet4Address addrPeer = (Inet4Address) Inet4Address.getByName(peerBGP_IPaddress);
+			Inet4Address addrPeer = remotePeerIP;
 			socket = new Socket(addrPeer, peerBGP_port, addr, 0);
 			if (no_delay){
 				this.socket.setTcpNoDelay(true);
@@ -82,7 +67,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 			}
 			
 		} catch (IOException e) {
-			log.severe("Couldn't get I/O for connection to " + peerBGP_IPaddress + " on port " + peerBGP_port +"exception: "+e.getMessage());
+			log.severe("Couldn't get I/O for connection to " + remotePeerIP.getHostAddress() + " on port " + peerBGP_port +"exception: "+e.getMessage());
 			//As there is not yet a session added (it is added in the beginning of initializeBGP4Session());
 			//endSession();
 			return;
@@ -151,13 +136,13 @@ public class BGP4SessionClient extends GenericBGP4Session{
 					case BGP4MessageTypes.MESSAGE_UPDATE:
 						log.info("BGP UPDATE message received from "+this.remotePeerIP);
 						if(this.getUpdateFrom()){
-						BGP4Update bgp4Update = new BGP4Update(msg);
-						log.info(bgp4Update.toString());
-						bgp4Update.setLearntFrom(this.getPeerBGP_IPaddress());
-						updateDispatcher.dispatchRequests(bgp4Update);
+							BGP4Update bgp4Update = new BGP4Update(msg);
+							log.info(bgp4Update.toString());
+							bgp4Update.setLearntFrom(this.remotePeerIP.getHostAddress() );
+							updateDispatcher.dispatchRequests(bgp4Update);
 						}
 						else
-							log.info("Update message from " + this.getPeerBGP_IPaddress() + " discarded");
+							log.info("Update message from " + this.remotePeerIP + " discarded");
 						break;
 
 					default:
@@ -207,12 +192,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 		this.no_delay = no_delay;
 	}
 
-	public String getPeerBGP_IPaddress() {
-		return peerBGP_IPaddress;
-	}
-	public void setPeerBGP_IPaddress(String peerBGP_IPaddress) {
-		this.peerBGP_IPaddress = peerBGP_IPaddress;
-	}
+
 	@Override
 	public void close() {
 		// TODO Auto-generated method stub

@@ -624,7 +624,7 @@ public class UpdateProccesorThread extends Thread {
 		node_info.setLearntFrom(learntFrom);
 		log.info("learnt from: " +learntFrom);
 		if (as_number==null){
-			log.severe("OSCAR: as_number ES NULL");
+			log.severe(" as_number is NULL");
 		}
 		DomainTEDB domainTEDB=intraTEDBs.get(as_number);
 		
@@ -674,6 +674,7 @@ public class UpdateProccesorThread extends Thread {
 		TEMetricTLV = null;				
 		transceiverClassAndAppATLV = null;
 		mF_OTP_ATLV = null;
+		availableLabels=null;
 
 	}
 

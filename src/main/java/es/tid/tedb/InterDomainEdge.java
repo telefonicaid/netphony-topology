@@ -34,6 +34,7 @@ public class InterDomainEdge extends DefaultWeightedEdge {
 	
 	public TE_Information TE_info;
 	public InterDomainEdge(){
+		TE_info=new TE_Information();
 		
 	}
 	public InterDomainEdge(Object src, Object dst){

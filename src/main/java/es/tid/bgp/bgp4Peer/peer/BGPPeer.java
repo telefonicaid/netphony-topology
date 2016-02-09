@@ -21,10 +21,16 @@ import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.SimpleTEDB;
 
 /**
- * Principal class. 
- * This is a BGP4 peer. It launches the BGP connections with its peers.
+ * BGP-LS Speaker. 
+ * This class is a BGP-LS peer which has two modes:
+ * - Listens to incoming connections
+ * - Launches new BGP session with a list of peers.
+ * It can send periodically its learnt topology to other peers.
+ * TEDB can be initialized from:
+ * - XML file with the topolgoy
+ * - Other BGP-LS Sessions 
  * 
- * @author pac
+ * @author pac ogondio 
  *
  */
 public class BGPPeer {
@@ -89,22 +95,12 @@ public class BGPPeer {
 	 * 
 	 */
 	/**
-	 * List of peers to establish connection.
+	 * List of peers to establish connections.
 	 */
-	private LinkedList<String> peersToConnect;
+	private LinkedList<BGP4LSPeerInfo> peersToConnect;
 	
-	/**
-	 * List of boolean to decide wether to send or not to send to the correspondent peer
-	 */
-	private LinkedList<Boolean> sendToPeer;
+	//Whitelist and blacklist not yet implemented
 	
-	/**
-	 * List of boolean to decide wether to update or not to update from the correspondent peer
-	 */
-	private LinkedList<Boolean> updateFromPeer;
-	//Lista de "peers" aceptables (son los que dejo que se conecten a mi)
-	
-	//Lista negra de "peers" NO aceptables (no les dejo que se conecten a mi, siempre les rechazare)
 	/**
 	 * Loggers
 	 */
@@ -143,8 +139,6 @@ public class BGPPeer {
 		peersToConnect = params.getPeersToConnect();
 		sendTopology = params.isSendTopology();
 		saveTopology = params.isSaveTopologyDB();
-		this.setSendToPeer(params.getSendToPeer());
-		this.setUpdateFromPeer(params.getUpdateFromPeer());
 		
 		//Initialize loggers
 		FileHandler fh;
@@ -242,8 +236,6 @@ public class BGPPeer {
 			}
 			for (int i =0;i<peersToConnect.size();i++){		
 				bgp4SessionClientManager=new BGP4SessionClientManager(bgp4SessionsInformation,ud, peersToConnect.get(i), params.getBGP4Port(),params.getLocalBGPAddress(),params.getLocalBGPPort(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(),params.getKeepAliveTimer());
-				bgp4SessionClientManager.setSendTo(sendToPeer.get(i));
-				bgp4SessionClientManager.setUpdateFrom(updateFromPeer.get(i));
 				//FIXME: Ver si dejamos delay fijo o variable	
 				executor.scheduleWithFixedDelay(bgp4SessionClientManager, 0,params.getDelay(), TimeUnit.MILLISECONDS);
 			}
@@ -271,7 +263,7 @@ public class BGPPeer {
 				e.printStackTrace();
 				return;
 			}
-			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer(),sendToPeer, peersToConnect );
+			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer(),peersToConnect );
 			executor.execute(bgp4SessionServer);
 		}else{
 			logServer.severe("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
@@ -324,21 +316,18 @@ public class BGPPeer {
 			this.intraTEDBs.put(simpleTEDB.getDomainID(), simpleTEDB);
 	}
 	
-	public LinkedList<Boolean> getSendToPeer() {
-		return sendToPeer;
+	
+	public void stopPeer(){
+		executor.shutdown();
+	}
+	public MultiDomainTEDB getMultiDomainTEDB() {
+		return multiDomainTEDB;
+	}
+	public Hashtable<Inet4Address, DomainTEDB> getIntraTEDBs() {
+		return intraTEDBs;
 	}
 	
-	public void setSendToPeer(LinkedList<Boolean> sendToPeer) {
-		this.sendToPeer = sendToPeer;
-	}
 	
-	public LinkedList<Boolean> getUpdateFromPeer() {
-		return updateFromPeer;
-	}
-	
-	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
-		this.updateFromPeer = updateFromPeer;
-	}
 	
 	
 }

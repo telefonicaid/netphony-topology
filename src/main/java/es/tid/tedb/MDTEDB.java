@@ -102,22 +102,24 @@ public class MDTEDB implements MultiDomainTEDB {
 		Set<InterDomainEdge> edgeset= networkDomainGraph.edgesOf(localDomainID);
 		Iterator <InterDomainEdge> iterador=edgeset.iterator();
 		boolean edgeFound=false;
+		InterDomainEdge interDomainEdgeFound=null;
 		if (edgeset.size() == 0)
-			log.info("Edge set size = 0");
+			log.fine("Edge set size = 0");
 		while (iterador.hasNext()){
 			InterDomainEdge interDomainEdge=iterador.next();
-			log.finest("existing edge: "+interDomainEdge.toString());
+			log.fine("existing edge: "+interDomainEdge.toString());
 			if (interDomainEdge.getSrc_router_id().equals(localRouterASBR)){
-				log.finest("Local router is the same!!!");
+				log.fine("Local router is the same!!!");
 				if (interDomainEdge.getDst_router_id().equals(remoteRouterASBR)){
-					log.finest("Destination router is the same!!!");
+					log.fine("Destination router is the same!!!");
 					edgeFound=true;
+					interDomainEdgeFound=interDomainEdge;
 				}
 				else {
-					log.finest("Destination router is NOT the same!!!");
+					log.fine("Destination router is NOT the same!!!");
 				}
 			}else {
-				log.finest("Local router is NOT the same!!!");
+				log.fine("Local router is NOT the same!!!");
 			}			
 		}
 		
@@ -134,6 +136,15 @@ public class MDTEDB implements MultiDomainTEDB {
 			networkDomainGraph.addEdge(localDomainID, remoteDomainID, newInterDomainEdge);
 			log.info("Edge between "+localDomainID+" and "+remoteDomainID+" added");
 
+		}else {
+			
+			if (te_info != null){
+				//FIXME: Update of TE info to be optimized
+				log.info("TE_info updated");
+				interDomainEdgeFound.setTE_info(te_info);
+			}
+			
+			
 		}
 	}
 

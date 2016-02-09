@@ -23,6 +23,7 @@ public class BGP4Parameters {
 	private Logger log = Logger.getLogger("TMController");
 	/**
 	 * TCP port where the BGP is listening for incoming bgp4 connections
+	 * Experimental use only. Default and standard is 179
 	 */
 	private int BGP4Port = 179;
 
@@ -70,18 +71,8 @@ public class BGP4Parameters {
 	/**
 	 * List of peers to establish connection.
 	 */
-	private LinkedList<String> peersToConnect;
+	private LinkedList<BGP4LSPeerInfo> peersToConnect;
 	
-	/**
-	 * List of boolean to decide wether to send or not to send to the correspondent peer
-	 */
-	private LinkedList<Boolean> sendToPeer;
-	
-	/**
-	 * List of boolean to decide wether to update or not to update from the correspondent peer
-	 */
-	private LinkedList<Boolean> updateFromPeer;
-
 	/**
 	 * Parameter used to set traces meanwhile the execution.
 	 */
@@ -151,17 +142,14 @@ public class BGP4Parameters {
 	 */
 	BGP4Parameters(){
 		confFile="BGP4Parameters.xml";
-		peersToConnect =new LinkedList<String>();
-		setSendToPeer(new LinkedList<Boolean>());
-		setUpdateFromPeer(new LinkedList<Boolean>());
+		peersToConnect =new LinkedList<BGP4LSPeerInfo>();
 	}
 	/**
 	 * Constructor 
 	 */
 	BGP4Parameters(String confFile){
-		peersToConnect =new LinkedList<String>();
-		setSendToPeer(new LinkedList<Boolean>());
-		setUpdateFromPeer(new LinkedList<Boolean>());
+		peersToConnect =new LinkedList<BGP4LSPeerInfo>();
+
 		if (confFile!=null){
 			this.confFile=confFile;
 		}else {
@@ -186,6 +174,8 @@ public class BGP4Parameters {
 				boolean peer = false;
 				boolean send = false;
 				boolean receive = false;
+				boolean peerPort = false;
+				BGP4LSPeerInfo peerInfo=null;
 
 				String tempVal;
 
@@ -194,7 +184,7 @@ public class BGP4Parameters {
 								throws SAXException {
 					
 					if (qName.equalsIgnoreCase("configPeer")){
-						log.info("Found peer configuration");
+						log.fine("Found peer configuration");
 					}
 					else if (qName.equalsIgnoreCase("peer")){
 						peer = true;
@@ -204,6 +194,8 @@ public class BGP4Parameters {
 					}
 					else if (qName.equalsIgnoreCase("import")){
 						receive = true;
+					}else if (qName.equalsIgnoreCase("peerPort")){
+						peerPort = true;
 					}
 						
 				}
@@ -303,12 +295,9 @@ public class BGP4Parameters {
 					else if (qName.equalsIgnoreCase("localBGPPort")){
 						localBGPPort = Integer.parseInt(tempVal.trim());
 					}
-					else if (qName.equalsIgnoreCase("configPeer")){
-						log.info("peers....." + peersToConnect.toString());
-						log.info("sendToPeer" + sendToPeer.toString());
-						log.info("updateFromPeer" + updateFromPeer.toString());
-
-					}
+//					else if (qName.equalsIgnoreCase("configPeer")){
+//						log.info("peers....." + peersToConnect.toString());
+//					}
 				}	
 				
 
@@ -316,26 +305,40 @@ public class BGP4Parameters {
 					tempVal = new String(ch,start,length);
 					
 					if(peer){
+						peerInfo= new BGP4LSPeerInfo();
+						
 						String peerBGP_IPaddress = new String(ch, start, length);
-						peersToConnect.add(peerBGP_IPaddress);
+						Inet4Address peerBGPIP;
+						try {
+							peerBGPIP=(Inet4Address)Inet4Address.getByName(peerBGP_IPaddress.trim());
+							peerInfo.setPeerIP(peerBGPIP);
+						} catch (UnknownHostException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						peersToConnect.add(peerInfo);
 						peer = false;
 					}
 					else if(send){
 						String sendInfo = new String(ch, start, length);
-						sendToPeer.add(Boolean.parseBoolean(sendInfo.trim()));
+						peerInfo.setSendToPeer(Boolean.parseBoolean(sendInfo.trim()));
 						send = false;
 					}
 					else if(receive){
 						String update_from = new String(ch, start, length);
-						updateFromPeer.add(Boolean.parseBoolean(update_from.trim()));
+						peerInfo.setUpdateFromPeer(Boolean.parseBoolean(update_from.trim()));
 						receive = false;
+					}else if (peerPort){
+						String peer_port = new String(ch, start, length);
+						peerInfo.setPeerPort(Integer.parseInt(peer_port.trim()));
+						peerPort = false;
 					}
 				}
 			};
 			saxParser.parse(confFile, handler);     
 
 		}catch (Exception e) {
-			System.err.println("Problemas al leer la configuracion");	
+			log.severe("Problems reading config");	
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -402,10 +405,10 @@ public class BGP4Parameters {
 		this.version = version;
 	}
 
-	public LinkedList<String> getPeersToConnect() {
+	public LinkedList<BGP4LSPeerInfo> getPeersToConnect() {
 		return peersToConnect;
 	}
-	public void setPeersToConnect(LinkedList<String> peersToConnect) {
+	public void setPeersToConnect(LinkedList<BGP4LSPeerInfo> peersToConnect) {
 		this.peersToConnect = peersToConnect;
 	}
 
@@ -476,18 +479,7 @@ public class BGP4Parameters {
 	public int getLocalBGPPort() {
 		return localBGPPort;
 	}
-	public LinkedList<Boolean> getSendToPeer() {
-		return sendToPeer;
-	}
-	public void setSendToPeer(LinkedList<Boolean> sendToPeer) {
-		this.sendToPeer = sendToPeer;
-	}
-	public LinkedList<Boolean> getUpdateFromPeer() {
-		return updateFromPeer;
-	}
-	public void setUpdateFromPeer(LinkedList<Boolean> updateFromPeer) {
-		this.updateFromPeer = updateFromPeer;
-	}
+	
 	public long getSendTopoDelay() {
 		return sendTopoDelay;
 	}
