@@ -1,3 +1,8 @@
+v1.2
+- JUnit Test added
+- Bugfixes
+- Reduced number of logs
+- Updated README with explanation of parameters
 v1.1.1
 - Added configuration instructions of the standalone BGP Peer 
 - Added dependencies to pom.xml
