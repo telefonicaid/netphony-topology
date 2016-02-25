@@ -1,4 +1,4 @@
-netphony-topology v1.2
+netphony-topology v1.2.1
 =======
 
 This software is a BGP-LS Speaker and a Java based Traffic Engineering Database. 
@@ -18,6 +18,7 @@ To build the .jar file and run the tests, first you need to install the netphony
  ```bash
     git clone https://github.com/telefonicaid/netphony-network-protocols.git
     cd netphony-network-protocols
+    git checkout tags/v1.2.1
     mvn package
     mvn install
  ```
