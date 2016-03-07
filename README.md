@@ -16,7 +16,6 @@ The traffic Engineering Database (TED) is a collection of nodes and links, each 
 
 The library can be built using the maven tool. Thus, all the dependencies are included in the pom.xml file. There is a Junit test included that performs the following tests:
 * Buils two BGP-LS Speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.   
-* 
 * Contributions on expanding the test suite are welcomed!!
 
 To build the .jar file and run the tests, first you need to install the netphony-network-protocols (the upload process to maven central is in progress)
@@ -52,16 +51,17 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
 
 ## Configuration parameters
 The parameters to be configured are:
- ```
-BGP4Port: TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)
-BGPIdentifier: 32 Bit ID. Write it like an IP address (e.g. 10.0.0.1) See section 3.2.1.4 of https://datatracker.ietf.org/doc/draft-ietf-idr-ls-distribution/?include_text=1
-BGP4ManagementPort: TCP port to connect to manage the BGP connection. Default value: 1112 
-configPeer: Peers to which this Peer is going to establish connection. One entry per peer.
-    peer: IP Address of the peer
-    export: If we need to export the topology to this peer. False by default
-    import: If we are going to import topology from this peer. True by default
- setTraces: true/false if the traces (detailed logs) are active or inactive. 
- BGP4LogFile: File where the logs are dumped
- delay: Waiting Time to re-connect to clients. Default value: 6000 ms.
- 
- ```
+
+* **BGP4Port:** TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)
+* **localBGPAddress:** IP where the BGP is listening for incoming bgp4 connections. Default value: localhost
+* **BGPIdentifier:** 32 Bit ID. Write it like an IP address (e.g. 10.0.0.1) See section 3.2.1.4 of https://datatracker.ietf.org/doc/draft-ietf-idr-ls-distribution/?include_text=1
+* **BGP4ManagementPort:** TCP port to connect to manage the BGP connection. Default value: 1112 
+* **configPeer:** Peers to which this Peer is going to establish connection. One entry per peer.
+  *  **peer:** IP Address of the peer
+  *  **export:** If we need to export the topology to this peer. False by default
+  *  **import:** If we are going to import topology from this peer. True by default
+* **setTraces:** true/false if the traces (detailed logs) are active or inactive. 
+* **BGP4LogFile:** File where the logs are dumped
+* **delay:** Waiting Time to re-connect to clients. Default value: 6000 ms.
+* **myAutonomousSystem:** RFC 4271.  This 2-octet unsigned integer indicates the Autonomous System number of the sender
+
