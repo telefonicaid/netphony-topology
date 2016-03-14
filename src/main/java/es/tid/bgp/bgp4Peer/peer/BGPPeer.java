@@ -126,7 +126,6 @@ public class BGPPeer {
 	/**
 	 * Function to configure the BGP4 peer. 
 	 * It created the loggers, the executor, 
-	 * @param args
 	 */
 	public void configure(String nameParametersFile){
 		//First of all, read the parameters	
@@ -196,8 +195,6 @@ public class BGPPeer {
 	}
 	/**
 	 * Function to create the TEDBs of the peer.
-	 *
-	 * @param args
 	 */
 	public void  createTEDB (String nameParametersFile){
 		//Topology database

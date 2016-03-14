@@ -45,7 +45,6 @@ public class FileTEDBUpdater {
 	/**
 	 * Read a full network (no specific layer)
 	 * @param fileName Name of the XML file
-	 * @return
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName){
 		return FileTEDBUpdater.readNetwork(fileName,null,false,0,Integer.MAX_VALUE);
@@ -55,7 +54,6 @@ public class FileTEDBUpdater {
 	 * Reads a specific layer from a Network XML file
 	 * @param fileName Name of the XML file
 	 * @param layer
-	 * @return
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName,String layer){
 		return FileTEDBUpdater.readNetwork(fileName,layer,false,0,Integer.MAX_VALUE, false);
@@ -66,7 +64,6 @@ public class FileTEDBUpdater {
 	 * @param fileName Name of the XML file
 	 * @param layer
 	 * @param allDomains
-	 * @return
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName,String layer,boolean allDomains){
 		return FileTEDBUpdater.readNetwork(fileName,layer,allDomains,0,Integer.MAX_VALUE, false);
@@ -79,7 +76,6 @@ public class FileTEDBUpdater {
 	 * @param allDomains
 	 * @param lambdaIni
 	 * @param lambdaEnd
-	 * @return
 	 */
 
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd) {
@@ -94,7 +90,6 @@ public class FileTEDBUpdater {
 	 * @param fileName
 	 * @param layer
 	 * @param allDomains
-	 * @return
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
 		Logger log = Logger.getLogger("PCEPServer");
@@ -924,7 +919,6 @@ public class FileTEDBUpdater {
 	 * Reads the inter-domain Topology from a topology XML file.
 	 * Needs update to work with datapath IDs.
 	 * @param fileName
-	 * @return
 	 */
 	public static DirectedWeightedMultigraph<Object, InterDomainEdge> readMDNetwork(
 			String fileName) {
