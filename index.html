@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Netphony-topology : BGP-LS Speaker and Traffic Engineering Database">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Netphony-topology</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/telefonicaid/netphony-topology">View on GitHub</a>
+
+          <h1 id="project_title">Netphony-topology</h1>
+          <h2 id="project_tagline">BGP-LS Speaker and Traffic Engineering Database</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/telefonicaid/netphony-topology/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/telefonicaid/netphony-topology/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="netphony-topology-v121" class="anchor" href="#netphony-topology-v121" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>netphony-topology v1.2.1</h1>
+
+<p>Netphony-topology is a BGP-LS Speaker and a Java based Traffic Engineering Database. </p>
+
+<p>BGP-LS is used for distributing Network Topologies to external elments, for example, a Path Computation Element. </p>
+
+<p>The BGP-LS speaker can be run as a standalone application, or as a module attached to other software.</p>
+
+<h2>
+<a id="traffic-engineering-database" class="anchor" href="#traffic-engineering-database" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Traffic Engineering Database</h2>
+
+<p>The traffic Engineering Database (TED) is a collection of nodes and links, each of them with Traffic Engineering Attributes. The TED has as an attribute a domain identifier and a network layer.</p>
+
+<h2>
+<a id="compilation-and-use" class="anchor" href="#compilation-and-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Compilation and use</h2>
+
+<p>The library can be built using the maven tool. Thus, all the dependencies are included in the pom.xml file. There is a Junit test included that performs the following tests:</p>
+
+<ul>
+<li>Buils two BGP-LS Speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.<br>
+</li>
+<li>Contributions on expanding the test suite are welcomed!!</li>
+</ul>
+
+<p>To build the .jar file and run the tests, first you need to install the netphony-network-protocols (the upload process to maven central is in progress)</p>
+
+<div class="highlight highlight-source-shell"><pre>    git clone https://github.com/telefonicaid/netphony-network-protocols.git
+    <span class="pl-c1">cd</span> netphony-network-protocols
+    git checkout tags/v1.2.1
+    mvn package
+    mvn install</pre></div>
+
+<p>Then, once the netphony-network-protocols is installed, you can proceed with the netphony-topology.</p>
+
+<div class="highlight highlight-source-shell"><pre>    <span class="pl-c1">cd</span> ..
+    git clone https://github.com/telefonicaid/netphony-topology.git
+    <span class="pl-c1">cd</span> netphony-topology
+    mvn package
+    mvn install</pre></div>
+
+<h1>
+<a id="bgp-ls-speaker" class="anchor" href="#bgp-ls-speaker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>BGP-LS Speaker</h1>
+
+<p>The BGPPeer is the principal class to run a BGP Speaker. It represents a BGP4 peer. It launches the BGP connections with its peers and waits for incoming connections. </p>
+
+<p>To run the BGP Peer as a standalone application use the class BGPPeerMain. You can use maven to create an autoexecutable jar that includes all dependencies in a single file. Plase be aware that if you use the real BGP port (179) you need to start as root.</p>
+
+<div class="highlight highlight-source-shell"><pre>    git clone https://github.com/telefonicaid/netphony-topology.git
+    <span class="pl-c1">cd</span> netphony-topology
+    mvn clean compile assembly:single
+    <span class="pl-c1">cd</span> target
+    sudo java -jar topology-1.2-jar-with-dependencies.jar </pre></div>
+
+<p>Before running, you should configure the parameteres. The parameters are configured in an xml file. By default, if used with BGPPeerMain, or it is not specified a file name, BGP4Parameters.xml should be used. An example of the file is located in examples/BGP4Parameters.xml (and with the maven assembly build, it is copied in the target directory).</p>
+
+<h2>
+<a id="configuration-parameters" class="anchor" href="#configuration-parameters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configuration parameters</h2>
+
+<p>The parameters to be configured are:</p>
+
+<ul>
+<li>
+<strong>BGP4Port:</strong> TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)</li>
+<li>
+<strong>localBGPAddress:</strong> IP where the BGP is listening for incoming bgp4 connections. Default value: localhost</li>
+<li>
+<strong>BGPIdentifier:</strong> 32 Bit ID. Write it like an IP address (e.g. 10.0.0.1) See section 3.2.1.4 of <a href="https://datatracker.ietf.org/doc/draft-ietf-idr-ls-distribution/?include_text=1">https://datatracker.ietf.org/doc/draft-ietf-idr-ls-distribution/?include_text=1</a>
+</li>
+<li>
+<strong>BGP4ManagementPort:</strong> TCP port to connect to manage the BGP connection. Default value: 1112 </li>
+<li>
+<strong>configPeer:</strong> Peers to which this Peer is going to establish connection. One entry per peer.
+
+<ul>
+<li> <strong>peer:</strong> IP Address of the peer</li>
+<li> <strong>export:</strong> If we need to export the topology to this peer. False by default</li>
+<li> <strong>import:</strong> If we are going to import topology from this peer. True by default</li>
+</ul>
+</li>
+<li>
+<strong>setTraces:</strong> true/false if the traces (detailed logs) are active or inactive. </li>
+<li>
+<strong>BGP4LogFile:</strong> File where the logs are dumped</li>
+<li>
+<strong>delay:</strong> Waiting Time to re-connect to clients. Default value: 6000 ms.</li>
+<li>
+<strong>myAutonomousSystem:</strong> RFC 4271.  This 2-octet unsigned integer indicates the Autonomous System number of the sender</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Netphony-topology maintained by <a href="https://github.com/telefonicaid">telefonicaid</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
