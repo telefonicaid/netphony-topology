@@ -32,7 +32,14 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 	/**
 	 * Constructor of the BGP4 Session
 	 * @param s Socket of the BGP4Peer-BGP4Peer Communication
-	 * @throws BGP4Exception 
+	 * @param bgp4SessionsInformation bgp4SessionsInformation
+	 * @param updateDispatcher updateDispatcher
+	 * @param holdTime holdTime
+	 * @param BGPIdentifier BGPIdentifier
+	 * @param version version
+	 * @param myAutonomousSystem myAutonomousSystem
+	 * @param noDelay noDelay
+	 * @param keepAliveTimer keepAliveTimer
 	 */
 	public BGP4PeerInitiatedSession(Socket s, BGP4SessionsInformation bgp4SessionsInformation, UpdateDispatcher updateDispatcher,int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem,boolean noDelay,int keepAliveTimer ){
 		super(bgp4SessionsInformation, holdTime, BGPIdentifier, version, myAutonomousSystem,keepAliveTimer);

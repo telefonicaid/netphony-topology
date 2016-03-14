@@ -193,6 +193,8 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 	/**
 	 * Read PCE message from TCP stream
 	 * @param in InputStream
+	 * @return byte array with a BGP4 Message
+	 * @throws IOException Execption thrown trying to read message
 	 */
 	protected byte[] readBGP4Msg(DataInputStream in) throws IOException{
 		byte[] ret = null;
@@ -251,6 +253,8 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 	/**
 	 * Read PCE message from TCP stream
 	 * @param in InputStream
+	 * @return byte array with a BGP4 Message
+	 * @throws IOException Execption thrown trying to read message
 	 */
 	protected byte[] readMsgOptimized(DataInputStream in) throws IOException{
 		byte[] ret = null;
