@@ -639,6 +639,7 @@ public class SendTopology implements Runnable {
 	 * - source
 	 * - destino
 	 * - maximun bandwithd
+	 * @return OSPFv2 Link State Update Packet
 	 */
 	public static OSPFv2LinkStateUpdatePacket createMsgOSPF(){
 		Inet4Address src = null;

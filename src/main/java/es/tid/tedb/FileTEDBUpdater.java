@@ -45,6 +45,7 @@ public class FileTEDBUpdater {
 	/**
 	 * Read a full network (no specific layer)
 	 * @param fileName Name of the XML file
+	 * @return Graph of the Network
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName){
 		return FileTEDBUpdater.readNetwork(fileName,null,false,0,Integer.MAX_VALUE);
@@ -53,7 +54,8 @@ public class FileTEDBUpdater {
 	/**
 	 * Reads a specific layer from a Network XML file
 	 * @param fileName Name of the XML file
-	 * @param layer
+	 * @param layer Layer
+	 * @return Graph of the network
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName,String layer){
 		return FileTEDBUpdater.readNetwork(fileName,layer,false,0,Integer.MAX_VALUE, false);
@@ -62,8 +64,9 @@ public class FileTEDBUpdater {
 	 * Reads a specific layer from a Network XML file
 	 * It can treat all domains as a single domain
 	 * @param fileName Name of the XML file
-	 * @param layer
-	 * @param allDomains
+	 * @param layer Layer 
+	 * @param allDomains if all domains are read or not 
+	 * @return Graph of the network
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName,String layer,boolean allDomains){
 		return FileTEDBUpdater.readNetwork(fileName,layer,allDomains,0,Integer.MAX_VALUE, false);
@@ -72,10 +75,11 @@ public class FileTEDBUpdater {
 	 * Reads a specific layer from a Network XML file
 	 * It can treat all domains as a single domain
 	 * @param fileName Name of the XML file
-	 * @param layer
-	 * @param allDomains
-	 * @param lambdaIni
-	 * @param lambdaEnd
+	 * @param layer Layer
+	 * @param allDomains if all domains are read or not 
+	 * @param lambdaIni first lambda (n)
+	 * @param lambdaEnd last lamnda (n)
+	 * @return Graph of the network
 	 */
 
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd) {
@@ -87,9 +91,13 @@ public class FileTEDBUpdater {
 	 * Reads a specific layer from a Network XML file. 
 	 * It can treat all domains as a single domain.
 	 * 
-	 * @param fileName
-	 * @param layer
-	 * @param allDomains
+	 * @param fileName Name of the XML file 
+	 * @param layer Layer
+	 * @param allDomains if all domains are read or not 
+	 * @param lambdaIni first lambda (n)
+	 * @param lambdaEnd last lamnda (n)
+	 * @param isSSONnetwork If the network supports Flexi Grid	
+	 * @return Graph of the network.
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
 		Logger log = Logger.getLogger("PCEPServer");
@@ -918,7 +926,8 @@ public class FileTEDBUpdater {
 	/**
 	 * Reads the inter-domain Topology from a topology XML file.
 	 * Needs update to work with datapath IDs.
-	 * @param fileName
+	 * @param fileName Name of the XML
+	 * @return Graph of the network.
 	 */
 	public static DirectedWeightedMultigraph<Object, InterDomainEdge> readMDNetwork(
 			String fileName) {
@@ -1632,6 +1641,8 @@ public class FileTEDBUpdater {
 	
 	/**
 	 * Read the interdomain Topology from a topology file
+	 * @param fileName Name of the xml file.
+	 * @return List of interdomain edges.
 	 */
 	public static LinkedList<InterDomainEdge> readInterDomainLinks(String fileName) {
 
