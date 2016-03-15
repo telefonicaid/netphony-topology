@@ -377,7 +377,6 @@ public class SendTopology implements Runnable {
 	 * This function create a BGP4 Message with NodeNLRI field
 	 * @param addressList 
 	 * @param node_info
-	 * @return
 	 */
 	private  BGP4Update createMsgUpdateNodeNLRI(Node_Info node_info){
 		try{
@@ -472,7 +471,6 @@ public class SendTopology implements Runnable {
 	 * @param metric 
 	 * @param domainList
 	 * @param intradomain
-	 * @return
 	 */
 	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,  float maximumBandwidth, float[] unreservedBandwidth, float maximumReservableBandwidth , AvailableLabels availableLabels, int metric,long te_metric, ArrayList<Inet4Address> domainList, boolean intradomain, MF_OTPAttribTLV mfOTP ){
 		BGP4Update update= new BGP4Update();	
@@ -641,6 +639,7 @@ public class SendTopology implements Runnable {
 	 * - source
 	 * - destino
 	 * - maximun bandwithd
+	 * @return OSPFv2 Link State Update Packet
 	 */
 	public static OSPFv2LinkStateUpdatePacket createMsgOSPF(){
 		Inet4Address src = null;
@@ -689,11 +688,7 @@ public class SendTopology implements Runnable {
 		return ospfv2Packet;
 	}
 
-	/**
-	 * Funci�n que decodifica un mensaje OSPFv2LinkStateUpdatePacket creando con los campos extraidos un mensaje BGP4 update.
-	 * @param ospfv2Packet
-	 * @return 
-	 */
+	//* Funcion que decodifica un mensaje OSPFv2LinkStateUpdatePacket creando con los campos extraidos un mensaje BGP4 update.
 	public BGP4Update decodificarMsgOSPF(OSPFv2LinkStateUpdatePacket ospfv2Packet){
 		boolean intradomain = true;
 		Inet4Address localIPAddress = ospfv2Packet.getRouterID();

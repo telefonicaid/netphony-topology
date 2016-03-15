@@ -123,10 +123,11 @@ public class BGPPeer {
 	public void  configure (){
 		this.configure (null);
 	}
+	
 	/**
 	 * Function to configure the BGP4 peer. 
 	 * It created the loggers, the executor, 
-	 * @param args
+	 * @param nameParametersFile Name of the Parameters File
 	 */
 	public void configure(String nameParametersFile){
 		//First of all, read the parameters	
@@ -194,10 +195,10 @@ public class BGPPeer {
 		//Updater dispatcher
 		ud = new UpdateDispatcher(multiDomainTEDB,intraTEDBs);
 	}
+	
 	/**
 	 * Function to create the TEDBs of the peer.
-	 *
-	 * @param args
+	 * @param nameParametersFile Name of the Parameters File
 	 */
 	public void  createTEDB (String nameParametersFile){
 		//Topology database

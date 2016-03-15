@@ -61,11 +61,6 @@ public class MDTEDB implements MultiDomainTEDB {
 	}
 	
 	public void initializeFromFileInterDomainLinks(String file){
-		//Cargamos los interdomain Links en una Lista
-		//interDomainLinks=FileTEDBUpdater.readInterDomainLinks(file);
-		
-		//FIXME: Faltaría cargar el grafo
-		//Ahora tenemos que cargar el grafo
 	}
 	
 	public void initializeFullTEDFromFile(String file){
@@ -80,11 +75,7 @@ public class MDTEDB implements MultiDomainTEDB {
 	}
 
 
-	/**
-	 * FOR THE FULL UMBRELLA PCE!!!!!!!!
-	 */
 	public SimpleDirectedWeightedGraph<Object, IntraDomainEdge> getDuplicatedNetworkGraph() {
-		// TODO Auto-generated method stub
 		return networkGraph;
 	}
 	
