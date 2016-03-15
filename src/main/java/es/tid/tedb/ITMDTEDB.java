@@ -74,11 +74,6 @@ public class ITMDTEDB implements MultiDomainTEDB {
 		this.graphId = graphId;
 	}
 
-
-
-	/**
-	 * FOR THE FULL UMBRELLA PCE!!!!!!!!
-	 */
 	public SimpleDirectedWeightedGraph<Object, IntraDomainEdge> getDuplicatedNetworkGraph() {
 		// TODO Auto-generated method stub
 		return networkGraph;

@@ -3,8 +3,9 @@ package es.tid.bgp.bgp4Peer.peer;
 
 
 public class BGPPeerMain {
+	
 	/**
-	 * @param args
+	 * @param args Command line arguments. First argument, config file.
 	 */
 	public static void main(String[] args) {
 		BGPPeer bgpPeer = new BGPPeer();

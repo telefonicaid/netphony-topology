@@ -88,8 +88,8 @@ public class ReachabilityManager {
 	
 	/**
 	 * Adds a ERO Subobject associated with a given domainId to the reachability table 
-	 * @param domainId
-	 * @param eroso
+	 * @param domainId Domain ID
+	 * @param eroso ERO Subobject
 	 */
 	public void addEROSubobject(Inet4Address domainId, EROSubobject eroso ){	
 		if (eroso.getType()==SubObjectValues.ERO_SUBOBJECT_IPV4PREFIX){
@@ -125,7 +125,7 @@ public class ReachabilityManager {
 	
 	/**
 	 * Print the reachability table
-	 * @return
+	 * @return String with the reachability information
 	 */
 	public String printReachability(){
 		String reachabilityString;

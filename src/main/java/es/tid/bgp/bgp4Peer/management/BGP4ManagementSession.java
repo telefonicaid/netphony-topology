@@ -56,14 +56,6 @@ public class BGP4ManagementSession extends Thread {
 	 */
 	private SendTopology sendTopology;
 	
-	/**
-	 * CONSTRUCTOR
-	 * @param s
-	 * @param multiTEDB
-	 * @param intraTEDB
-	 * @param bgp4SessionsInformation
-	 * @param sendTopology
-	 */
 	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
 		this.socket=s;
 		log=Logger.getLogger("BGP4Server");

@@ -346,16 +346,11 @@ public class SimpleTEDB implements DomainTEDB{
 		this.interDomainLinks = interDomainLinks;
 	}
 	
-	
-	//	@Override
-	//	public DirectedWeightedMultigraph<Object, InterDomainEdge> getDuplicatedMDNetworkGraph() {
-	//		// TODO Auto-generated method stub
-	//		return null;
-	//	}
-
-
 	/**
 	 * Return true if scr and dst are linked by an InterDomainLink
+	 * @param src Source 
+	 * @param dst Destination
+	 * @return  true if scr and dst are linked by an InterDomainLink
 	 */
 	public InterDomainEdge getInterdomainLink(Object src, Object dst){
 

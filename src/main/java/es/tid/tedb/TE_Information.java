@@ -291,7 +291,6 @@ public class TE_Information {
 	/**
 	 * Funcion que transforma una cantidad de bits en el numero de bytes que necesita 
 	 * @param numBit
-	 * @return
 	 */
 	private int getNumberBytes(int numBits){
 		int numberBytes = numBits/8;
