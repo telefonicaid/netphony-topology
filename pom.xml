@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>es.tid.netphony</groupId>
   <artifactId>topology</artifactId>
-  <version>1.2.1</version>
+  <version>1.2.2</version>
   <packaging>jar</packaging>
   <name>Netphony TED and BGP-LS peer</name>
   <description>Traffic Engineering Database and BGP-LS peer</description>
@@ -161,7 +161,7 @@
         <executions>
           <execution>
             <id>sign-artifacts</id>
-            <phase>verify</phase>
+            <phase>deploy</phase>
             <goals>
               <goal>sign</goal>
             </goals>
