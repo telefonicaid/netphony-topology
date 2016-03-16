@@ -6,7 +6,9 @@ Repository branch build status:
 |:---:|:---:|
 | [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=master)](https://travis-ci.org/telefonicaid/netphony-topology) | [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=develop)](https://travis-ci.org/telefonicaid/netphony-topology) |
 
-**Latest Maven Central Release:** [![Maven Central](https://maven-badges.herokuapp.com/maven-central/es.tid.netphony/topology/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/es.tid.netphony/topology/)
+Latest Maven Central Release: 
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/es.tid.netphony/topology/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/es.tid.netphony/topology/)
 
 Netphony-topology is a BGP-LS Speaker and a Java based Traffic Engineering Database. 
 
