@@ -1,6 +1,7 @@
 netphony-topology v1.2.2
 =======
 Repository branch build status:
+
 | **Master**  | **Develop**   |
 |:---:|:---:|
 | [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=master)](https://travis-ci.org/telefonicaid/netphony-topology) | [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=develop)](https://travis-ci.org/telefonicaid/netphony-topology) |
