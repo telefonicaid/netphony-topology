@@ -20,7 +20,7 @@
 		<router_id>172.16.101.103</router_id>
 	</node>
 
-		<node>
+	<node>
 		<router_id>172.16.101.104</router_id>
 	</node>
 	<edge>
@@ -133,7 +133,8 @@
 		<destination>
 			<router_id>172.16.102.101</router_id>
 			<if_id>11</if_id>
-		</destination>				
+		</destination>	
+		<linkDelay>100</linkDelay>			
 	</edge>
 </domain>
 

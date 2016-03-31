@@ -19,6 +19,7 @@ import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.MDTEDB;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.SimpleTEDB;
+import es.tid.tedb.TEDB;
 
 /**
  * BGP-LS Speaker. 
@@ -206,7 +207,9 @@ public class BGPPeer {
 		
 		if (params.getLearnTopology().equals("fromXML")){	
 			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
+			//TEDB intraTEDB = new SimpleTEDB();
 			//intraTEDB.initializeFromFile(params.getTopologyFile());		
+			//intraTEDBs.put(key, intraTEDB);
 		}
 		
 

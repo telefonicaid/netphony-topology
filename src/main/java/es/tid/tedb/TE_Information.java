@@ -7,6 +7,13 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.LinkProtectionTypeLin
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MetricLinkAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.TransceiverClassAndAppAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.MinMaxUndirectionalLinkDelayDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalAvailableBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalDelayVariationDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkDelayDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AdministrativeGroup;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.IPv4RemoteASBRID;
@@ -53,6 +60,16 @@ public class TE_Information {
 	private IPv4RouterIDLocalNodeLinkAttribTLV iPv4LocalNode;
 	
 	private IPv4RouterIDRemoteNodeLinkAttribTLV iPv4RemoteNode;
+	
+	
+	private UndirectionalLinkDelayDescriptorSubTLV undirLinkDelay;
+	private MinMaxUndirectionalLinkDelayDescriptorSubTLV minMaxUndirLinkDelay;
+	private UndirectionalDelayVariationDescriptorSubTLV undirDelayVar;
+	private UndirectionalLinkLossDescriptorSubTLV undirLinkLoss;
+	private UndirectionalResidualBandwidthDescriptorSubTLV undirResidualBw;
+	private UndirectionalAvailableBandwidthDescriptorSubTLV undirAvailableBw;
+	private UndirectionalUtilizedBandwidthDescriptorSubTLV undirUtilizedBw;
+	
 	
 	private MetricLinkAttribTLV metric;
 	
@@ -129,6 +146,62 @@ public class TE_Information {
 
 	public void setUnreservedBandwidth(UnreservedBandwidth unreservedBandwidth) {
 		this.unreservedBandwidth = unreservedBandwidth;
+	}
+	
+	public UndirectionalLinkDelayDescriptorSubTLV getUndirLinkDelay() {
+		return undirLinkDelay;
+	}
+
+	public void setUndirLinkDelay(UndirectionalLinkDelayDescriptorSubTLV undirLinkDelay) {
+		this.undirLinkDelay = undirLinkDelay;
+	}
+
+	public MinMaxUndirectionalLinkDelayDescriptorSubTLV getMinMaxUndirLinkDelay() {
+		return minMaxUndirLinkDelay;
+	}
+
+	public void setMinMaxUndirLinkDelay(MinMaxUndirectionalLinkDelayDescriptorSubTLV minMaxUndirLinkDelay) {
+		this.minMaxUndirLinkDelay = minMaxUndirLinkDelay;
+	}
+
+	public UndirectionalDelayVariationDescriptorSubTLV getUndirDelayVar() {
+		return undirDelayVar;
+	}
+
+	public void setUndirDelayVar(UndirectionalDelayVariationDescriptorSubTLV undirDelayVar) {
+		this.undirDelayVar = undirDelayVar;
+	}
+
+	public UndirectionalLinkLossDescriptorSubTLV getUndirLinkLoss() {
+		return undirLinkLoss;
+	}
+
+	public void setUndirLinkLoss(UndirectionalLinkLossDescriptorSubTLV undirLinkLoss) {
+		this.undirLinkLoss = undirLinkLoss;
+	}
+
+	public UndirectionalResidualBandwidthDescriptorSubTLV getUndirResidualBw() {
+		return undirResidualBw;
+	}
+
+	public void setUndirResidualBw(UndirectionalResidualBandwidthDescriptorSubTLV undirResidualBw) {
+		this.undirResidualBw = undirResidualBw;
+	}
+
+	public UndirectionalAvailableBandwidthDescriptorSubTLV getUndirAvailableBw() {
+		return undirAvailableBw;
+	}
+
+	public void setUndirAvailableBw(UndirectionalAvailableBandwidthDescriptorSubTLV undirAvailableBw) {
+		this.undirAvailableBw = undirAvailableBw;
+	}
+
+	public UndirectionalUtilizedBandwidthDescriptorSubTLV getUndirUtilizedBw() {
+		return undirUtilizedBw;
+	}
+
+	public void setUndirUtilizedBw(UndirectionalUtilizedBandwidthDescriptorSubTLV undirUtilizedBw) {
+		this.undirUtilizedBw = undirUtilizedBw;
 	}
 
 	public AdministrativeGroup getAdministrativeGroup() {

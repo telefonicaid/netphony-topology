@@ -653,6 +653,561 @@ public class FileTEDBUpdater {
 		return graph;
 	}
 
+	public static Hashtable<Inet4Address,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
+		Logger log = Logger.getLogger("PCEPServer");
+		Object router_id_addr = null;
+		Object s_router_id_addr = null;
+		Object d_router_id_addr = null;
+		Object src_Numif_id = null;
+		Object dst_Numif_id = null;
+
+
+		//First, create the graph
+		
+		log.info("1. SimpleDirectedWeightedGraph");
+
+		File file = new File(fileName);
+		try {
+			String domain_id = "";
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = builder.parse(file);			
+			HashMap<Inet4Address, Integer >SIDS = new HashMap<Inet4Address,Integer>();
+			HashMap<DataPathID, Integer >SIDSDP = new HashMap<DataPathID,Integer>();
+
+			NodeList nodes_domains = doc.getElementsByTagName("domain");
+			if (layer!=null){
+				log.info("Reading topology, looking for layer "+ layer);	
+			}
+
+
+			//First pass to get all the nodes
+			//If we need to read all the domains
+			for (int j = 0; j < nodes_domains.getLength(); j++) {
+				boolean readNetwork=false;
+				Element element1 = (Element) nodes_domains.item(j);
+				SimpleTEDB tedb = new SimpleTEDB();
+				SimpleDirectedWeightedGraph<Object, IntraDomainEdge> graph = new SimpleDirectedWeightedGraph<Object, IntraDomainEdge>(IntraDomainEdge.class);
+
+				if (layer!=null){				
+					NodeList domain_layer = element1.getElementsByTagName("layer");					
+					if (domain_layer.getLength()==1){						
+						Element layer_type = (Element) domain_layer.item(0);
+						log.info("Layer: " + layer_type.getAttributeNode("type").getValue());
+						log.info("Reading network topology");
+						if (layer_type.getAttributeNode("type").getValue().equals(layer)){
+							readNetwork = true;
+
+						}
+						if (layer.equals("interlayer")){
+							readNetwork = true;
+						}
+					}															
+				}else {
+					readNetwork=true;
+				}
+				if (readNetwork){
+					Element element_domain = (Element) nodes_domains.item(j);
+					NodeList nodes_domain_id = element_domain.getElementsByTagName("domain_id");
+					for (int k = 0; k < nodes_domain_id.getLength(); k++) {
+						Element domain_id_e = (Element) nodes_domain_id.item(0);
+						domain_id = getCharacterDataFromElement(domain_id_e);
+						log.info("Looking for nodes in domain: " + domain_id);
+					}
+
+					NodeList nodes = element1.getElementsByTagName("node");
+					for (int i = 0; i < nodes.getLength(); i++) {
+						Element element = (Element) nodes.item(i);
+						NodeList router_id_node = element.getElementsByTagName("router_id");
+						Element router_id_e = (Element) router_id_node.item(0);
+						String router_id = getCharacterDataFromElement(router_id_e);
+
+						log.info("Adding router_id " + router_id);
+						router_id_addr = EdgeUtils.getEdge(router_id);
+						graph.addVertex(router_id_addr);
+
+						log.info("About to look for SID");
+						NodeList SID_aux = element.getElementsByTagName("sid");
+						Element SID_e = (Element) SID_aux.item(0);
+						if (SID_e!=null)
+						{ 
+							log.info("SID existe");
+							int SID = Integer.parseInt(getCharacterDataFromElement(SID_e));
+
+							try { //Router_type: DatapathID
+								SIDS.put((Inet4Address) router_id_addr,SID);
+								log.info("SID of node Inet4Address: "+SID);
+							} catch (Exception e) { //Router_type: DatapathID
+								SIDSDP.put((DataPathID)router_id_addr, SID);
+								log.info("SID of node DataPathID: "+SID);
+							}
+						}
+						else
+						{
+							log.info("SID not found");
+						}
+
+					}
+				}
+			}	
+
+
+			//Next pass to get all the links
+			for (int j = 0; j < nodes_domains.getLength(); j++) {
+
+				boolean readNetwork=false;
+				Element element1 = (Element) nodes_domains.item(j);
+
+				if (layer!=null){				
+					NodeList domain_layer = element1.getElementsByTagName("layer");					
+					if (domain_layer.getLength()==1){						
+						Element layer_type = (Element) domain_layer.item(0);
+						log.info("Layer: " + layer_type.getAttributeNode("type").getValue());
+						log.info("Reading Topology");
+						if (layer_type.getAttributeNode("type").getValue().equals(layer)){
+							readNetwork = true;
+						}	
+					}															
+				}else {
+					readNetwork=true;
+				}
+				log.info("Read network = "+readNetwork);
+				if (readNetwork){
+					Element element_domain = (Element) nodes_domains.item(j);
+					NodeList nodes_domain_id = element_domain.getElementsByTagName("domain_id");
+
+					for (int k = 0; k < nodes_domain_id.getLength(); k++) {
+						Element domain_id_e = (Element) nodes_domain_id.item(0);
+						domain_id = getCharacterDataFromElement(domain_id_e);
+						log.info("Looking for links in domain: " + domain_id);
+					}
+					int numLabels=0;
+
+					Boolean commonBitmapLabelSet = false;
+					NodeList edgeCommon = doc.getElementsByTagName("edgeCommon");
+					int grid=0;
+					int cs=0;
+					int n=0;
+					for (int i = 0; i < edgeCommon.getLength(); i++) {
+
+						Element edgeCommonElement = (Element) edgeCommon.item(i);
+						NodeList availableLabels_node = edgeCommonElement.getElementsByTagName("AvailableLabels");
+						for (int k = 0; k < availableLabels_node.getLength(); k++) {
+
+							Element availableLabels_e = (Element) availableLabels_node.item(k);
+							NodeList labelSetField_node = availableLabels_e.getElementsByTagName("LabelSetField");
+							Element labelSetField_el = (Element) labelSetField_node.item(0);
+							if (labelSetField_el.getAttributeNode("type").getValue().equals("4")){//Tengo BitMapSet
+								//Crear un BitMapSet
+
+								NodeList numbLabels_node = labelSetField_el.getElementsByTagName("numLabels");
+
+								Element numbLabels_e = (Element) numbLabels_node.item(0);
+								String numbLabels_s = getCharacterDataFromElement(numbLabels_e);						
+								numLabels=Integer.parseInt(numbLabels_s);	
+
+								NodeList baseLabel_node = labelSetField_el.getElementsByTagName("baseLabel");
+								Element baseLabel_e = (Element) baseLabel_node.item(0);
+
+								float min_frequency;
+
+								grid= Integer.parseInt(baseLabel_e.getAttributeNode("grid").getValue());
+
+								cs = Integer.parseInt(baseLabel_e.getAttributeNode("cs").getValue());
+								boolean n_frequency_included=false;
+								if (baseLabel_e.getAttributeNode("n") != null ){
+									n = Integer.parseInt(baseLabel_e.getAttributeNode("n").getValue());
+									n_frequency_included = true;
+								}
+								else if (baseLabel_e.getAttributeNode("min_frequency") != null){
+									String s_min_frequency = labelSetField_el.getAttributeNode("min_frequency").getValue();
+
+									min_frequency=Float.parseFloat(s_min_frequency);	
+									n = ((int)min_frequency - 1471)/20;
+									n_frequency_included=true;
+								}
+								if (n_frequency_included){
+									commonBitmapLabelSet = true;
+								}else{
+									log.info("ERROR reading the xml file of the topology, you should enter <baseLabel grid=\"1\" cs=\"2\" n=\"-11\"></baseLabel> ");
+								}
+
+							}
+						}
+
+					}
+					/*if(isSSONnetwork ==true){
+						if(cs==4){
+							numLabels=numLabels*4;
+						}
+						else if (cs==5){
+							numLabels=numLabels*8;
+						}
+					}*/
+
+					NodeList edges = element_domain.getElementsByTagName("edge");
+					for (int i = 0; i < edges.getLength(); i++) {
+						log.info("New Edge");
+						Element element = (Element) edges.item(i);
+						//By default, all nodes are intradomain
+						String type;
+						Attr attr_type=element.getAttributeNode("type");
+						if (attr_type==null){
+							type="intradomain";
+						}else {
+							type=attr_type.getValue();
+							if (allDomains){
+								if (type.equals("interdomain")){
+									type="intradomain";
+								}
+							}
+
+							else if (type.equals("interlayer")){
+								if (layer.equals("interlayer")){
+									type="intradomain";
+								}
+
+							}
+						}	
+						log.info("type::"+type);
+						if (type.equals("intradomain")) {						
+							IntraDomainEdge edge = new IntraDomainEdge();
+							log.info("New Intradomain Edge");
+							NodeList source = element.getElementsByTagName("source");
+							Element source_router_el = (Element) source.item(0);
+
+							NodeList source_router_id = source_router_el.getElementsByTagName("router_id");
+							Element source_router_id_el = (Element) source_router_id.item(0);
+							String s_r_id = getCharacterDataFromElement(source_router_id_el);
+							s_router_id_addr= EdgeUtils.getEdge(s_r_id);
+
+							NodeList source_if_id_nl = source_router_el.getElementsByTagName("if_id");
+							Element source_if_id_el = (Element) source_if_id_nl.item(0);
+							String s_source_if_id;
+							int src_if_id = -1;
+							if (source_if_id_el!=null){
+								s_source_if_id = getCharacterDataFromElement(source_if_id_el);
+								src_if_id = Integer.parseInt(s_source_if_id);
+							}
+							log.info("SRC if id: "+src_if_id);
+
+							NodeList source_Numif_id_nl = source_router_el.getElementsByTagName("NumIf_id");
+							Element source_Numif_id_el = (Element) source_Numif_id_nl.item(0);
+							String s_source_Numif_id;
+							if (source_Numif_id_el!=null){
+								s_source_Numif_id = getCharacterDataFromElement(source_Numif_id_el);
+								try { // src_Numif_id type : Inet4Address
+									src_Numif_id = (Inet4Address) Inet4Address.getByName(s_source_Numif_id);
+								} catch (Exception e) { // src_Numif_id type : DataPathID
+									src_Numif_id =  DataPathID.getByName(s_source_Numif_id);
+								}
+							}
+
+							NodeList dest_nl = element.getElementsByTagName("destination");
+							Element dest_el = (Element) dest_nl.item(0);
+
+							NodeList dest_router_id_nl = dest_el.getElementsByTagName("router_id");
+							Element dest_router_id_el = (Element) dest_router_id_nl.item(0);
+							String d_r_id = getCharacterDataFromElement(dest_router_id_el);
+							d_router_id_addr= EdgeUtils.getEdge(d_r_id);
+
+							//Anyadimos los SID
+							if (SIDS.get(s_router_id_addr)!=null && SIDS.get(d_router_id_addr)!=null)
+							{
+								log.info("setting SIDS src: "+SIDS.get(s_router_id_addr)+" dst: "+SIDS.get(d_router_id_addr));
+								edge.setSrc_sid(SIDS.get(s_router_id_addr));
+								edge.setDst_sid(SIDS.get(d_router_id_addr));
+								log.info("edge.getSrc_sid(): "+edge.getSrc_sid());
+								log.info("edge.getDst_sid(): "+edge.getDst_sid());
+							}
+							else if (SIDSDP.get(s_router_id_addr)!=null && SIDSDP.get(d_router_id_addr)!=null)
+							{
+								log.info("setting SIDSDP src: "+SIDSDP.get(s_router_id_addr)+" dst: "+SIDSDP.get(d_router_id_addr));
+								edge.setSrc_sid(SIDSDP.get(s_router_id_addr));
+								edge.setDst_sid(SIDSDP.get(d_router_id_addr));
+								log.info("edge.getSrc_sid(): "+edge.getSrc_sid());
+								log.info("edge.getDst_sid(): "+edge.getDst_sid());
+							}
+
+
+							NodeList dest_if_id_nl = dest_el.getElementsByTagName("if_id");
+							Element dest_if_id_el= (Element) dest_if_id_nl.item(0);
+							String s_dest_if_id;
+							int dst_if_id = -1;
+							if (dest_if_id_el!=null){
+								s_dest_if_id = getCharacterDataFromElement(dest_if_id_el);
+								dst_if_id = Integer.parseInt(s_dest_if_id);
+							}
+							log.info("DST if id: "+dst_if_id);
+
+							NodeList dest_Numif_id_nl = dest_el.getElementsByTagName("NumIf_id");
+							Element dest_Numif_id_el = (Element) dest_Numif_id_nl.item(0);
+							String s_dest_Numif_id;
+
+							if (source_Numif_id_el!=null){
+								s_dest_Numif_id = getCharacterDataFromElement(dest_Numif_id_el);
+
+								try { // s_dest_Numif_id type : Inet4Address
+									dst_Numif_id = (Inet4Address) Inet4Address.getByName(s_dest_Numif_id);
+								} catch (Exception e) { // s_dest_Numif_id type : DataPathID 
+									dst_Numif_id =  DataPathID.getByName(s_dest_Numif_id);
+								}
+							}
+							// Añadimos interfaces Numeradas
+							if (src_Numif_id!=null){
+								edge.setSrc_Numif_id(src_Numif_id);
+							}if (dst_Numif_id!=null){
+								edge.setDst_Numif_id(dst_Numif_id);
+							}else{
+								if (src_if_id != -1){
+									edge.setSrc_if_id(src_if_id);
+								}
+								if (dst_if_id != -1){
+									edge.setDst_if_id(dst_if_id);
+								}
+							}
+
+							//DELAY, IF IT COMES..
+							NodeList delay_ms_nl = element.getElementsByTagName("delay");
+							if (delay_ms_nl.getLength()>0){
+
+								Element delay_ms_el = (Element)delay_ms_nl.item(0);
+								String s_delay_ms=getCharacterDataFromElement(delay_ms_el);
+								double delay_ms=Double.parseDouble(s_delay_ms);
+								edge.setDelay_ms(delay_ms);
+							}
+
+							//TE Link information
+							NodeList maximum_bandwidth_nl = element.getElementsByTagName("maximum_bandwidth");
+							if (maximum_bandwidth_nl!=null){
+								if (maximum_bandwidth_nl.getLength()>0){
+									if(edge.getTE_info()==null){
+										TE_Information tE_info= new TE_Information();
+										if (commonBitmapLabelSet){
+											if(lambdaEnd!=Integer.MAX_VALUE){
+
+												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
+											}
+											else
+												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n);
+										}
+										//tid.util.FuncionesUtiles.printByte(((BitmapLabelSet)tE_info.getAvailableLabels().getLabelSet()).getBytesBitmapReserved(),"getBytesBitmapReserved1:");
+										edge.setTE_info(tE_info);
+
+									} else {
+										TE_Information te_info = edge.getTE_info();
+										if (commonBitmapLabelSet){
+											//	if(lambdaEnd!=Integer.MAX_VALUE){
+
+											//	te_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
+											//	}
+											//	else
+											te_info.createBitmapLabelSet(numLabels, grid,  cs, n);
+										}
+										//tid.util.FuncionesUtiles.printByte(((BitmapLabelSet)tE_info.getAvailableLabels().getLabelSet()).getBytesBitmapReserved(),"getBytesBitmapReserved1:");
+										edge.setTE_info(te_info);
+									}
+
+									Element maximum_bandwidth_el = (Element) maximum_bandwidth_nl.item(0);
+									String s_maximum_bandwidth = getCharacterDataFromElement(maximum_bandwidth_el);
+
+									float maximum_bandwidth=Float.parseFloat(s_maximum_bandwidth);
+									MaximumBandwidth maximumBandwidth =new MaximumBandwidth();
+									maximumBandwidth.setMaximumBandwidth(maximum_bandwidth);
+									(edge.getTE_info()).setMaximumBandwidth(maximumBandwidth);
+
+								}
+							}
+							/**
+							 * NodeList SID_aux = element.getElementsByTagName("sid");
+						Element SID_e = (Element) SID_aux.item(0);
+						if (SID_e!=null)
+						{ 
+							log.info("SID existe");
+							int SID = Integer.parseInt(getCharacterDataFromElement(SID_e));
+							SIDS.put(router_id_addr,SID);
+							log.info("SID of node: "+SID);
+						}
+						else
+						{
+							log.info("SID not found");
+						}
+							 */
+
+							NodeList defaultmetric = element.getElementsByTagName("default_te_metric");
+							Element metric_aux = (Element) defaultmetric.item(0);
+
+							if (metric_aux != null){
+								String s_metric_aux = getCharacterDataFromElement(metric_aux);
+								TE_Information tE_info;
+								int metric = Integer.parseInt(s_metric_aux);
+								DefaultTEMetricLinkAttribTLV defaultTeMetric= new DefaultTEMetricLinkAttribTLV();
+								if(edge.getTE_info()==null){
+									tE_info= new TE_Information();
+								}
+								else{
+									tE_info = edge.getTE_info();
+								}
+								defaultTeMetric.setLinkMetric((long)metric);
+								tE_info.setDefaultTEMetric(defaultTeMetric);
+								edge.setTE_info(tE_info);
+							}
+
+							NodeList unreserved_bandwidth_nl = element.getElementsByTagName("unreserved_bandwidth");
+							if (unreserved_bandwidth_nl!=null){
+								int num_u_b=unreserved_bandwidth_nl.getLength();
+								UnreservedBandwidth unreservedBandwidth;
+								if (num_u_b>0){
+									if(edge.getTE_info()==null){
+										TE_Information tE_info= new TE_Information();
+										if (commonBitmapLabelSet){
+											if(lambdaEnd!=Integer.MAX_VALUE)
+												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
+											else
+												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n);
+										}
+										edge.setTE_info(tE_info);
+									}
+									unreservedBandwidth =new UnreservedBandwidth();
+									(edge.getTE_info()).setUnreservedBandwidth(unreservedBandwidth);
+									for(int k=0;k<num_u_b;++k){
+										Element unreserved_bandwidth_el = (Element) unreserved_bandwidth_nl.item(k);
+										String s_unreserved_bandwidth = getCharacterDataFromElement(unreserved_bandwidth_el);
+
+										String s_priority=unreserved_bandwidth_el.getAttributeNode("priority").getValue();
+										Integer priority = Integer.valueOf(s_priority);
+										float unreserved_bandwidth=Float.parseFloat(s_unreserved_bandwidth);	
+
+										(unreservedBandwidth.getUnreservedBandwidth())[priority]=unreserved_bandwidth;
+									}
+								}
+
+
+							}
+
+							NodeList maximum_wlans_nl = element.getElementsByTagName("number_wlans");
+							if (maximum_wlans_nl!=null){
+								if (maximum_wlans_nl.getLength()>0){
+									if(edge.getTE_info()==null){
+										TE_Information tE_info= new TE_Information();
+
+										if (commonBitmapLabelSet){
+											if(lambdaEnd!=Integer.MAX_VALUE){
+
+												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
+											}
+											else
+												tE_info.createBitmapLabelSet(numLabels, grid,  cs, n);
+										}
+										//tid.util.FuncionesUtiles.printByte(((BitmapLabelSet)tE_info.getAvailableLabels().getLabelSet()).getBytesBitmapReserved(),"getBytesBitmapReserved1:");
+										edge.setTE_info(tE_info);
+
+									}
+
+									Element number_wlan_el = (Element) maximum_wlans_nl.item(0);
+									String s_number_wlans = getCharacterDataFromElement(number_wlan_el);
+
+									int number_wlans=Integer.parseInt(s_number_wlans.replace("\n", "").replaceAll("\\s",""));
+									(edge.getTE_info()).setNumberWLANs(number_wlans);
+									(edge.getTE_info()).initWLANs();
+
+								}
+							}
+
+							if(edge.getTE_info()==null){
+								TE_Information tE_info= new TE_Information();							
+								edge.setTE_info(tE_info);
+							}
+							if (commonBitmapLabelSet){
+								if(lambdaEnd!=Integer.MAX_VALUE)
+									edge.getTE_info().createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
+								else
+									edge.getTE_info().createBitmapLabelSet(numLabels, grid,  cs, n);
+							}
+
+							NodeList availableLabels_node = element.getElementsByTagName("AvailableLabels");
+							if ( availableLabels_node != null){
+								for (int k = 0; k < availableLabels_node.getLength(); k++) {
+									Element availableLabels_e = (Element) availableLabels_node.item(k);
+									NodeList labelSetField_node = availableLabels_e.getElementsByTagName("LabelSetField");
+									Element labelSetField_el = (Element) labelSetField_node.item(0);
+									if (labelSetField_el.getAttributeNode("type").getValue().equals("4")){//Tengo BitMapSet
+
+										NodeList numbLabels_node = labelSetField_el.getElementsByTagName("numLabels");
+
+										Element numbLabels_e = (Element) numbLabels_node.item(0);
+										String numbLabels_s = getCharacterDataFromElement(numbLabels_e);						
+										numLabels=Integer.parseInt(numbLabels_s);	
+
+										NodeList baseLabel_node = labelSetField_el.getElementsByTagName("baseLabel");
+										Element baseLabel_e = (Element) baseLabel_node.item(0);
+
+										byte[] bitmap=new byte[1];
+										NodeList bitmap_node = labelSetField_el.getElementsByTagName("bitmap");
+										int result=0;
+										Element bitmap_e = (Element) bitmap_node.item(0);
+										if (bitmap_e!=null){
+											String bitmap_string=getCharacterDataFromElement(bitmap_e);
+											System.out.println("Bitmap read: "+bitmap_string);
+											for (int p =0; p<bitmap_string.length(); p++)
+												result= (int) (result+Math.pow(2, bitmap_string.length()-p-1)*(bitmap_string.charAt(p)-48));
+											bitmap[0]=(byte) result;
+											((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).setBytesBitmap(bitmap);
+										}
+										float min_frequency;
+
+										grid= Integer.parseInt(baseLabel_e.getAttributeNode("grid").getValue());
+
+										cs = Integer.parseInt(baseLabel_e.getAttributeNode("cs").getValue());
+										boolean n_frequency_included=false;
+										if (baseLabel_e.getAttributeNode("n") != null ){
+											n = Integer.parseInt(baseLabel_e.getAttributeNode("n").getValue());
+											n_frequency_included = true;
+										}
+										else if (baseLabel_e.getAttributeNode("min_frequency") != null){
+											String s_min_frequency = labelSetField_el.getAttributeNode("min_frequency").getValue();
+
+											min_frequency=Float.parseFloat(s_min_frequency);	
+											n = ((int)min_frequency - 1471)/20;
+											n_frequency_included=true;
+										}
+										if (n_frequency_included){/*Modify availableLabels*/
+											((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).setNumLabels(numLabels);
+											((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).getDwdmWavelengthLabel().setGrid(grid);
+											((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).getDwdmWavelengthLabel().setChannelSpacing(cs);
+											((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).getDwdmWavelengthLabel().setN(n);
+										}
+										else{
+											log.info("ERROR reading the xml file of the topology, you should enter <baseLabel grid=\"1\" cs=\"2\" n=\"-11\"></baseLabel> ");
+										}
+									}
+								}
+
+							}
+							log.info("Preparing to add edge");
+							try{
+								if(graph.containsEdge(s_router_id_addr, d_router_id_addr)){
+									graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(graph.getEdge(s_router_id_addr, d_router_id_addr).getNumberFibers()+1);
+								}else{
+									log.info("s_router_id_addr: "+s_router_id_addr.toString()+"; d_router_id_addr: "+d_router_id_addr.toString()+"; edge: "+edge);
+									graph.addEdge(s_router_id_addr, d_router_id_addr, edge);
+									graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(1);
+								}
+							}catch(Exception e){
+								log.info("Problem with source "+s_router_id_addr+" destination "+d_router_id_addr);
+								e.printStackTrace();
+								System.exit(-1);
+							}
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		log.info("Info graph edge :: "+graph.edgeSet());
+		return graph;
+	}
+
 
 
 	public static SimpleDirectedWeightedGraph<Object,IntraDomainEdge> readITNetwork(String fileName){
