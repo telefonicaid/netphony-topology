@@ -450,6 +450,7 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setRemote_Node_Info(simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				log.info("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
 				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
+				simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId).setNumberFibers(1);
 				IntraDomainEdge edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(intraEdge.getTE_info().getAvailableLabels()!=null)
 					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
