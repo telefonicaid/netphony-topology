@@ -768,8 +768,8 @@ public class SendTopology implements Runnable {
 
 		//Create the domain List
 		ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
-
-		return createMsgUpdateLinkNLRI(addressList,localRemoteIfList,23,maxBandwidth,unBandwidth,maximumReservableBandwidth,al, 0,0, domainList, intradomain, null);
+		//TODO OOOOO
+		return null;//createMsgUpdateLinkNLRI(addressList,localRemoteIfList,23,maxBandwidth,unBandwidth,maximumReservableBandwidth,al, 0,0, domainList, intradomain, null);
 
 	}
 

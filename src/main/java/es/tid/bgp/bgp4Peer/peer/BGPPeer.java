@@ -16,6 +16,7 @@ import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
 import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
 import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 import es.tid.tedb.DomainTEDB;
+import es.tid.tedb.FileTEDBUpdater;
 import es.tid.tedb.MDTEDB;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.SimpleTEDB;
@@ -210,6 +211,7 @@ public class BGPPeer {
 			//TEDB intraTEDB = new SimpleTEDB();
 			//intraTEDB.initializeFromFile(params.getTopologyFile());		
 			//intraTEDBs.put(key, intraTEDB);
+			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
 		}
 		
 

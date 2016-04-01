@@ -652,6 +652,82 @@ public class FileTEDBUpdater {
 		log.info("Info graph edge :: "+graph.edgeSet());
 		return graph;
 	}
+	
+	private static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readGraphIntraDomain(Element element1, String layer, Logger log){
+		
+		Object router_id_addr = null;
+		
+		HashMap<Inet4Address, Integer >SIDS = new HashMap<Inet4Address,Integer>();
+		HashMap<DataPathID, Integer >SIDSDP = new HashMap<DataPathID,Integer>();
+		
+		SimpleDirectedWeightedGraph<Object, IntraDomainEdge> graph = new SimpleDirectedWeightedGraph<Object, IntraDomainEdge>(IntraDomainEdge.class);
+		//NodeList nodes_domains = doc.getElementsByTagName("domain");
+		boolean readNetwork=false;
+		//Element element1 = (Element) nodes_domains.item(j);
+		String domain_id = "";
+		
+		if (layer!=null){				
+			NodeList domain_layer = element1.getElementsByTagName("layer");					
+			if (domain_layer.getLength()==1){						
+				Element layer_type = (Element) domain_layer.item(0);
+				log.info("Layer: " + layer_type.getAttributeNode("type").getValue());
+				log.info("Reading network topology");
+				if (layer_type.getAttributeNode("type").getValue().equals(layer)){
+					readNetwork = true;
+
+				}
+				if (layer.equals("interlayer")){
+					readNetwork = true;
+				}
+			}															
+		}else {
+			readNetwork=true;
+		}
+		if (readNetwork){
+			Element element_domain = element1;
+			NodeList nodes_domain_id = element_domain.getElementsByTagName("domain_id");
+			for (int k = 0; k < nodes_domain_id.getLength(); k++) {
+				Element domain_id_e = (Element) nodes_domain_id.item(0);
+				domain_id = getCharacterDataFromElement(domain_id_e);
+				//log.info("Looking for nodes in domain: " + domain_id);
+			}
+
+			NodeList nodes = element1.getElementsByTagName("node");
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Element element = (Element) nodes.item(i);
+				NodeList router_id_node = element.getElementsByTagName("router_id");
+				Element router_id_e = (Element) router_id_node.item(0);
+				String router_id = getCharacterDataFromElement(router_id_e);
+
+				//log.info("Adding router_id " + router_id);
+				router_id_addr = EdgeUtils.getEdge(router_id);
+				graph.addVertex(router_id_addr);
+
+				//log.info("About to look for SID");
+				NodeList SID_aux = element.getElementsByTagName("sid");
+				Element SID_e = (Element) SID_aux.item(0);
+				if (SID_e!=null)
+				{ 
+					//log.info("SID existe");
+					int SID = Integer.parseInt(getCharacterDataFromElement(SID_e));
+
+					try { //Router_type: DatapathID
+						SIDS.put((Inet4Address) router_id_addr,SID);
+						//log.info("SID of node Inet4Address: "+SID);
+					} catch (Exception e) { //Router_type: DatapathID
+						SIDSDP.put((DataPathID)router_id_addr, SID);
+						//log.info("SID of node DataPathID: "+SID);
+					}
+				}
+				else
+				{
+					//log.info("SID not found");
+				}
+
+			}
+		}
+		return graph;
+	}
 
 	public static Hashtable<Inet4Address,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
 		Logger log = Logger.getLogger("PCEPServer");
@@ -661,7 +737,7 @@ public class FileTEDBUpdater {
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
 
-
+		Hashtable<Inet4Address,DomainTEDB> TEDBs = new Hashtable<Inet4Address,DomainTEDB>();
 		//First, create the graph
 		
 		log.info("1. SimpleDirectedWeightedGraph");
@@ -748,12 +824,14 @@ public class FileTEDBUpdater {
 
 					}
 				}
+				tedb.setNetworkGraph(graph);
+				TEDBs.put((Inet4Address) Inet4Address.getByName(domain_id),tedb);
 			}	
 
 
 			//Next pass to get all the links
 			for (int j = 0; j < nodes_domains.getLength(); j++) {
-
+				SimpleDirectedWeightedGraph<Object, IntraDomainEdge> graph=null;
 				boolean readNetwork=false;
 				Element element1 = (Element) nodes_domains.item(j);
 
@@ -780,6 +858,9 @@ public class FileTEDBUpdater {
 						domain_id = getCharacterDataFromElement(domain_id_e);
 						log.info("Looking for links in domain: " + domain_id);
 					}
+					SimpleTEDB domainTEDB = (SimpleTEDB)TEDBs.get((Inet4Address) Inet4Address.getByName(domain_id));
+					graph = domainTEDB.getNetworkGraph();
+					
 					int numLabels=0;
 
 					Boolean commonBitmapLabelSet = false;
@@ -855,12 +936,11 @@ public class FileTEDBUpdater {
 							type="intradomain";
 						}else {
 							type=attr_type.getValue();
-							if (allDomains){
+							if (false/*allDomains*/){
 								if (type.equals("interdomain")){
 									type="intradomain";
 								}
 							}
-
 							else if (type.equals("interlayer")){
 								if (layer.equals("interlayer")){
 									type="intradomain";
@@ -1184,13 +1264,19 @@ public class FileTEDBUpdater {
 
 							}
 							log.info("Preparing to add edge");
+							System.out.println("NODES IN GRAPH:: "+graph.vertexSet());
 							try{
 								if(graph.containsEdge(s_router_id_addr, d_router_id_addr)){
 									graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(graph.getEdge(s_router_id_addr, d_router_id_addr).getNumberFibers()+1);
 								}else{
 									log.info("s_router_id_addr: "+s_router_id_addr.toString()+"; d_router_id_addr: "+d_router_id_addr.toString()+"; edge: "+edge);
-									graph.addEdge(s_router_id_addr, d_router_id_addr, edge);
-									graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(1);
+									if(graph.containsVertex(d_router_id_addr)==false){
+										//interDomain edge
+										//TODO
+									}else{
+										graph.addEdge(s_router_id_addr, d_router_id_addr, edge);
+										graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(1);
+									}
 								}
 							}catch(Exception e){
 								log.info("Problem with source "+s_router_id_addr+" destination "+d_router_id_addr);
@@ -1199,13 +1285,16 @@ public class FileTEDBUpdater {
 							}
 						}
 					}
+					
 				}
+				log.info("Info graph edge :: "+graph.edgeSet());
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		log.info("Info graph edge :: "+graph.edgeSet());
-		return graph;
+		
+		return TEDBs;
 	}
 
 
