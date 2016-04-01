@@ -1,7 +1,12 @@
 package es.tid.bgp.bgp4Peer.tests;
 
 import static org.junit.Assert.*;
+
+import java.net.Inet4Address;
+import java.util.Set;
+
 import es.tid.bgp.bgp4Peer.peer.BGPPeer;
+import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.MDTEDB;
 
 public class BGP4PeerTest {
@@ -68,17 +73,34 @@ public class BGP4PeerTest {
 			e.printStackTrace();
 		}
 		String topo2=bgpPeer2.getMultiDomainTEDB().printTopology();
+		
 		System.out.println("---------------------------------------");
 		System.out.println("---------------------------------------");
 		System.out.println("---------------------------------------");
 		System.out.println("Topology of BGP-LS Speaker 1: ");
 		System.out.println("---------------------------------------");
 		System.out.println(topoOriginal);
+		Set<Inet4Address> keySet = bgpPeer.getIntraTEDBs().keySet();
+		for(Inet4Address key : keySet){
+			System.out.println("---IntraTEDB: domain_id= "+key.toString());
+			System.out.println(bgpPeer.getIntraTEDBs().get(key).printTopology());
+		}
 		System.out.println("---------------------------------------");
 		System.out.println("Topology of  BGP-LS Speaker 2: ");
 		System.out.println("---------------------------------------");		
 		System.out.println(topo2);
 		System.out.println("---------------------------------------");
+		Set<Inet4Address> keySet2 = bgpPeer2.getIntraTEDBs().keySet();
+		for(Inet4Address key : keySet2){
+			System.out.println("---IntraTEDB: domain_id= "+key.toString());
+			System.out.println(bgpPeer2.getIntraTEDBs().get(key).printTopology());
+		}
+		/*try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		assertTrue("Checking if topos are equal",topoOriginal.equals(topo2));
 		
 		} catch (Exception exc){

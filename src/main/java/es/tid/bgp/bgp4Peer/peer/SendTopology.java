@@ -36,8 +36,14 @@ import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterI
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4InterfaceAddressLinkDescriptorsSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4NeighborAddressLinkDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.LinkLocalRemoteIdentifiersLinkDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.MinMaxUndirectionalLinkDelayDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalAvailableBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalDelayVariationDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkDelayDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.bgp4session.GenericBGP4Session;
 import es.tid.ospf.ospfv2.OSPFv2LinkStateUpdatePacket;
@@ -208,62 +214,16 @@ public class SendTopology implements Runnable {
 				localRemoteIfList.add(0,((InterDomainEdge) edge).getSrc_if_id());//te_info.getLinkLocalRemoteIdentifiers().getLinkLocalIdentifier());
 				localRemoteIfList.add(1,((InterDomainEdge) edge).getDst_if_id());//te_info.getLinkLocalRemoteIdentifiers().getLinkRemoteIdentifier());
 
-				//MPLS
-				float maximumBandwidth = 0; 
-				float[] unreservedBandwidth = null;
-				float maximumReservableBandwidth = 0; 	
-				int undirLinkDelay = 0;
-				//GMPLS
-				AvailableLabels availableLabels = null;
-				MF_OTPAttribTLV mfOTP = null;
-
-				int metric = 0;
-				int te_metric = 0;
 				
-				
-				TE_Information te_info = ((InterDomainEdge) edge).getTE_info();
-				if (te_info != null){
-					if (te_info.getLinkLocalRemoteIdentifiers() != null){
-
-					}
-					if(te_info.getUndirLinkDelay() != null){
-						undirLinkDelay = te_info.getUndirLinkDelay().getDelay();
-					}
-					//MPLS
-					if (te_info.getMaximumBandwidth() != null) {
-						maximumBandwidth = te_info.getMaximumBandwidth().getMaximumBandwidth();
-					}
-					if (te_info.getUnreservedBandwidth() != null)
-						unreservedBandwidth = te_info.getUnreservedBandwidth().getUnreservedBandwidth();
-					if (te_info.getMaximumReservableBandwidth() != null)
-						maximumReservableBandwidth = te_info.getMaximumReservableBandwidth().getMaximumReservableBandwidth();
-					//GMPLS
-					if (te_info.getAvailableLabels() != null)
-						availableLabels = te_info.getAvailableLabels();
-					if(te_info.getDefaultTEMetric()!=null){
-						metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
-						log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
-					}
-					if(te_info.getTrafficEngineeringMetric()!=null){
-						te_metric = (int) te_info.getTrafficEngineeringMetric().getLinkMetric() ;
-						log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
-					}
-					if(te_info.getMfOTF()!=null){
-						mfOTP =  te_info.getMfOTF();
-					}
-
-				}else{
-					log.fine("TE_Info es null");
-				}
 				ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
 				//FIXME: chequear
-				
+				TE_Information te_info = ((InterDomainEdge) edge).getTE_info();
 				
 				domainList.add((Inet4Address)edge.getDomain_src_router());
 				log.fine("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
 				domainList.add((Inet4Address)edge.getDomain_dst_router());
 				log.fine("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
-				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric,te_metric, domainList, false, mfOTP, undirLinkDelay);
+				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, false, te_info);
 				
 				log.fine("Update message Created");	
 				sendMessage(update);				
@@ -308,42 +268,11 @@ public class SendTopology implements Runnable {
 			
 
 			TE_Information te_info = ((IntraDomainEdge) edge).getTE_info();
-			if (te_info != null){
-				if (te_info.getLinkLocalRemoteIdentifiers() != null){
-
-				}
-				if(te_info.getUndirLinkDelay() != null){
-					undirLinkDelay = te_info.getUndirLinkDelay().getDelay();
-				}
-				//MPLS
-				if (te_info.getMaximumBandwidth() != null) {
-					maximumBandwidth = te_info.getMaximumBandwidth().getMaximumBandwidth();
-				}
-				if (te_info.getUnreservedBandwidth() != null)
-					unreservedBandwidth = te_info.getUnreservedBandwidth().getUnreservedBandwidth();
-				if (te_info.getMaximumReservableBandwidth() != null)
-					maximumReservableBandwidth = te_info.getMaximumReservableBandwidth().getMaximumReservableBandwidth();
-				//GMPLS
-				if (te_info.getAvailableLabels() != null){
-					availableLabels = te_info.getAvailableLabels();
-				}
-				if(te_info.getDefaultTEMetric()!=null){
-					metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
-					log.info("Metric en el metodo sendLinkNLRI 2 es: " + metric);
-				}
-				if(te_info.getTrafficEngineeringMetric()!=null ){
-					te_metric = te_info.getTrafficEngineeringMetric().getLinkMetric();
-				}
-				if(te_info.getMfOTF()!=null){
-					mfOTP =  te_info.getMfOTF();
-				}
-			}else{
-				log.info("TE_Info es null");
-			}
+			
 			ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);	
 			domainList.add(domainID);
 			domainList.add(domainID);
-			BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID,   maximumBandwidth, unreservedBandwidth,  maximumReservableBandwidth ,  availableLabels, metric, te_metric, domainList, true, mfOTP, undirLinkDelay);
+			BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, true, te_info);
 			update.setLearntFrom(edge.getLearntFrom());
 			sendMessage(update);
 
@@ -482,7 +411,7 @@ public class SendTopology implements Runnable {
 	 * @param intradomain
 	 * @param linkDelay 
 	 */
-	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,  float maximumBandwidth, float[] unreservedBandwidth, float maximumReservableBandwidth , AvailableLabels availableLabels, int metric,long te_metric, ArrayList<Inet4Address> domainList, boolean intradomain, MF_OTPAttribTLV mfOTP, int linkDelay ){
+	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,   ArrayList<Inet4Address> domainList, boolean intradomain, TE_Information te_info ){
 		BGP4Update update= new BGP4Update();	
 		//1. Path Attributes
 		ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
@@ -503,6 +432,51 @@ public class SendTopology implements Runnable {
 
 
 		//1.2. LINK-STATE
+		//MPLS
+		float maximumBandwidth = 0; 
+		float[] unreservedBandwidth = null;
+		float maximumReservableBandwidth = 0; 	
+
+		//GMPLS
+		AvailableLabels availableLabels = null;
+		MF_OTPAttribTLV mfOTP = null;
+
+		int metric = 0;
+		int te_metric = 0;
+		
+		
+		if (te_info != null){
+			if (te_info.getLinkLocalRemoteIdentifiers() != null){
+
+			}
+			//MPLS
+			if (te_info.getMaximumBandwidth() != null) {
+				maximumBandwidth = te_info.getMaximumBandwidth().getMaximumBandwidth();
+			}
+			if (te_info.getUnreservedBandwidth() != null)
+				unreservedBandwidth = te_info.getUnreservedBandwidth().getUnreservedBandwidth();
+			if (te_info.getMaximumReservableBandwidth() != null)
+				maximumReservableBandwidth = te_info.getMaximumReservableBandwidth().getMaximumReservableBandwidth();
+			//GMPLS
+			if (te_info.getAvailableLabels() != null)
+				availableLabels = te_info.getAvailableLabels();
+			if(te_info.getDefaultTEMetric()!=null){
+				metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
+				log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
+			}
+			if(te_info.getTrafficEngineeringMetric()!=null){
+				te_metric = (int) te_info.getTrafficEngineeringMetric().getLinkMetric() ;
+				log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
+			}
+			if(te_info.getMfOTF()!=null){
+				mfOTP =  te_info.getMfOTF();
+			}
+
+		}else{
+			log.fine("TE_Info es null");
+		}
+		
+		
 		boolean linkStateNeeded = false;
 		LinkStateAttribute  linkStateAttribute = new LinkStateAttribute();
 		//1.2.1. MaxReservableBandwidth
@@ -638,10 +612,52 @@ public class SendTopology implements Runnable {
 		}
 		
 		//2.2.3 LinkDelay
-		if(linkDelay > 0){
-			UndirectionalLinkDelayDescriptorSubTLV uldSTLV =new UndirectionalLinkDelayDescriptorSubTLV();
-			uldSTLV.setDelay(linkDelay);
-			linkNLRI.setUndirectionalLinkDelayTLV(uldSTLV);
+		if (te_info != null){
+			if(te_info.getUndirLinkDelay() != null){
+				int undirLinkDelay = te_info.getUndirLinkDelay().getDelay();
+				UndirectionalLinkDelayDescriptorSubTLV uSTLV =new UndirectionalLinkDelayDescriptorSubTLV();
+				uSTLV.setDelay(undirLinkDelay);
+				linkNLRI.setUndirectionalLinkDelayTLV(uSTLV);
+			}
+			if(te_info.getUndirDelayVar() != null){
+				int undirDelayVar = te_info.getUndirDelayVar().getDelayVar();
+				UndirectionalDelayVariationDescriptorSubTLV uSTLV =new UndirectionalDelayVariationDescriptorSubTLV();
+				uSTLV.setDelayVar(undirDelayVar);
+				linkNLRI.setUndirectionalDelayVariationTLV(uSTLV);
+			}
+			if(te_info.getMinMaxUndirLinkDelay() != null){
+				int minDelay = te_info.getMinMaxUndirLinkDelay().getLowDelay();
+				int maxDelay = te_info.getMinMaxUndirLinkDelay().getHighDelay();
+				MinMaxUndirectionalLinkDelayDescriptorSubTLV uSTLV =new MinMaxUndirectionalLinkDelayDescriptorSubTLV();
+				uSTLV.setHighDelay(maxDelay);
+				uSTLV.setLowDelay(minDelay);
+				linkNLRI.setMinMaxUndirectionalLinkDelayTLV(uSTLV);
+			}
+			if(te_info.getUndirLinkLoss() != null){
+				int linkLoss = te_info.getUndirLinkLoss().getLinkLoss();
+				UndirectionalLinkLossDescriptorSubTLV uSTLV =new UndirectionalLinkLossDescriptorSubTLV();
+				uSTLV.setLinkLoss(linkLoss);
+				linkNLRI.setUndirectionalLinkLossTLV(uSTLV);
+			}
+			if(te_info.getUndirResidualBw() != null){
+				int resBw = te_info.getUndirResidualBw().getResidualBw();
+				UndirectionalResidualBandwidthDescriptorSubTLV uSTLV =new UndirectionalResidualBandwidthDescriptorSubTLV();
+				uSTLV.setResidualBw(resBw);
+				linkNLRI.setUndirectionalResidualBwTLV(uSTLV);
+			}
+			if(te_info.getUndirAvailableBw() != null){
+				int availableBw = te_info.getUndirAvailableBw().getAvailableBw();
+				UndirectionalAvailableBandwidthDescriptorSubTLV uSTLV =new UndirectionalAvailableBandwidthDescriptorSubTLV();
+				uSTLV.setAvailableBw(availableBw);
+				linkNLRI.setUndirectionalAvailableBwTLV(uSTLV);
+			}
+			if(te_info.getUndirUtilizedBw() != null){
+				int utilizedBw = te_info.getUndirUtilizedBw().getUtilizedBw();
+				UndirectionalUtilizedBandwidthDescriptorSubTLV uSTLV =new UndirectionalUtilizedBandwidthDescriptorSubTLV();
+				uSTLV.setUtilizedBw(utilizedBw);
+				linkNLRI.setUndirectionalUtilizedBwTLV(uSTLV);
+			}
+			
 		}
 		linkNLRI.setIdentifier(this.identifier);
 		BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
@@ -768,9 +784,9 @@ public class SendTopology implements Runnable {
 
 		//Create the domain List
 		ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
-		//TODO OOOOO
-		return null;//createMsgUpdateLinkNLRI(addressList,localRemoteIfList,23,maxBandwidth,unBandwidth,maximumReservableBandwidth,al, 0,0, domainList, intradomain, null);
-
+		//FIXME CHECK IF THIS METHOD IS USED
+		//return createMsgUpdateLinkNLRI(addressList,localRemoteIfList,23,maxBandwidth,unBandwidth,maximumReservableBandwidth,al, 0,0, domainList, intradomain, null);
+		return null;
 	}
 
 	public boolean isSendTopology() {

@@ -569,6 +569,30 @@ public class TE_Information {
 		if(this.trans !=null){
 			ret=ret+trans.toString()+"\r\n";
 		}
+		if(undirLinkDelay!=null){
+			ret=ret+undirLinkDelay.toString()+"\r\n";
+		}
+		if(minMaxUndirLinkDelay!=null){
+			ret=ret+minMaxUndirLinkDelay.toString()+"\r\n";
+		}
+		if(undirDelayVar!=null){
+			ret=ret+undirDelayVar.toString()+"\r\n";
+		}
+		
+		if(undirLinkLoss!=null){
+			ret=ret+undirLinkLoss.toString()+"\r\n";
+		}
+		if(undirResidualBw!=null){
+			ret=ret+undirResidualBw.toString()+"\r\n";
+		}
+		if(undirAvailableBw!=null){
+			ret=ret+undirAvailableBw.toString()+"\r\n";
+		}
+		
+		if(undirUtilizedBw!=null){
+			ret=ret+undirUtilizedBw.toString()+"\r\n";
+		}
+		
 		return ret;
 	}
 
