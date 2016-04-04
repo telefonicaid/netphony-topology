@@ -41,7 +41,7 @@
 	<!-- Delay between topology updates sent in ms -->
 	<sendTopoDelay>5000</sendTopoDelay>
 	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
-	<sendIntradomainLinks>false</sendIntradomainLinks>
+	<sendIntradomainLinks>true</sendIntradomainLinks>
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
 	<learnTopology>fromXML</learnTopology>	
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->

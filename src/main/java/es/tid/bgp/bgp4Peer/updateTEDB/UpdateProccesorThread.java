@@ -38,7 +38,14 @@ import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.RouteTagPrefixAttribT
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.TransceiverClassAndAppAttribTLV;
 import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.MinMaxUndirectionalLinkDelayDescriptorSubTLV;
 import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalAvailableBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalDelayVariationDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkDelayDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AdministrativeGroup;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
@@ -84,8 +91,14 @@ public class UpdateProccesorThread extends Thread {
 	DefaultTEMetricLinkAttribTLV TEMetricTLV;	
 	TransceiverClassAndAppAttribTLV transceiverClassAndAppATLV;
 	MF_OTPAttribTLV mF_OTP_ATLV;
-
-
+	int linkDelay;
+	int linkDelayVar;
+	int minDelay;
+	int maxDelay;
+	int linkLoss;
+	int residualBw;
+	int availableBw;
+	int utilizedBw;
 	/** NODE ATTRIBUTE TLVs 
 	 * Ipv4 of local node link attribute TLV also used
 	 * 
@@ -118,6 +131,8 @@ public class UpdateProccesorThread extends Thread {
 	private LinkedList<UpdateLink> updateLinks;
 
 	private TE_Information te_info;
+
+	
 
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
@@ -355,7 +370,28 @@ public class UpdateProccesorThread extends Thread {
 		if (linkNLRI.getRemoteNodeDescriptorsTLV().getIGPRouterID()!=null) {
 			RemoteNodeIGPId = linkNLRI.getRemoteNodeDescriptorsTLV().getIGPRouterID().getIpv4AddressOSPF();
 		}
-
+		if(linkNLRI.getUndirectionalLinkDelayTLV()!=null){
+			linkDelay = linkNLRI.getUndirectionalLinkDelayTLV().getDelay();
+		}
+		if(linkNLRI.getUndirectionalDelayVariationTLV()!=null){
+			linkDelayVar = linkNLRI.getUndirectionalDelayVariationTLV().getDelayVar();
+		}
+		if(linkNLRI.getMinMaxUndirectionalLinkDelayTLV()!=null){
+			maxDelay = linkNLRI.getMinMaxUndirectionalLinkDelayTLV().getHighDelay();
+			minDelay = linkNLRI.getMinMaxUndirectionalLinkDelayTLV().getLowDelay();
+		}
+		if(linkNLRI.getUndirectionalLinkLossTLV()!=null){
+			linkLoss = linkNLRI.getUndirectionalLinkLossTLV().getLinkLoss();
+		}
+		if(linkNLRI.getUndirectionalResidualBwTLV()!=null){
+			residualBw = linkNLRI.getUndirectionalResidualBwTLV().getResidualBw();
+		}
+		if(linkNLRI.getUndirectionalAvailableBwTLV()!=null){
+			availableBw = linkNLRI.getUndirectionalAvailableBwTLV().getAvailableBw();
+		}
+		if(linkNLRI.getUndirectionalUtilizedBwTLV()!=null){
+			utilizedBw = linkNLRI.getUndirectionalUtilizedBwTLV().getUtilizedBw();
+		}
 		/**Creamos el grafo*/
 		//Let's see if our link is intradomain or interdomain...
 		//log.info("as_local "+localDomainID);
@@ -414,6 +450,7 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setRemote_Node_Info(simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				log.info("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
 				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
+				simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId).setNumberFibers(1);
 				IntraDomainEdge edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(intraEdge.getTE_info().getAvailableLabels()!=null)
 					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
@@ -475,6 +512,42 @@ public class UpdateProccesorThread extends Thread {
 
 	private TE_Information createTE_Info(DomainTEDB domainTEDB){
 		TE_Information te_info = new TE_Information();
+		if(linkDelay>0){
+			UndirectionalLinkDelayDescriptorSubTLV uSTLV = new UndirectionalLinkDelayDescriptorSubTLV();
+			uSTLV.setDelay(linkDelay);
+			te_info.setUndirLinkDelay(uSTLV);
+		}
+		if(linkDelayVar>0){
+			UndirectionalDelayVariationDescriptorSubTLV uSTLV = new UndirectionalDelayVariationDescriptorSubTLV();
+			uSTLV.setDelayVar(linkDelayVar);
+			te_info.setUndirDelayVar(uSTLV);
+		}
+		if(minDelay>0 && maxDelay>0){
+			MinMaxUndirectionalLinkDelayDescriptorSubTLV uSTLV = new MinMaxUndirectionalLinkDelayDescriptorSubTLV();
+			uSTLV.setHighDelay(maxDelay);
+			uSTLV.setLowDelay(minDelay);
+			te_info.setMinMaxUndirLinkDelay(uSTLV);
+		}
+		if(linkLoss>0){
+			UndirectionalLinkLossDescriptorSubTLV uSTLV = new UndirectionalLinkLossDescriptorSubTLV();
+			uSTLV.setLinkLoss(linkLoss);
+			te_info.setUndirLinkLoss(uSTLV);
+		}
+		if(residualBw>0){
+			UndirectionalResidualBandwidthDescriptorSubTLV uSTLV = new UndirectionalResidualBandwidthDescriptorSubTLV();
+			uSTLV.setResidualBw(residualBw);
+			te_info.setUndirResidualBw(uSTLV);
+		}
+		if(availableBw>0){
+			UndirectionalAvailableBandwidthDescriptorSubTLV uSTLV = new UndirectionalAvailableBandwidthDescriptorSubTLV();
+			uSTLV.setAvailableBw(availableBw);
+			te_info.setUndirAvailableBw(uSTLV);
+		}
+		if(utilizedBw>0){
+			UndirectionalUtilizedBandwidthDescriptorSubTLV uSTLV = new UndirectionalUtilizedBandwidthDescriptorSubTLV();
+			uSTLV.setUtilizedBw(utilizedBw);
+			te_info.setUndirUtilizedBw(uSTLV);
+		}
 		if (maximumLinkBandwidthTLV!=null){
 			MaximumBandwidth maximumBandwidth = new MaximumBandwidth();
 			maximumBandwidth.setMaximumBandwidth(maximumLinkBandwidthTLV.getMaximumBandwidth());
@@ -675,6 +748,14 @@ public class UpdateProccesorThread extends Thread {
 		transceiverClassAndAppATLV = null;
 		mF_OTP_ATLV = null;
 		availableLabels=null;
+		linkDelay=0;
+		linkDelayVar=0;
+		minDelay=0;
+		maxDelay=0;
+		linkLoss=0;
+		residualBw=0;
+		availableBw=0;
+		utilizedBw=0;
 
 	}
 

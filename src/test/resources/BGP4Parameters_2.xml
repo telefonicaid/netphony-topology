@@ -14,14 +14,14 @@
     </configPeer>
 
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
-	<BGP4LogFile>BGP4Parser.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
-	<BGP4LogFileClient>BGP4Client.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
-	<BGP4LogFileServer>BGP4Server.log</BGP4LogFileServer><!-- Default value: BGP4Server.log-->
+	<BGP4LogFile>BGP4Parser2.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
+	<BGP4LogFileClient>BGP4Client2.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
+	<BGP4LogFileServer>BGP4Server2.log</BGP4LogFileServer><!-- Default value: BGP4Server.log-->
 	<!-- If the tcp no delay option is used or not. Optional Parameter. Default value: false. -->
 	<nodelay>true</nodelay>
 	<!-- Waiting Time to re-connect to clients. Default value: 6000 ms. -->
 	<delay>40000</delay>
-	<setTraces>false</setTraces>
+	<setTraces>true</setTraces>
 	<!-- OPEN Parameters -->
 	<!-- RFC 4271. This 2-octet unsigned integer indicates the number of seconds the sender proposes for the value of the Hold Timer.  
 		Upon receipt of an OPEN message, a BGP speaker MUST calculate the value of the Hold Timer by using the smaller of its configured
@@ -40,7 +40,7 @@
 	<!-- If the peer is in charge of sending its topology (only the interdomain Links) to the other BGP peer it is connected to. Default: false -->
 	<sendTopology>false</sendTopology>
 	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
-	<sendIntradomainLinks>false</sendIntradomainLinks>
+	<sendIntradomainLinks>true</sendIntradomainLinks>
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
 	<learnTopology>fromBGP</learnTopology>	
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
