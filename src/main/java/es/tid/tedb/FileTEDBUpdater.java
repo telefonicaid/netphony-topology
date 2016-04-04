@@ -870,18 +870,17 @@ public class FileTEDBUpdater {
 					graph = domainTEDB.getNetworkGraph();
 					
 					int numLabels=0;
-
+					TE_Information tE_info_common=null;
 					Boolean commonBitmapLabelSet = false;
-					NodeList edgeCommon = doc.getElementsByTagName("edgeCommon");
+					NodeList edgeCommon = element1.getElementsByTagName("edgeCommon");
 					int grid=0;
 					int cs=0;
 					int n=0;
 					for (int i = 0; i < edgeCommon.getLength(); i++) {
-
 						Element edgeCommonElement = (Element) edgeCommon.item(i);
+						tE_info_common =readTE_INFOfromXml(tE_info_common,edgeCommonElement, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
 						NodeList availableLabels_node = edgeCommonElement.getElementsByTagName("AvailableLabels");
 						for (int k = 0; k < availableLabels_node.getLength(); k++) {
-
 							Element availableLabels_e = (Element) availableLabels_node.item(k);
 							NodeList labelSetField_node = availableLabels_e.getElementsByTagName("LabelSetField");
 							Element labelSetField_el = (Element) labelSetField_node.item(0);
@@ -919,7 +918,6 @@ public class FileTEDBUpdater {
 								}else{
 									log.info("ERROR reading the xml file of the topology, you should enter <baseLabel grid=\"1\" cs=\"2\" n=\"-11\"></baseLabel> ");
 								}
-
 							}
 						}
 
@@ -1065,7 +1063,7 @@ public class FileTEDBUpdater {
 							}
 
 							//TE Link information
-							edge.setTE_info(readTE_INFOfromXml(element, commonBitmapLabelSet,numLabels, grid,  cs, n,lambdaIni,lambdaEnd));
+							edge.setTE_info(readTE_INFOfromXml(tE_info_common, element, commonBitmapLabelSet,numLabels, grid,  cs, n,lambdaIni,lambdaEnd));
 							
 
 							NodeList availableLabels_node = element.getElementsByTagName("AvailableLabels");
@@ -1152,7 +1150,7 @@ public class FileTEDBUpdater {
 						}
 						if(type.equals("interdomain")){
 							InterDomainEdge edge = new InterDomainEdge();
-							TE_Information tE_info=readTE_INFOfromXml(element, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
+							TE_Information tE_info=readTE_INFOfromXml(tE_info_common,element, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
 							edge.setTE_info(tE_info);
 							NodeList source = element.getElementsByTagName("source");
 							Element source_router_el = (Element) source.item(0);
@@ -1233,14 +1231,15 @@ public class FileTEDBUpdater {
 
 
 
-	private static TE_Information readTE_INFOfromXml(Element element, Boolean commonBitmapLabelSet, int numLabels, int grid, int cs, int n, int lambdaIni, int lambdaEnd) {
-		TE_Information tE_info= new TE_Information();
-		if (commonBitmapLabelSet){
-			if(lambdaEnd!=Integer.MAX_VALUE)
-				tE_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
-			else
-				tE_info.createBitmapLabelSet(numLabels, grid,  cs, n);
-		}
+	private static TE_Information readTE_INFOfromXml(TE_Information tE_info_common,Element element, Boolean commonBitmapLabelSet, int numLabels, int grid, int cs, int n, int lambdaIni, int lambdaEnd) {
+		
+			TE_Information tE_info= new TE_Information();
+			if (commonBitmapLabelSet){
+				if(lambdaEnd!=Integer.MAX_VALUE)
+					tE_info.createBitmapLabelSet(numLabels, grid,  cs, n,lambdaIni,lambdaEnd);
+				else
+					tE_info.createBitmapLabelSet(numLabels, grid,  cs, n);
+			}
 		
 		NodeList maximum_bandwidth_nl = element.getElementsByTagName("maximum_bandwidth");
 		if (maximum_bandwidth_nl!=null){
@@ -1254,6 +1253,10 @@ public class FileTEDBUpdater {
 				tE_info.setMaximumBandwidth(maximumBandwidth);
 
 			}
+		}else if(tE_info_common!=null && tE_info_common.getMaximumBandwidth()!=null){
+			MaximumBandwidth maximumBandwidth =new MaximumBandwidth();
+			maximumBandwidth.setMaximumBandwidth(tE_info_common.getMaximumBandwidth().getMaximumBandwidth());
+			tE_info.setMaximumBandwidth(maximumBandwidth);
 		}
 		/**
 		 * NodeList SID_aux = element.getElementsByTagName("sid");
@@ -1279,6 +1282,10 @@ public class FileTEDBUpdater {
 			int metric = Integer.parseInt(s_metric_aux);
 			DefaultTEMetricLinkAttribTLV defaultTeMetric= new DefaultTEMetricLinkAttribTLV();
 			defaultTeMetric.setLinkMetric((long)metric);
+			tE_info.setDefaultTEMetric(defaultTeMetric);
+		}else if(tE_info_common!=null && tE_info_common.getDefaultTEMetric()!=null){
+			DefaultTEMetricLinkAttribTLV defaultTeMetric= new DefaultTEMetricLinkAttribTLV();
+			defaultTeMetric.setLinkMetric(tE_info_common.getDefaultTEMetric().getLinkMetric());
 			tE_info.setDefaultTEMetric(defaultTeMetric);
 		}
 
@@ -1325,6 +1332,10 @@ public class FileTEDBUpdater {
 			UndirectionalLinkDelayDescriptorSubTLV uldSTLV = new UndirectionalLinkDelayDescriptorSubTLV();
 			uldSTLV.setDelay(undirDelayLinkValue);
 			tE_info.setUndirLinkDelay(uldSTLV);
+		}else if(tE_info_common!=null && tE_info_common.getUndirLinkDelay()!=null){
+			UndirectionalLinkDelayDescriptorSubTLV uldSTLV = new UndirectionalLinkDelayDescriptorSubTLV();
+			uldSTLV.setDelay(tE_info_common.getUndirLinkDelay().getDelay());
+			tE_info.setUndirLinkDelay(uldSTLV);
 		}
 		
 		NodeList undirDelayVars = element.getElementsByTagName("undir_delay_variation");
@@ -1335,6 +1346,10 @@ public class FileTEDBUpdater {
 			UndirectionalDelayVariationDescriptorSubTLV udvSTLV = new UndirectionalDelayVariationDescriptorSubTLV();
 			udvSTLV.setDelayVar(undirDelayVarValue);
 			tE_info.setUndirDelayVar(udvSTLV);
+		}else if(tE_info_common!=null && tE_info_common.getUndirDelayVar()!=null){
+			UndirectionalDelayVariationDescriptorSubTLV uldSTLV = new UndirectionalDelayVariationDescriptorSubTLV();
+			uldSTLV.setDelayVar(tE_info_common.getUndirDelayVar().getDelayVar());
+			tE_info.setUndirDelayVar(uldSTLV);
 		}
 		
 		NodeList undirLinkLosss = element.getElementsByTagName("undir_link_loss");
@@ -1345,6 +1360,10 @@ public class FileTEDBUpdater {
 			UndirectionalLinkLossDescriptorSubTLV uSTLV = new UndirectionalLinkLossDescriptorSubTLV();
 			uSTLV.setLinkLoss(undirLinkLossValue);
 			tE_info.setUndirLinkLoss(uSTLV);
+		}else if(tE_info_common!=null && tE_info_common.getUndirLinkLoss()!=null){
+			UndirectionalLinkLossDescriptorSubTLV uldSTLV = new UndirectionalLinkLossDescriptorSubTLV();
+			uldSTLV.setLinkLoss(tE_info_common.getUndirLinkLoss().getLinkLoss());
+			tE_info.setUndirLinkLoss(uldSTLV);
 		}
 		
 		NodeList undirReBws = element.getElementsByTagName("undir_residual_bandwidth");
@@ -1355,6 +1374,10 @@ public class FileTEDBUpdater {
 			UndirectionalResidualBandwidthDescriptorSubTLV uSTLV = new UndirectionalResidualBandwidthDescriptorSubTLV();
 			uSTLV.setResidualBw(undirReBwValue);
 			tE_info.setUndirResidualBw(uSTLV);
+		}else if(tE_info_common!=null && tE_info_common.getUndirResidualBw()!=null){
+			UndirectionalResidualBandwidthDescriptorSubTLV uldSTLV = new UndirectionalResidualBandwidthDescriptorSubTLV();
+			uldSTLV.setResidualBw( tE_info_common.getUndirResidualBw().getResidualBw());
+			tE_info.setUndirResidualBw(uldSTLV);
 		}
 		
 		NodeList undirAvalBws = element.getElementsByTagName("undir_available_bandwidth");
@@ -1365,6 +1388,10 @@ public class FileTEDBUpdater {
 			UndirectionalAvailableBandwidthDescriptorSubTLV uSTLV = new UndirectionalAvailableBandwidthDescriptorSubTLV();
 			uSTLV.setAvailableBw(undirAvalBwValue);
 			tE_info.setUndirAvailableBw(uSTLV);
+		}else if(tE_info_common!=null && tE_info_common.getUndirAvailableBw()!=null){
+			UndirectionalAvailableBandwidthDescriptorSubTLV uldSTLV = new UndirectionalAvailableBandwidthDescriptorSubTLV();
+			uldSTLV.setAvailableBw( tE_info_common.getUndirAvailableBw().getAvailableBw());
+			tE_info.setUndirAvailableBw(uldSTLV);
 		}
 		
 		NodeList undirUtilBws = element.getElementsByTagName("undir_utilized_bandwidth");
@@ -1375,6 +1402,10 @@ public class FileTEDBUpdater {
 			UndirectionalUtilizedBandwidthDescriptorSubTLV uSTLV = new UndirectionalUtilizedBandwidthDescriptorSubTLV();
 			uSTLV.setUtilizedBw(undirUtilBwValue);
 			tE_info.setUndirUtilizedBw(uSTLV);
+		}else if(tE_info_common!=null && tE_info_common.getUndirUtilizedBw()!=null){
+			UndirectionalUtilizedBandwidthDescriptorSubTLV uldSTLV = new UndirectionalUtilizedBandwidthDescriptorSubTLV();
+			uldSTLV.setUtilizedBw( tE_info_common.getUndirUtilizedBw().getUtilizedBw());
+			tE_info.setUndirUtilizedBw(uldSTLV);
 		}
 		
 		NodeList minMaxDelays = element.getElementsByTagName("undir_min_max_delay");
@@ -1394,6 +1425,11 @@ public class FileTEDBUpdater {
 				ummSTLV.setLowDelay(minDelayValue);
 				tE_info.setMinMaxUndirLinkDelay(ummSTLV);
 			}
+		}else if(tE_info_common!=null && tE_info_common.getMinMaxUndirLinkDelay()!=null){
+			MinMaxUndirectionalLinkDelayDescriptorSubTLV uldSTLV = new MinMaxUndirectionalLinkDelayDescriptorSubTLV();
+			uldSTLV.setHighDelay( tE_info_common.getMinMaxUndirLinkDelay().getHighDelay());
+			uldSTLV.setLowDelay( tE_info_common.getMinMaxUndirLinkDelay().getLowDelay());
+			tE_info.setMinMaxUndirLinkDelay(uldSTLV);
 		}
 
 		return tE_info;
@@ -1800,7 +1836,7 @@ public class FileTEDBUpdater {
 
 				Element element = (Element) edges.item(i);
 				InterDomainEdge edge = new InterDomainEdge();
-				TE_Information tE_info=readTE_INFOfromXml(element, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
+				TE_Information tE_info=readTE_INFOfromXml(null, element, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
 				edge.setTE_info(tE_info);
 				NodeList source = element.getElementsByTagName("source");
 				Element source_router_el = (Element) source.item(0);
