@@ -832,6 +832,7 @@ public class FileTEDBUpdater {
 					}
 				}
 				tedb.setNetworkGraph(graph);
+				tedb.setDomainID((Inet4Address) Inet4Address.getByName(domain_id));
 				TEDBs.put((Inet4Address) Inet4Address.getByName(domain_id),tedb);
 			}	
 
@@ -943,17 +944,17 @@ public class FileTEDBUpdater {
 							type="intradomain";
 						}else {
 							type=attr_type.getValue();
-							if (false/*allDomains*/){
+							/*if (allDomains){
 								if (type.equals("interdomain")){
 									type="intradomain";
 								}
-							}
-							else if (type.equals("interlayer")){
+							}*/
+							//else if (type.equals("interlayer")){
 								if (layer.equals("interlayer")){
 									type="intradomain";
 								}
 
-							}
+							//}
 						}	
 						log.info("type::"+type);
 						if (type.equals("intradomain")) {						
@@ -1136,6 +1137,8 @@ public class FileTEDBUpdater {
 									if(graph.containsVertex(d_router_id_addr)==false){
 										//interDomain edge
 										//TODO
+										type="interdomain";
+										
 									}else{
 										graph.addEdge(s_router_id_addr, d_router_id_addr, edge);
 										graph.getEdge(s_router_id_addr, d_router_id_addr).setNumberFibers(1);
@@ -1146,6 +1149,74 @@ public class FileTEDBUpdater {
 								e.printStackTrace();
 								System.exit(-1);
 							}
+						}
+						if(type.equals("interdomain")){
+							InterDomainEdge edge = new InterDomainEdge();
+							TE_Information tE_info=readTE_INFOfromXml(element, false,numLabels, grid,  cs, n, 0, Integer.MAX_VALUE);
+							edge.setTE_info(tE_info);
+							NodeList source = element.getElementsByTagName("source");
+							Element source_router_el = (Element) source.item(0);
+							NodeList source_router_id = source_router_el
+									.getElementsByTagName("router_id");
+							Element source_router_id_el = (Element) source_router_id
+									.item(0);
+							String s_r_id = getCharacterDataFromElement(source_router_id_el);
+							log.fine("Edge Source router_id: " + s_r_id);
+
+							try { // s_router_id_addr type: Inet4Address
+								s_router_id_addr = (Inet4Address) Inet4Address.getByName(s_r_id);
+							} catch (Exception e) {// s_router_id_addr type: DataPathID
+								s_router_id_addr =  DataPathID.getByName(s_r_id);
+							}
+							Inet4Address source_domain_id = (Inet4Address) Inet4Address.getByName(domain_id);
+							log.fine("Edge Source domain_id: " + source_domain_id);
+
+							NodeList source_if_id_nl = source_router_el
+									.getElementsByTagName("if_id");
+							Element source_if_id_el = (Element) source_if_id_nl.item(0);
+							String s_source_if_id = getCharacterDataFromElement(source_if_id_el);
+							log.fine("Edge Source if_id: " + s_source_if_id);
+							int src_if_id = Integer.parseInt(s_source_if_id);
+
+							NodeList dest_nl = element.getElementsByTagName("destination");
+							Element dest_el = (Element) dest_nl.item(0);
+							NodeList dest_router_id_nl = dest_el
+									.getElementsByTagName("router_id");
+							Element dest_router_id_el = (Element) dest_router_id_nl.item(0);
+							String d_r_id = getCharacterDataFromElement(dest_router_id_el);
+							log.fine("Edge Destination router_id: " + d_r_id);
+							try { // d_router_id_addr type: Inet4Address
+								d_router_id_addr = (Inet4Address) Inet4Address.getByName(d_r_id);
+							} catch (Exception e) { // d_router_id_addr type: DataPathID
+								d_router_id_addr =  DataPathID.getByName(d_r_id);
+							}
+							//Inet4Address dest_domain_id = router_id_domain_ed.get(d_router_id_addr);
+							log.fine("Destination domain_id: <Unknown>");
+
+							NodeList dest_if_id_nl = dest_el.getElementsByTagName("if_id");
+							Element dest_if_id_el = (Element) dest_if_id_nl.item(0);
+							String s_dest_if_id = getCharacterDataFromElement(dest_if_id_el);
+							log.fine("Edge Dest if_id: " + s_dest_if_id);
+							int dst_if_id = Integer.parseInt(s_dest_if_id);
+
+							//router_id_domain_ed
+							//edge.setDomain_src_router(source_domain_id);
+
+							edge.setSrc_if_id(src_if_id);
+							edge.setDst_if_id(dst_if_id);
+							edge.setDomain_src_router(source_domain_id);
+							//edge.setDomain_dst_router(dest_domain_id);
+
+							edge.setSrc_router_id(s_router_id_addr);
+							edge.setDst_router_id(d_router_id_addr);
+							if(domainTEDB.getInterDomainLinks()==null){
+								LinkedList<InterDomainEdge> interDomainLinks= new LinkedList<InterDomainEdge>();
+								interDomainLinks.add(edge);
+								domainTEDB.setInterDomainLinks(interDomainLinks);
+							}else{
+								domainTEDB.getInterDomainLinks().add(edge);
+							}
+							
 						}
 					}
 					

@@ -14,7 +14,7 @@ public class BGPPeerMain {
 		else
 			bgpPeer.configure();
 		
-		bgpPeer.createTEDB("hola");
+		//bgpPeer.createTEDB("hola"); //did it in configure
 		bgpPeer.createUpdateDispatcher();
 		bgpPeer.startClient();		
 		bgpPeer.startServer();

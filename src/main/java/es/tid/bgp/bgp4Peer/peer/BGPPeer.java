@@ -167,6 +167,12 @@ public class BGPPeer {
 		}
 		logParser.info("Inizializing BGP4 Peer");
 		intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
+		multiDomainTEDB = new MDTEDB();
+		
+		if (params.getLearnTopology().equals("fromXML")){	
+			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
+			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
+		}
 		// Create Thread executor
 		//FIXME: Actualizar n�mero de threads que se crean
 		executor = new ScheduledThreadPoolExecutor(20);//1 para el servidor, 1 para el que lanza y vigila los clientes
@@ -178,6 +184,7 @@ public class BGPPeer {
 		if (params.isSaveTopologyDB() == true){
 			saveTopologyDB.configure(intraTEDBs, multiDomainTEDB, params.isSaveTopologyDB(), params.getTopologyDBIP().getHostAddress(), params.getTopologyDBport());
 		}
+		
 	}
 	
 	
@@ -202,20 +209,7 @@ public class BGPPeer {
 	 * Function to create the TEDBs of the peer.
 	 * @param nameParametersFile Name of the Parameters File
 	 */
-	public void  createTEDB (String nameParametersFile){
-		//Topology database
-		multiDomainTEDB = new MDTEDB();
-		
-		if (params.getLearnTopology().equals("fromXML")){	
-			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
-			//TEDB intraTEDB = new SimpleTEDB();
-			//intraTEDB.initializeFromFile(params.getTopologyFile());		
-			//intraTEDBs.put(key, intraTEDB);
-			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
-		}
-		
 
-	}
 	
 	/**
 	 * Start the session for the management of the BGP4.

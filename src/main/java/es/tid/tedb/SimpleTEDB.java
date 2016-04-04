@@ -688,6 +688,10 @@ public class SimpleTEDB implements DomainTEDB{
 		return domainID;
 	}
 
+	public void setDomainID(Inet4Address domainID) {
+		this.domainID = domainID;
+	}
+
 	@Override
 	public Set<IntraDomainEdge> getIntraDomainLinks() {
 		return this.getNetworkGraph().edgeSet();
@@ -695,6 +699,56 @@ public class SimpleTEDB implements DomainTEDB{
 	
 	public Set<Object> getIntraDomainLinksvertexSet() {
 		return this.getNetworkGraph().vertexSet();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((domainID == null) ? 0 : domainID.hashCode());
+		result = prime * result + ((intraDomainEdges == null) ? 0 : intraDomainEdges.hashCode());
+		result = prime * result + ((networkGraph == null) ? 0 : networkGraph.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SimpleTEDB other = (SimpleTEDB) obj;
+		if (intraDomainEdges == null) {
+			if (other.intraDomainEdges != null)
+				return false;
+		} else if (!intraDomainEdges.equals(other.intraDomainEdges))
+			return false;
+		if (networkGraph == null) {
+			if (other.networkGraph != null)
+				return false;
+		}
+		for(Object v : networkGraph.vertexSet()){
+			if(!other.networkGraph.containsVertex(v))
+				return false;
+		}
+		
+		for(IntraDomainEdge e :networkGraph.edgeSet()){
+			boolean flagEqual=false;
+			for(IntraDomainEdge otherE : other.networkGraph.edgeSet()){
+				if(e.toString().equals(otherE.toString()))flagEqual=true;
+			}
+			if(flagEqual==false)return false; //edge not present in other
+		}
+		for(IntraDomainEdge e :other.networkGraph.edgeSet()){
+			boolean flagEqual=false;
+			for(IntraDomainEdge otherE : networkGraph.edgeSet()){
+				if(e.toString().equals(otherE.toString()))flagEqual=true;
+			}
+			if(flagEqual==false)return false; //edge not present in other
+		}
+		return true;
 	}
 	
 	

@@ -389,8 +389,8 @@ public class UpdateProccesorThread extends Thread {
 		if(linkNLRI.getUndirectionalAvailableBwTLV()!=null){
 			availableBw = linkNLRI.getUndirectionalAvailableBwTLV().getAvailableBw();
 		}
-		if(linkNLRI.getUndirectionalResidualBwTLV()!=null){
-			residualBw = linkNLRI.getUndirectionalResidualBwTLV().getResidualBw();
+		if(linkNLRI.getUndirectionalUtilizedBwTLV()!=null){
+			utilizedBw = linkNLRI.getUndirectionalUtilizedBwTLV().getUtilizedBw();
 		}
 		/**Creamos el grafo*/
 		//Let's see if our link is intradomain or interdomain...
@@ -519,7 +519,7 @@ public class UpdateProccesorThread extends Thread {
 		}
 		if(linkDelayVar>0){
 			UndirectionalDelayVariationDescriptorSubTLV uSTLV = new UndirectionalDelayVariationDescriptorSubTLV();
-			uSTLV.setDelayVar(linkDelay);
+			uSTLV.setDelayVar(linkDelayVar);
 			te_info.setUndirDelayVar(uSTLV);
 		}
 		if(minDelay>0 && maxDelay>0){

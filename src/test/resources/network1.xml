@@ -33,12 +33,12 @@
 			<if_id>1</if_id>
 		</destination>	
 		<maximum_bandwidth>3.35</maximum_bandwidth>
-		<undir_delay_link>112</undir_delay_link>
+		<undir_delay_link>99</undir_delay_link>
 		<undir_min_max_delay>
 			<min>23</min>
 			<max>43</max>
 		</undir_min_max_delay>	
-		<undir_delay_variation>12</undir_delay_variation>
+		<undir_delay_variation>1</undir_delay_variation>
 		<undir_link_loss>102</undir_link_loss>
 		<undir_residual_bandwidth>802</undir_residual_bandwidth>
 		<undir_available_bandwidth>500</undir_available_bandwidth>
