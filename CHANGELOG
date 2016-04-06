@@ -1,3 +1,8 @@
+v1.3
+- Compile with networking-protocols v1.3.0 (available in maven central)
+- JUnit Test upgrade to check intraTEDBs after sending
+- Added functionality: read multiple intraTEDBs from xml file
+- Added support to draft-previdi-idr-bgpls-te-metric-extensions-00
 v1.2.2
 - Added travis integration
 - Javadoc errors fixed

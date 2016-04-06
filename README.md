@@ -1,8 +1,14 @@
-netphony-topology v1.2.2
+netphony-topology v1.3.0
 =======
 Repository branch build status:
-* **Master:** [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=master)](https://travis-ci.org/telefonicaid/netphony-topology)
-* **Develop:** [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=develop)](https://travis-ci.org/telefonicaid/netphony-topology)
+
+| **Master**  | **Develop**   |
+|:---:|:---:|
+| [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=master)](https://travis-ci.org/telefonicaid/netphony-topology) | [![Build Status](https://travis-ci.org/telefonicaid/netphony-topology.svg?branch=develop)](https://travis-ci.org/telefonicaid/netphony-topology) |
+
+Latest Maven Central Release: 
+
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/es.tid.netphony/topology/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/es.tid.netphony/topology/)
 
 Netphony-topology is a BGP-LS Speaker and a Java based Traffic Engineering Database. 
 
@@ -25,7 +31,7 @@ To build the .jar file and run the tests, first you need to install the netphony
  ```bash
     git clone https://github.com/telefonicaid/netphony-network-protocols.git
     cd netphony-network-protocols
-    git checkout tags/v1.2.2
+    git checkout tags/v1.3.0
     mvn package
     mvn install
  ```
@@ -47,7 +53,7 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
     cd netphony-topology
     mvn clean compile assembly:single
     cd target
-    sudo java -jar topology-1.2.2-jar-with-dependencies.jar 
+    sudo java -jar topology-1.3.0-jar-with-dependencies.jar 
  ```
  
  Before running, you should configure the parameteres. The parameters are configured in an xml file. By default, if used with BGPPeerMain, or it is not specified a file name, BGP4Parameters.xml should be used. An example of the file is located in examples/BGP4Parameters.xml (and with the maven assembly build, it is copied in the target directory).
