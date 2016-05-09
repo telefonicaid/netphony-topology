@@ -145,8 +145,8 @@ public class BGPPeer {
 	 * Function to configure the BGP4 peer. 
 	 * It created the loggers, the executor, 
 	 * @param nameParametersFile Name of the Parameters File
-	 * @param MultiDomainTEDB multiTEDB
-	 * @param Hashtable<Inet4Address,DomainTEDB> iTEDBs
+	 * @param multiTEDB multidomain database
+	 * @param iTEDBs internal domains database 
 	 */
 	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> iTEDBs){
 		//First of all, read the parameters
