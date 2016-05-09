@@ -146,9 +146,9 @@ public class BGPPeer {
 	 * It created the loggers, the executor, 
 	 * @param nameParametersFile Name of the Parameters File
 	 * @param MultiDomainTEDB multiTEDB
-	 * @param Hashtable<Inet4Address,DomainTEDB> intraTEDBs
+	 * @param Hashtable<Inet4Address,DomainTEDB> iTEDBs
 	 */
-	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs){
+	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> iTEDBs){
 		//First of all, read the parameters
 		if (nameParametersFile != null){
 			params=new BGP4Parameters(nameParametersFile);
@@ -183,10 +183,10 @@ public class BGPPeer {
 			System.exit(1);
 		}
 		logParser.info("Inizializing BGP4 Peer");
-		if (intraTEDBs!= null) intraTEDBs=intrTEDBs;
+		if (iTEDBs!= null) intraTEDBs=iTEDBs;
 		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 		
-		if (multiDomainTEDB!= null) multiDomainTEDB = multiTEDB;
+		if (multiTEDB!= null) multiDomainTEDB = multiTEDB;
 		else multiDomainTEDB = new MDTEDB();
 	
 		if (params.getLearnTopology().equals("fromXML")){
