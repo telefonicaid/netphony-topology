@@ -169,7 +169,7 @@ public class BGPPeer {
 			System.exit(1);
 		}
 		logParser.info("Inizializing BGP4 Peer");
-		if (intraTEDBs!= null)intraTEDBs=intrTEDBs;
+		if (intraTEDBs!= null) intraTEDBs=intrTEDBs;
 		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 		
 		if (multiDomainTEDB!= null) multiDomainTEDB = multiTEDB;
