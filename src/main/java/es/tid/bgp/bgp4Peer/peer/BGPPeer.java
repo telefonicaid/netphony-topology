@@ -169,15 +169,15 @@ public class BGPPeer {
 //		FileHandler fh2;
 //		try {
 //			fh=new FileHandler(params.getBGP4LogFile());
-//			logParser=LoggerFactory.getLogger("BGP4Parser");
+			logParser=LoggerFactory.getLogger("BGP4Parser");
 //			logParser.addHandler(fh);
 //			logParser.setLevel(Level.ALL);
 //			fh1=new FileHandler(params.getBGP4LogFileClient());
-//			logClient=LoggerFactory.getLogger("BGP4Client");
+			logClient=LoggerFactory.getLogger("BGP4Client");
 //			logClient.addHandler(fh1);
 //			logClient.setLevel(Level.ALL);
 //			fh2=new FileHandler(params.getBGP4LogFileServer());
-//			logServer=LoggerFactory.getLogger("BGP4Server");
+			logServer=LoggerFactory.getLogger("BGP4Peer");
 //			logServer.addHandler(fh2);
 //			logServer.setLevel(Level.ALL);
 //
@@ -185,7 +185,7 @@ public class BGPPeer {
 //			e1.printStackTrace();
 //			System.exit(1);
 //		}
-		logParser.info("Inizializing BGP4 Peer");
+			logServer.info("Inizializing BGP4 Peer");
 		if (iTEDBs!= null) intraTEDBs=iTEDBs;
 		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 		
