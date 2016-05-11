@@ -2,7 +2,8 @@ package es.tid.bgp.bgp4Peer.bgp4session;
 
 
 import java.util.TimerTask;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,12 +23,12 @@ public class KeepWaitTimerTask extends TimerTask {
 	
 	public KeepWaitTimerTask(BGP4Session bgp4Session){
 		this.bgp4Session=bgp4Session;
-		log=Logger.getLogger("PCEServer");
+		log=LoggerFactory.getLogger("PCEServer");
 	}
 		
 	
 	public void run() {
-		log.warning("KEEP WAIT Timer OVER");
+		log.warn("KEEP WAIT Timer OVER");
 //		PCEPError perror=new PCEPError();
 //		PCEPErrorObject perrorObject=new PCEPErrorObject();
 //		perrorObject.setErrorType(ObjectParameters.ERROR_ESTABLISHMENT);

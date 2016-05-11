@@ -4,7 +4,8 @@ package es.tid.bgp.bgp4Peer.peer;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -20,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class BGP4Parameters {
 	
-	private Logger log = Logger.getLogger("TMController");
+	private Logger log = LoggerFactory.getLogger("TMController");
 	/**
 	 * TCP port where the BGP is listening for incoming bgp4 connections
 	 * Experimental use only. Default and standard is 179
@@ -184,7 +185,7 @@ public class BGP4Parameters {
 								throws SAXException {
 					
 					if (qName.equalsIgnoreCase("configPeer")){
-						log.fine("Found peer configuration");
+						log.debug("Found peer configuration");
 					}
 					else if (qName.equalsIgnoreCase("peer")){
 						peer = true;
@@ -338,7 +339,7 @@ public class BGP4Parameters {
 			saxParser.parse(confFile, handler);     
 
 		}catch (Exception e) {
-			log.severe("Problems reading config");	
+			log.error("Problems reading config");	
 			e.printStackTrace();
 			System.exit(1);
 		}

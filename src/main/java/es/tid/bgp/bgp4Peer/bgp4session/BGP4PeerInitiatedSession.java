@@ -6,7 +6,8 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Timer;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Message;
 import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
@@ -45,7 +46,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 		super(bgp4SessionsInformation, holdTime, BGPIdentifier, version, myAutonomousSystem,keepAliveTimer);
 
 		this.setFSMstate(BGP4StateSession.BGP4_STATE_IDLE);
-		log=Logger.getLogger("BGP4Server");
+		log=LoggerFactory.getLogger("BGP4Server");
 		log.info("New BGP4Session: "+s);
 		this.socket = s;
 		try {
@@ -103,9 +104,9 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 						in.close();
 						out.close();
 					} catch (Exception e1) {
-						log.warning("Exception Closing BGP4 Session with "+this.remotePeerIP);
+						log.warn("Exception Closing BGP4 Session with "+this.remotePeerIP);
 					}
-					log.warning("Finishing BGP4 Session with "+this.remotePeerIP);
+					log.warn("Finishing BGP4 Session with "+this.remotePeerIP);
 					return;
 				}
 				if (this.msg != null) {//If null, it is not a valid PCEP message			
@@ -114,13 +115,13 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 					switch(BGP4Message.getMessageType(this.msg)) {
 
 					case BGP4MessageTypes.MESSAGE_OPEN:
-						log.fine("OPEN message received");
+						log.debug("OPEN message received");
 						//After the session has been started, ignore subsequent OPEN messages
-						log.warning("OPEN message ignored");
+						log.warn("OPEN message ignored");
 						break;
 
 					case BGP4MessageTypes.MESSAGE_KEEPALIVE:
-						log.fine("KEEPALIVE message received from "+this.remotePeerIP);
+						log.debug("KEEPALIVE message received from "+this.remotePeerIP);
 						//The Keepalive message allows to reset the deadtimer
 						break;
 
@@ -129,15 +130,15 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 						break;
 
 					case BGP4MessageTypes.MESSAGE_UPDATE:
-						log.fine("UPDATE message from "+this.remotePeerIP);						
+						log.debug("UPDATE message from "+this.remotePeerIP);						
 						BGP4Update bgp4Update = new BGP4Update(msg);
-						log.fine(bgp4Update.toString());
+						log.debug(bgp4Update.toString());
 						bgp4Update.setLearntFrom(this.getRemotePeerIP().toString());
 						updateDispatcher.dispatchRequests(bgp4Update);
 						break;
 
 					default:
-						log.warning("ERROR: unexpected message from "+this.remotePeerIP);
+						log.warn("ERROR: unexpected message from "+this.remotePeerIP);
 						bgp4Msg = false;
 					}
 
@@ -148,7 +149,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 				} 
 			}
 		}finally{
-			log.severe("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
+			log.error("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
 			cancelDeadTimer();
 			cancelKeepAlive();
 			this.FSMstate=BGP4StateSession.BGP4_STATE_IDLE;
@@ -167,7 +168,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 	@Override
 	protected void endSession() {
 		// TODO Auto-generated method stub
-		log.severe("Ending session with id "+this.getSessionId()+" from peer "+this.remotePeerIP);
+		log.error("Ending session with id "+this.getSessionId()+" from peer "+this.remotePeerIP);
 		BGP4SessionsInformation.deleteSession(this.getSessionId());
 	}
 

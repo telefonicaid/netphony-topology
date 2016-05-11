@@ -6,7 +6,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -41,7 +42,7 @@ public class SimpleITTEDB implements DomainTEDB{
 		it_site_id_domain_ed=new Hashtable <Object,Object>();
 		resource_id_domain_ed=new Hashtable <Object,Object>();
 		SimpleDirectedWeightedGraph<Object,IntraDomainEdge> graphCopy= (SimpleDirectedWeightedGraph<Object, IntraDomainEdge>) networkGraph.clone();
-		log = Logger.getLogger("PCEServer");
+		log = LoggerFactory.getLogger("PCEServer");
 		return graphCopy;
 	}
 	
