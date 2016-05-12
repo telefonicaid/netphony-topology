@@ -2,6 +2,17 @@ language: java
 jdk:
   - oraclejdk7
   - oraclejdk8
+services:
+  - docker
+matrix:
+  - env: TEST_TYPE="unit"
+  - env: TEST_TYPE="integration"
+install:
+  - if [ $TEST_TYPE = 'integration' ]; then docker build -t bgppeer . ; fi
+  - docker_host=$(ifconfig docker0 | grep 'inet:' | cut -d: -f2 | awk '{ print $1}')
+  - echo $docker_host
+  - if [ $TEST_TYPE = 'integration' ]; then sudo docker run -d -p 11179:11179 --add-host docker_host:$docker_host -t --name bgppeer1 bgppeer java -jar target/BGPPeer.jar src/test/resources/BGP4Parameters_1_IT.xml ; fi
 script:
-  - mvn package -X -f ./pom.xml
   - mvn install -X -f ./pom.xml
+  - mvn org.apache.maven.plugins:maven-javadoc-plugin:2.9.1:jar
+  - if [ $TEST_TYPE = 'integration' ]; then mvn compile failsafe:integration-test ; fi
