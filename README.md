@@ -47,7 +47,7 @@ To build the .jar file and run the tests, first you need to install the netphony
 
 The BGPPeerMain is an example of a main class to run a BGP Speaker. It represents a BGP4 peer. It launches the BGP connections with its peers and waits for incoming connections. 
 
-To run the BGP Peer as a standalone application use the class BGPPeerMain. You can use maven to create an autoexecutable jar that includes all dependencies in a single file. Plase be aware that if you use the real BGP port (179) you need to start as root. 
+To run the BGP Peer as a standalone application use the class BGPPeerMain. You can use maven to create an autoexecutable jar that includes all dependencies in a single file. There is a specific profile called bgp-ls-speaker for this sole purpose. Plase be aware that if you use the real BGP port (179) you need to start as root.  
   ```bash
     git clone https://github.com/telefonicaid/netphony-topology.git
     cd netphony-topology
@@ -56,7 +56,7 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
     sudo java -Dlog4j.configurationFile=log4j2.xml  -jar bgp-ls-speaker-jar-with-dependencies.jar BGP4Parameters.xml 
  ```
  
- Before running, you should configure the parameteres. The parameters are configured in an xml file. By default, if used with BGPPeerMain, or it is not specified a file name, BGP4Parameters.xml should be used. An example of the file is located in examples/BGP4Parameters.xml (and with the maven assembly build, it is copied in the target directory).
+Before running, you should configure the parameteres. The parameters are configured in an xml file. By default, if used with BGPPeerMain, or it is not specified a file name, BGP4Parameters.xml should be used. An example of the file is located in examples/BGP4Parameters.xml (and with the maven assembly build, it is copied in the target directory).
 
 ## Configuration parameters
 The parameters to be configured are:
