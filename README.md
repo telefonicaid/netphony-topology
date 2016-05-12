@@ -27,20 +27,10 @@ The library can be built using the maven tool. Thus, all the dependencies are in
 * Buils two BGP-LS Speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.   
 * Contributions on expanding the test suite are welcomed!!
 
-To build the .jar file and run the tests, first you need to install the netphony-network-protocols (the upload process to maven central is in progress)
- ```bash
-    git clone https://github.com/telefonicaid/netphony-network-protocols.git
-    cd netphony-network-protocols
-    git checkout tags/v1.3.0
-    mvn package
-    mvn install
- ```
- Then, once the netphony-network-protocols is installed, you can proceed with the netphony-topology.
+To build the .jar file and run the tests, you can proceed as a regular maven install:
   ```bash
-    cd ..
     git clone https://github.com/telefonicaid/netphony-topology.git
     cd netphony-topology
-    mvn package
     mvn install
  ```
 # BGP-LS Speaker
