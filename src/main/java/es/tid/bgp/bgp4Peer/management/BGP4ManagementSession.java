@@ -8,8 +8,10 @@ import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.peer.SendTopology;
@@ -58,7 +60,7 @@ public class BGP4ManagementSession extends Thread {
 	
 	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
 		this.socket=s;
-		log=Logger.getLogger("BGP4Server");
+		log=LoggerFactory.getLogger("BGP4Server");
 		this.multiTEDB=multiTEDB;
 		this.intraTEDBs=intraTEDBs;
 		this.bgp4SessionsInformation= bgp4SessionsInformation;
@@ -71,7 +73,7 @@ public class BGP4ManagementSession extends Thread {
 		try {
 			out=new PrintStream(socket.getOutputStream());
 		} catch (IOException e) {
-			log.warning("Management session cancelled: "+e.getMessage());
+			log.warn("Management session cancelled: "+e.getMessage());
 			return;
 		}
 		try {
@@ -95,7 +97,7 @@ public class BGP4ManagementSession extends Thread {
 				try {
 					command = br.readLine();
 				} catch (IOException ioe) {
-					log.warning("IO error trying to read your command");
+					log.warn("IO error trying to read your command");
 					return;
 				}
 				if (command.equals("quit")) {
@@ -143,19 +145,19 @@ public class BGP4ManagementSession extends Thread {
 					
 				}
 				else if (command.equals("set traces on")) {
-					log.setLevel(Level.ALL);		
-					Logger log2=Logger.getLogger("BGP4Parser");
-					log2.setLevel(Level.ALL);			
-					Logger log3=Logger.getLogger("BGP4Client");
-					log3.setLevel(Level.ALL);
+					//log.setLevel(Level.ALL);		
+					Logger log2=LoggerFactory.getLogger("BGP4Parser");
+					//log2.setLevel(Level.ALL);			
+					Logger log3=LoggerFactory.getLogger("BGP4Client");
+					//log3.setLevel(Level.ALL);
 					out.print("traces on!\r\n");
 				} 
 				else if (command.equals("set traces off")) {
-					log.setLevel(Level.SEVERE);		
-					Logger log2=Logger.getLogger("BGP4Parser");
-					log2.setLevel(Level.SEVERE);
-					Logger log3=Logger.getLogger("BGP4Client");
-					log3.setLevel(Level.SEVERE);
+					//log.setLevel(Level.SEVERE);		
+					Logger log2=LoggerFactory.getLogger("BGP4Parser");
+					//log2.setLevel(Level.SEVERE);
+					Logger log3=LoggerFactory.getLogger("BGP4Client");
+					//log3.setLevel(Level.SEVERE);
 					out.print("traces off!\r\n");
 				} 
 				else if (command.equals("send topology on")) {

@@ -9,7 +9,8 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
@@ -73,7 +74,7 @@ public class SimpleTEDB implements DomainTEDB{
 	private boolean multidomain=false;//By default, the TED has only one domain
 	Logger log;
 	public SimpleTEDB(){
-		log=Logger.getLogger("TEDBParser");		
+		log=LoggerFactory.getLogger("TEDBParser");		
 		registeredAlgorithms= new ArrayList<TEDListener>();
 		registeredAlgorithmssson= new ArrayList<SSONListener>();
 		TEDBlock=new ReentrantLock();

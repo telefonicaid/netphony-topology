@@ -6,7 +6,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4PeerInitiatedSession;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
@@ -33,7 +34,7 @@ public class BGP4SessionServerManager implements Runnable {
 	private LinkedList<BGP4LSPeerInfo> peersToConnect;
 	
 	public BGP4SessionServerManager(BGP4SessionsInformation bgp4SessionInformation, TEDB tedb,UpdateDispatcher ud, int bgp4Port,int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem,boolean noDelay,Inet4Address localAddress ,int mykeepAliveTimer, LinkedList<BGP4LSPeerInfo> peersToConnect ){
-		log = Logger.getLogger("BGP4Server");
+		log = LoggerFactory.getLogger("BGP4Server");
 		this.holdTime=holdTime;
 		this.BGPIdentifier=BGPIdentifier;
 		this.version = version;
@@ -76,7 +77,7 @@ public class BGP4SessionServerManager implements Runnable {
 			log.info("SERVER Listening on address: "+ localBGP4Address);
 			serverSocket = new ServerSocket( bgp4Port,0,localBGP4Address);
 		} catch (IOException e) {
-			log.severe("Could not listen on port: "+ bgp4Port);
+			log.error("Could not listen on port: "+ bgp4Port);
 			System.exit(-1);
 		}
 		while (listening) {	
@@ -87,7 +88,7 @@ public class BGP4SessionServerManager implements Runnable {
 					try {
 						Inet4Address add = peersToConnect.get(i).getPeerIP();
 						if (add==null){
-							log.warning("peer IP address shouldn't be null");
+							log.warn("peer IP address shouldn't be null");
 						}else  {
 							if (add.equals(sock.getInetAddress())){
 								log.info("FOUND "+add);

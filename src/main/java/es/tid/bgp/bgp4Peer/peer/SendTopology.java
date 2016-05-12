@@ -9,7 +9,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Update;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
@@ -100,7 +101,7 @@ public class SendTopology implements Runnable {
 	private Inet4Address localAreaID;
 	
 	public SendTopology(){
-		log = Logger.getLogger("BGP4Parser");
+		log = LoggerFactory.getLogger("BGP4Parser");
 	}
 
 	public void configure( Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
@@ -159,7 +160,7 @@ public class SendTopology implements Runnable {
 		}
 		}catch (Exception e) {
 			e.printStackTrace();
-			log.severe("PROBLEM SENDING TOPOLOGY: "+e.toString());
+			log.error("PROBLEM SENDING TOPOLOGY: "+e.toString());
 		}
 
 	}
@@ -176,12 +177,12 @@ public class SendTopology implements Runnable {
 			Node_Info node_info = NodeTable.get(node);
 			//log.info(" XXXX node_info: "+ node_info);
 			if (node_info!=null){
-				log.fine("Sending node: ("+node+")");
+				log.debug("Sending node: ("+node+")");
 				//Mandamos NodeNLRI
 				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
 				sendMessage(update);	
 			}else {
-				log.severe("Node "+node+ " HAS NO node_info in NodeTable");
+				log.error("Node "+node+ " HAS NO node_info in NodeTable");
 			}
 			
 
@@ -220,12 +221,12 @@ public class SendTopology implements Runnable {
 				TE_Information te_info = ((InterDomainEdge) edge).getTE_info();
 				
 				domainList.add((Inet4Address)edge.getDomain_src_router());
-				log.fine("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
+				log.debug("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
 				domainList.add((Inet4Address)edge.getDomain_dst_router());
-				log.fine("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
+				log.debug("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
 				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, false, te_info);
 				
-				log.fine("Update message Created");	
+				log.debug("Update message Created");	
 				sendMessage(update);				
 			}
 		}
@@ -287,11 +288,11 @@ public class SendTopology implements Runnable {
 
 		Enumeration <GenericBGP4Session > sessions = bgp4SessionsInformation.getSessionList().elements();
 
-		log.fine("Sending a BGP4 update message:"+update.toString());
+		log.debug("Sending a BGP4 update message:"+update.toString());
 		while (sessions.hasMoreElements()){	
 			GenericBGP4Session session = sessions.nextElement();
 			if (session==null) {
-				log.severe("SESSION NULL");
+				log.error("SESSION NULL");
 			}else {
 				if (session.getSendTo()) {
 					String destination = session.getRemotePeerIP().getHostAddress();
@@ -462,18 +463,18 @@ public class SendTopology implements Runnable {
 				availableLabels = te_info.getAvailableLabels();
 			if(te_info.getDefaultTEMetric()!=null){
 				metric = (int) te_info.getDefaultTEMetric().getLinkMetric();
-				log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
+				log.debug("Metric en el metodo sendLinkNLRI es: " + metric);
 			}
 			if(te_info.getTrafficEngineeringMetric()!=null){
 				te_metric = (int) te_info.getTrafficEngineeringMetric().getLinkMetric() ;
-				log.fine("Metric en el metodo sendLinkNLRI es: " + metric);
+				log.debug("Metric en el metodo sendLinkNLRI es: " + metric);
 			}
 			if(te_info.getMfOTF()!=null){
 				mfOTP =  te_info.getMfOTF();
 			}
 
 		}else{
-			log.fine("TE_Info es null");
+			log.debug("TE_Info es null");
 		}
 		
 		
@@ -502,7 +503,7 @@ public class SendTopology implements Runnable {
 		}
 		//1.2.4. AvailableLabels
 		if (availableLabels != null){
-			log.fine("Available labels fields: "+availableLabels.getLabelSet().getNumLabels());
+			log.debug("Available labels fields: "+availableLabels.getLabelSet().getNumLabels());
 			AvailableLabels al = new AvailableLabels();
 
 			BitmapLabelSet bl = new BitmapLabelSet();
@@ -514,10 +515,10 @@ public class SendTopology implements Runnable {
 
 			al.setLabelSet(bl);
 
-			log.fine("Campo BytesBitmap: "+Integer.toHexString(((int)bl.getBytesBitMap()[0])&0xFF));
-			log.fine("Campo DwdmWavelengthLabel: "+bl.getDwdmWavelengthLabel());
+			log.debug("Campo BytesBitmap: "+Integer.toHexString(((int)bl.getBytesBitMap()[0])&0xFF));
+			log.debug("Campo DwdmWavelengthLabel: "+bl.getDwdmWavelengthLabel());
 			if (bl.getBytesBitmapReserved()!=null){
-				log.fine("Campo BytesBitmapReserved: "+bl.getBytesBitmapReserved()[0]);
+				log.debug("Campo BytesBitmapReserved: "+bl.getBytesBitmapReserved()[0]);
 			}
 			linkStateAttribute.setAvailableLabels(al);
 
@@ -742,17 +743,17 @@ public class SendTopology implements Runnable {
 		for (int i =0;i< lsaList.size();i++){
 			if (lsaList.get(i).getLStype() == LSATypes.TYPE_10_OPAQUE_LSA){
 				lsa=(OSPFTEv2LSA)lsaList.get(i);
-				log.fine("Starting to process LSA");
+				log.debug("Starting to process LSA");
 
 				LinkTLV linkTLV = lsa.getLinkTLV();
 				if (linkTLV!=null){
 					//Local and Remote interface IP address
 					remoteIPAddress = linkTLV.getLinkID().getLinkID();					
-					log.fine("Remote IP Address: "+remoteIPAddress);	
+					log.debug("Remote IP Address: "+remoteIPAddress);	
 					localInterfaceIPAddress = linkTLV.getLinkLocalRemoteIdentifiers().getLinkLocalIdentifier();
-					log.fine("Local Interface: "+localInterfaceIPAddress);
+					log.debug("Local Interface: "+localInterfaceIPAddress);
 					remoteInterfaceIPAddress =linkTLV.getLinkLocalRemoteIdentifiers().getLinkRemoteIdentifier();					
-					log.fine("Remote Interface: "+remoteInterfaceIPAddress);
+					log.debug("Remote Interface: "+remoteInterfaceIPAddress);
 
 					//MPLS fields
 					if (linkTLV.getMaximumBandwidth() != null)
