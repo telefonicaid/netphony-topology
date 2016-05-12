@@ -3,7 +3,8 @@ package es.tid.bgp.bgp4Peer.peer;
 
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionClient;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionExistsException;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
@@ -39,7 +40,7 @@ public class BGP4SessionClientManager implements Runnable{
 	private Boolean sendTo;
 
 	public BGP4SessionClientManager(BGP4SessionsInformation bgp4SessionInformation,UpdateDispatcher ud, BGP4LSPeerInfo peer,int bgp4Port,String my_IPAddress,int  my_bgp4Port , int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, int my_keepAliveTimer){	
-		log=Logger.getLogger("BGP4Client");
+		log=LoggerFactory.getLogger("BGP4Client");
 		this.bgp4SessionInformation=bgp4SessionInformation;
 		this.holdTime=holdTime;
 		this.BGPIdentifier=BGPIdentifier;
@@ -65,16 +66,16 @@ public class BGP4SessionClientManager implements Runnable{
 		if(bgp4SessionClient != null){
 			if (bgp4SessionClient.isAlive()){
 				if (bgp4SessionClient.isInterrupted()){
-					log.severe("Thread alive... backup session dead");
+					log.error("Thread alive... backup session dead");
 
 				}
-				log.fine("Session alive and not interrupted");
+				log.debug("Session alive and not interrupted");
 				return;	
 			}
 			else{
 				try{
 					bgp4SessionInformation.notifySessionStart(peerIP);	
-					log.severe("Session with BGP-LS peer"+peer +" dead, trying to establish new session");
+					log.error("Session with BGP-LS peer"+peer +" dead, trying to establish new session");
 					bgp4SessionClient= new BGP4SessionClient(bgp4SessionInformation,ud,peer.getPeerIP(),peer.getPeerPort(),holdTime,BGPIdentifier,version,myAutonomousSystem,localBGP4Address, localBGP4Port,keepAliveTimer);
 					bgp4SessionClient.setSendTo(sendTo);
 					bgp4SessionClient.setUpdateFrom(updateFrom);
@@ -88,7 +89,7 @@ public class BGP4SessionClientManager implements Runnable{
 		} else {
 			try{
 				bgp4SessionInformation.notifySessionStart(peerIP);		
-				log.severe("No Session BGP with peer, trying to establish new session from"+this.localBGP4Address+"with peer "+ peer.getPeerIP()+":"+peer.getPeerPort());
+				log.error("No Session BGP with peer, trying to establish new session from"+this.localBGP4Address+"with peer "+ peer.getPeerIP()+":"+peer.getPeerPort());
 				bgp4SessionClient = new BGP4SessionClient(bgp4SessionInformation,ud, peer.getPeerIP(), peer.getPeerPort(), holdTime, BGPIdentifier,
 						version,myAutonomousSystem,localBGP4Address, localBGP4Port ,keepAliveTimer);
 				bgp4SessionClient.setSendTo(sendTo);

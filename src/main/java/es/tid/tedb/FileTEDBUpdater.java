@@ -5,7 +5,8 @@ import java.net.Inet4Address;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -107,7 +108,7 @@ public class FileTEDBUpdater {
 	 * @return Graph of the network.
 	 */
 	public static SimpleDirectedWeightedGraph<Object, IntraDomainEdge> readNetwork(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		Object router_id_addr = null;
 		Object s_router_id_addr = null;
 		Object d_router_id_addr = null;
@@ -737,7 +738,7 @@ public class FileTEDBUpdater {
 	}*/
 
 	public static Hashtable<Inet4Address,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		Object router_id_addr = null;
 		Object s_router_id_addr = null;
 		Object d_router_id_addr = null;
@@ -1159,7 +1160,7 @@ public class FileTEDBUpdater {
 							Element source_router_id_el = (Element) source_router_id
 									.item(0);
 							String s_r_id = getCharacterDataFromElement(source_router_id_el);
-							log.fine("Edge Source router_id: " + s_r_id);
+							log.debug("Edge Source router_id: " + s_r_id);
 
 							try { // s_router_id_addr type: Inet4Address
 								s_router_id_addr = (Inet4Address) Inet4Address.getByName(s_r_id);
@@ -1167,13 +1168,13 @@ public class FileTEDBUpdater {
 								s_router_id_addr =  DataPathID.getByName(s_r_id);
 							}
 							Inet4Address source_domain_id = (Inet4Address) Inet4Address.getByName(domain_id);
-							log.fine("Edge Source domain_id: " + source_domain_id);
+							log.debug("Edge Source domain_id: " + source_domain_id);
 
 							NodeList source_if_id_nl = source_router_el
 									.getElementsByTagName("if_id");
 							Element source_if_id_el = (Element) source_if_id_nl.item(0);
 							String s_source_if_id = getCharacterDataFromElement(source_if_id_el);
-							log.fine("Edge Source if_id: " + s_source_if_id);
+							log.debug("Edge Source if_id: " + s_source_if_id);
 							int src_if_id = Integer.parseInt(s_source_if_id);
 
 							NodeList dest_nl = element.getElementsByTagName("destination");
@@ -1182,19 +1183,19 @@ public class FileTEDBUpdater {
 									.getElementsByTagName("router_id");
 							Element dest_router_id_el = (Element) dest_router_id_nl.item(0);
 							String d_r_id = getCharacterDataFromElement(dest_router_id_el);
-							log.fine("Edge Destination router_id: " + d_r_id);
+							log.debug("Edge Destination router_id: " + d_r_id);
 							try { // d_router_id_addr type: Inet4Address
 								d_router_id_addr = (Inet4Address) Inet4Address.getByName(d_r_id);
 							} catch (Exception e) { // d_router_id_addr type: DataPathID
 								d_router_id_addr =  DataPathID.getByName(d_r_id);
 							}
 							//Inet4Address dest_domain_id = router_id_domain_ed.get(d_router_id_addr);
-							log.fine("Destination domain_id: <Unknown>");
+							log.debug("Destination domain_id: <Unknown>");
 
 							NodeList dest_if_id_nl = dest_el.getElementsByTagName("if_id");
 							Element dest_if_id_el = (Element) dest_if_id_nl.item(0);
 							String s_dest_if_id = getCharacterDataFromElement(dest_if_id_el);
-							log.fine("Edge Dest if_id: " + s_dest_if_id);
+							log.debug("Edge Dest if_id: " + s_dest_if_id);
 							int dst_if_id = Integer.parseInt(s_dest_if_id);
 
 							//router_id_domain_ed
@@ -1437,7 +1438,7 @@ public class FileTEDBUpdater {
 	}
 
 	public static SimpleDirectedWeightedGraph<Object,IntraDomainEdge> readITNetwork(String fileName){
-		Logger log=Logger.getLogger("PCEPServer");
+		Logger log=LoggerFactory.getLogger("PCEPServer");
 		SimpleDirectedWeightedGraph<Object,IntraDomainEdge> graph =new SimpleDirectedWeightedGraph<Object,IntraDomainEdge>(IntraDomainEdge.class);
 		Object router_id_addr = null;
 		Object it_site_id_addr = null;
@@ -1672,7 +1673,7 @@ public class FileTEDBUpdater {
 
 
 	public static Inet4Address readNetworkDomain(String fileName) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		File file = new File(fileName);
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
@@ -1712,7 +1713,7 @@ public class FileTEDBUpdater {
 	 */
 	public static DirectedWeightedMultigraph<Object, InterDomainEdge> readMDNetwork(
 			String fileName) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		DirectedWeightedMultigraph<Object, InterDomainEdge> graph = new DirectedWeightedMultigraph<Object, InterDomainEdge>(
 				InterDomainEdge.class);
 		Hashtable<Object, Inet4Address> router_id_domain_ed  = new Hashtable<Object, Inet4Address>();
@@ -1751,7 +1752,7 @@ public class FileTEDBUpdater {
 							.getElementsByTagName("router_id");
 					Element router_id_e = (Element) router_id_node.item(0);
 					String router_id = getCharacterDataFromElement(router_id_e);
-					log.fine("Router_id: " + router_id);
+					log.debug("Router_id: " + router_id);
 					try { // router_id_addr type: Inet4Address
 						router_id_addr = (Inet4Address) Inet4Address.getByName(router_id);
 					} catch (Exception e) { // router_id_addr type: DataPathID
@@ -1772,7 +1773,7 @@ public class FileTEDBUpdater {
 				}
 				
 			}
-			log.fine("Domain_ids read");
+			log.debug("Domain_ids read");
 			
 			int numLabels=0;
 
@@ -1832,7 +1833,7 @@ public class FileTEDBUpdater {
 			NodeList edges = doc.getElementsByTagName("edge");
 			boolean a =true;
 			for (int i = 0; i < edges.getLength(); i++) {
-				log.fine("Looking at edge");
+				log.debug("Looking at edge");
 
 				Element element = (Element) edges.item(i);
 				InterDomainEdge edge = new InterDomainEdge();
@@ -1845,7 +1846,7 @@ public class FileTEDBUpdater {
 				Element source_router_id_el = (Element) source_router_id
 						.item(0);
 				String s_r_id = getCharacterDataFromElement(source_router_id_el);
-				log.fine("Edge Source router_id: " + s_r_id);
+				log.debug("Edge Source router_id: " + s_r_id);
 
 				try { // s_router_id_addr type: Inet4Address
 					s_router_id_addr = (Inet4Address) Inet4Address.getByName(s_r_id);
@@ -1853,13 +1854,13 @@ public class FileTEDBUpdater {
 					s_router_id_addr =  DataPathID.getByName(s_r_id);
 				}
 				Inet4Address source_domain_id = router_id_domain_ed.get(s_router_id_addr);
-				log.fine("Edge Source domain_id: " + source_domain_id);
+				log.debug("Edge Source domain_id: " + source_domain_id);
 
 				NodeList source_if_id_nl = source_router_el
 						.getElementsByTagName("if_id");
 				Element source_if_id_el = (Element) source_if_id_nl.item(0);
 				String s_source_if_id = getCharacterDataFromElement(source_if_id_el);
-				log.fine("Edge Source if_id: " + s_source_if_id);
+				log.debug("Edge Source if_id: " + s_source_if_id);
 				int src_if_id = Integer.parseInt(s_source_if_id);
 
 				NodeList dest_nl = element.getElementsByTagName("destination");
@@ -1868,19 +1869,19 @@ public class FileTEDBUpdater {
 						.getElementsByTagName("router_id");
 				Element dest_router_id_el = (Element) dest_router_id_nl.item(0);
 				String d_r_id = getCharacterDataFromElement(dest_router_id_el);
-				log.fine("Edge Destination router_id: " + d_r_id);
+				log.debug("Edge Destination router_id: " + d_r_id);
 				try { // d_router_id_addr type: Inet4Address
 					d_router_id_addr = (Inet4Address) Inet4Address.getByName(d_r_id);
 				} catch (Exception e) { // d_router_id_addr type: DataPathID
 					d_router_id_addr =  DataPathID.getByName(d_r_id);
 				}
 				Inet4Address dest_domain_id = router_id_domain_ed.get(d_router_id_addr);
-				log.fine("Destination domain_id: " + dest_domain_id);
+				log.debug("Destination domain_id: " + dest_domain_id);
 
 				NodeList dest_if_id_nl = dest_el.getElementsByTagName("if_id");
 				Element dest_if_id_el = (Element) dest_if_id_nl.item(0);
 				String s_dest_if_id = getCharacterDataFromElement(dest_if_id_el);
-				log.fine("Edge Dest if_id: " + s_dest_if_id);
+				log.debug("Edge Dest if_id: " + s_dest_if_id);
 				int dst_if_id = Integer.parseInt(s_dest_if_id);
 
 				//router_id_domain_ed
@@ -1912,7 +1913,7 @@ public class FileTEDBUpdater {
 
 	public static void initializeReachabilityFromFile(String fileName,
 			ReachabilityManager rm) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		log.info("Initializng reachability from " + fileName);
 		File file = new File(fileName);
 		try {
@@ -1968,7 +1969,7 @@ public class FileTEDBUpdater {
 	// IT update del GEYSERS
 
 	public static DirectedWeightedMultigraph<Object,InterDomainEdge> readITMDNetwork(String fileName){
-		Logger log=Logger.getLogger("PCEPServer");
+		Logger log=LoggerFactory.getLogger("PCEPServer");
 		DirectedWeightedMultigraph<Object,InterDomainEdge>graph =new DirectedWeightedMultigraph<Object,InterDomainEdge>(InterDomainEdge.class);
 		Hashtable <Object,Object> router_id_domain_ed=new Hashtable <Object,Object>();
 		Hashtable <Object,Object> it_site_id_domain_ed2=new Hashtable <Object,Object>();
@@ -2167,7 +2168,7 @@ public class FileTEDBUpdater {
 	}
 
 	public static WSONInformation getWSONInformation(String fileName, String layer){
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		File file = new File(fileName);
 		AvailableLabels commonAvailableLabels = null;
 		WSONInformation WSONinfo = null;
@@ -2255,7 +2256,7 @@ public class FileTEDBUpdater {
 	}
 
 	public static SSONInformation getSSONInformation(String fileName, String layer){
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		File file = new File(fileName);
 		AvailableLabels commonAvailableLabels = null;
 		SSONInformation SSONinfo = null;
@@ -2366,7 +2367,7 @@ public class FileTEDBUpdater {
 	}
 
 	public static Inet4Address getDomainIDfromSimpleDomain(String fileName) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		log.info("Initializng reachability from " + fileName);
 		File file = new File(fileName);
 		Inet4Address domain_id = null;
@@ -2390,7 +2391,7 @@ public class FileTEDBUpdater {
 
 	public static void getDomainReachabilityFromFile(String fileName,
 			/*byte[] domainReachabilityIPv4Prefix,*/ ReachabilityEntry reachabilityEntry,String layer) {
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		log.info("Initializng reachability from " + fileName);
 		File file = new File(fileName);
 		try {
@@ -2481,7 +2482,7 @@ public class FileTEDBUpdater {
 	public static LinkedList<InterDomainEdge> readInterDomainLinks(String fileName) {
 
 		LinkedList<InterDomainEdge> interDomainLinks = new LinkedList<InterDomainEdge>();
-		Logger log = Logger.getLogger("PCEPServer");
+		Logger log = LoggerFactory.getLogger("PCEPServer");
 		File file = new File(fileName);
 		Inet4Address domain_id=null;
 		try {
@@ -2660,7 +2661,7 @@ public class FileTEDBUpdater {
 	}
 
 	public static int readWSONLambdas(String fileName){
-		Logger log=Logger.getLogger("PCEPServer");
+		Logger log=LoggerFactory.getLogger("PCEPServer");
 		File file = new File(fileName);
 		int num_wavelengths=4;
 		try {

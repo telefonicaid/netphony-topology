@@ -4,7 +4,8 @@ import java.net.Inet4Address;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
@@ -34,7 +35,7 @@ public class MDTEDB implements MultiDomainTEDB {
 	LinkedList<ReachabilityEntry> reachability;
 	
 	public MDTEDB(){
-		log=Logger.getLogger("PCEServer");
+		log=LoggerFactory.getLogger("PCEServer");
 		networkDomainGraph=new DirectedWeightedMultigraph<Object,InterDomainEdge> (InterDomainEdge.class);
 		addBidirectional=true;//FIXME: ESTO ES UN APA�O TEMPORAL
 		reachability=new LinkedList<ReachabilityEntry>();
@@ -95,22 +96,22 @@ public class MDTEDB implements MultiDomainTEDB {
 		boolean edgeFound=false;
 		InterDomainEdge interDomainEdgeFound=null;
 		if (edgeset.size() == 0)
-			log.fine("Edge set size = 0");
+			log.debug("Edge set size = 0");
 		while (iterador.hasNext()){
 			InterDomainEdge interDomainEdge=iterador.next();
-			log.fine("existing edge: "+interDomainEdge.toString());
+			log.debug("existing edge: "+interDomainEdge.toString());
 			if (interDomainEdge.getSrc_router_id().equals(localRouterASBR)){
-				log.fine("Local router is the same!!!");
+				log.debug("Local router is the same!!!");
 				if (interDomainEdge.getDst_router_id().equals(remoteRouterASBR)){
-					log.fine("Destination router is the same!!!");
+					log.debug("Destination router is the same!!!");
 					edgeFound=true;
 					interDomainEdgeFound=interDomainEdge;
 				}
 				else {
-					log.fine("Destination router is NOT the same!!!");
+					log.debug("Destination router is NOT the same!!!");
 				}
 			}else {
-				log.fine("Local router is NOT the same!!!");
+				log.debug("Local router is NOT the same!!!");
 			}			
 		}
 		

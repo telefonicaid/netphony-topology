@@ -6,7 +6,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
@@ -40,7 +41,7 @@ public class ITMDTEDB implements MultiDomainTEDB {
 	
 	
 	public ITMDTEDB(){
-		log=Logger.getLogger("PCEServer");
+		log=LoggerFactory.getLogger("PCEServer");
 		networkDomainGraph=new DirectedWeightedMultigraph<Object,InterDomainEdge> (InterDomainEdge.class);
 		it_site_id_domain_ed=new Hashtable <Object,Object>();
 		resource_id_domain_ed=new Hashtable <Object,Object>();
@@ -82,30 +83,30 @@ public class ITMDTEDB implements MultiDomainTEDB {
 	public synchronized void addInterdomainLink( Object localDomainID, Object localRouterASBR, long localRouterASBRIf, Object remoteDomainID, Object remoteRouterASBR, long remoteRouterASBRIf, TE_Information te_info ){
 		if (!networkDomainGraph.containsVertex(localDomainID)){
 			networkDomainGraph.addVertex(localDomainID);
-			log.finest("Vertex (domain) "+localDomainID+" added");
+			log.debug("Vertex (domain) "+localDomainID+" added");
 		}
 		if (!networkDomainGraph.containsVertex(remoteDomainID)){
 			networkDomainGraph.addVertex(remoteDomainID);
-			log.finest("Vertex (domain) "+remoteDomainID+" added");
+			log.debug("Vertex (domain) "+remoteDomainID+" added");
 		}
-		log.finest("Looking to add "+localRouterASBR+":"+localRouterASBRIf+" ("+localDomainID+") -->"+remoteRouterASBR+":"+remoteRouterASBRIf+" ("+remoteDomainID+")");
+		log.debug("Looking to add "+localRouterASBR+":"+localRouterASBRIf+" ("+localDomainID+") -->"+remoteRouterASBR+":"+remoteRouterASBRIf+" ("+remoteDomainID+")");
 		Set<InterDomainEdge> edgeset= networkDomainGraph.edgesOf(localDomainID);
 		Iterator <InterDomainEdge> iterador=edgeset.iterator();
 		boolean edgeFound=false;
 		while (iterador.hasNext()){
 			InterDomainEdge interDomainEdge=iterador.next();
-			log.finest("existing edge: "+interDomainEdge.toString());
+			log.debug("existing edge: "+interDomainEdge.toString());
 			if (interDomainEdge.getSrc_router_id().equals(localRouterASBR)){
-				log.finest("Local router is the same!!!");
+				log.debug("Local router is the same!!!");
 				if (interDomainEdge.getDst_router_id().equals(remoteRouterASBR)){
-					log.finest("Destination router is the same!!!");
+					log.debug("Destination router is the same!!!");
 					edgeFound=true;
 				}
 				else {
-					log.finest("Destination router is NOT the same!!!");
+					log.debug("Destination router is NOT the same!!!");
 				}
 			}else {
-				log.finest("Local router is NOT the same!!!");
+				log.debug("Local router is NOT the same!!!");
 			}			
 		}
 		
@@ -132,11 +133,11 @@ public class ITMDTEDB implements MultiDomainTEDB {
 		resource_id_it_site_ed = new Hashtable <Object,Object> ();
 		if (!networkDomainGraph.containsVertex(domainID)){
 			networkDomainGraph.addVertex(domainID);
-			log.finest("Vertex (domain) "+domainID+" added");
+			log.debug("Vertex (domain) "+domainID+" added");
 		}
 		
-		log.finest("Looking to"+AdvType+" Storage resource:"+ResourceID+" in IT_Site:"+IT_site);
-		log.finest("Total storage size:"+TotalStorageSize+" Available storage size:"+AvailableStorageSize+")");
+		log.debug("Looking to"+AdvType+" Storage resource:"+ResourceID+" in IT_Site:"+IT_site);
+		log.debug("Total storage size:"+TotalStorageSize+" Available storage size:"+AvailableStorageSize+")");
 		
 		
 		if (AdvType == 0x01){

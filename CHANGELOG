@@ -1,3 +1,7 @@
+v1.3.1-SNAPSHOT (remove SNAPSHOT at release time)
+- Moved to slf4j logging framework
+- Added method to pass multiple TEDs from en external program
+- Added docker support in travis
 v1.3
 - Compile with networking-protocols v1.3.0 (available in maven central)
 - JUnit Test upgrade to check intraTEDBs after sending

@@ -12,9 +12,12 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
@@ -124,7 +127,6 @@ public class BGPPeer {
 	 */
 	private ScheduledThreadPoolExecutor executor;
 
-	private Logger log = Logger.getLogger("TMController");
 	/**
 	 * Function to configure the BGP4 Peer without specifying the file. It will read a file with name: BGP4Parameters.xml
 	 */
@@ -161,28 +163,28 @@ public class BGPPeer {
 		saveTopology = params.isSaveTopologyDB();
 
 		//Initialize loggers
-		FileHandler fh;
-		FileHandler fh1;
-		FileHandler fh2;
-		try {
-			fh=new FileHandler(params.getBGP4LogFile());
-			logParser=Logger.getLogger("BGP4Parser");
-			logParser.addHandler(fh);
-			logParser.setLevel(Level.ALL);
-			fh1=new FileHandler(params.getBGP4LogFileClient());
-			logClient=Logger.getLogger("BGP4Client");
-			logClient.addHandler(fh1);
-			logClient.setLevel(Level.ALL);
-			fh2=new FileHandler(params.getBGP4LogFileServer());
-			logServer=Logger.getLogger("BGP4Server");
-			logServer.addHandler(fh2);
-			logServer.setLevel(Level.ALL);
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			System.exit(1);
-		}
-		logParser.info("Inizializing BGP4 Peer");
+//		FileHandler fh;
+//		FileHandler fh1;
+//		FileHandler fh2;
+//		try {
+//			fh=new FileHandler(params.getBGP4LogFile());
+			logParser=LoggerFactory.getLogger("BGP4Parser");
+//			logParser.addHandler(fh);
+//			logParser.setLevel(Level.ALL);
+//			fh1=new FileHandler(params.getBGP4LogFileClient());
+			logClient=LoggerFactory.getLogger("BGP4Client");
+//			logClient.addHandler(fh1);
+//			logClient.setLevel(Level.ALL);
+//			fh2=new FileHandler(params.getBGP4LogFileServer());
+			logServer=LoggerFactory.getLogger("BGP4Peer");
+//			logServer.addHandler(fh2);
+//			logServer.setLevel(Level.ALL);
+//
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//			System.exit(1);
+//		}
+			logServer.info("Inizializing BGP4 Peer");
 		if (iTEDBs!= null) intraTEDBs=iTEDBs;
 		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 		
@@ -297,7 +299,7 @@ public class BGPPeer {
 			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer(),peersToConnect );
 			executor.execute(bgp4SessionServer);
 		}else{
-			logServer.severe("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
+			logServer.error("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
 			System.exit(1);
 		}
 	}

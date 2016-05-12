@@ -45,7 +45,7 @@
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
 	<learnTopology>fromXML</learnTopology>	
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
-	<topologyFile>../src/main/resources/network1.xml</topologyFile>
+	<topologyFile>network1.xml</topologyFile>
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
 	<!--<topologyFile>src/test/resources/network1.xml</topologyFile>-->
 	<!-- Optional Parameter. Instance Identifier for node and link NLRI. See rfc 6549. Default value: 0-->

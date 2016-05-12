@@ -4,7 +4,8 @@ import java.io.DataOutputStream;
 import java.net.Inet4Address;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
 
@@ -26,7 +27,7 @@ public class BGP4SessionsInformation {
 	public BGP4SessionsInformation(){
 		sessionList=new Hashtable<Long,GenericBGP4Session>();
 		sessionListByPeerIP=new Hashtable<Inet4Address,GenericBGP4Session>();
-		log = Logger.getLogger("BGP4Parser");
+		log = LoggerFactory.getLogger("BGP4Parser");
 	}
 	
 	public synchronized void notifySessionStart(Inet4Address addr) throws BGP4SessionExistsException{

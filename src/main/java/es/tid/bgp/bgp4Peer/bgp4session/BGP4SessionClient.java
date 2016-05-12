@@ -6,7 +6,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Timer;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Message;
 import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
@@ -42,7 +43,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	public BGP4SessionClient(BGP4SessionsInformation bgp4SessionsInformation,UpdateDispatcher updateDispatcher, Inet4Address peerBGP_IPaddress, int peerBGP_port, int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem, String localBGP4Address, int localBGP4Port,int keepAliveTimer){
 		super(bgp4SessionsInformation, holdTime, BGPIdentifier, version, myAutonomousSystem,keepAliveTimer);
 		timer=new Timer();
-		log = Logger.getLogger("BGP4Client");		
+		log = LoggerFactory.getLogger("BGP4Client");		
 		this.peerBGP_port = peerBGP_port;
 		this.updateDispatcher=updateDispatcher;
 		this.localBGP4Address=localBGP4Address;
@@ -55,19 +56,19 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	public void run() {
 	
 		log.info("Opening new BGP4 Session with host "+ this.remotePeerIP.getHostAddress() + " on port " + this.peerBGP_port +" local " + this.localBGP4Address);
-		log.fine("Do we want to update from peer?" + updateFrom);
-		log.fine("Do we want to send to peer?" + sendTo);
+		log.debug("Do we want to update from peer?" + updateFrom);
+		log.debug("Do we want to send to peer?" + sendTo);
 		try {
 			Inet4Address addr = (Inet4Address) Inet4Address.getByName(localBGP4Address);
 			Inet4Address addrPeer = remotePeerIP;
 			socket = new Socket(addrPeer, peerBGP_port, addr, 0);
 			if (no_delay){
 				this.socket.setTcpNoDelay(true);
-				log.fine("No delay activated");
+				log.debug("No delay activated");
 			}
 			
 		} catch (IOException e) {
-			log.severe("Couldn't get I/O for connection to " + remotePeerIP.getHostAddress() + " on port " + peerBGP_port +"exception: "+e.getMessage());
+			log.error("Couldn't get I/O for connection to " + remotePeerIP.getHostAddress() + " on port " + peerBGP_port +"exception: "+e.getMessage());
 			//As there is not yet a session added (it is added in the beginning of initializeBGP4Session());
 			//endSession();
 			return;
@@ -108,9 +109,9 @@ public class BGP4SessionClient extends GenericBGP4Session{
 						in.close();
 						out.close();
 					} catch (Exception e1) {
-						log.warning("problem closing sockets");
+						log.warn("problem closing sockets");
 					}
-					log.warning("Finishing BGP4 Session abruptly!");
+					log.warn("Finishing BGP4 Session abruptly!");
 					return;
 				}
 				if (this.msg != null) {//If null, it is not a valid PCEP message			
@@ -121,7 +122,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 					case BGP4MessageTypes.MESSAGE_OPEN:
 						log.info("BGP OPEN message received from "+this.remotePeerIP);
 						//After the session has been started, ignore subsequent OPEN messages
-						log.warning("OPEN message ignored");
+						log.warn("OPEN message ignored");
 						break;
 
 					case BGP4MessageTypes.MESSAGE_KEEPALIVE:
@@ -146,7 +147,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 						break;
 
 					default:
-						log.warning("ERROR: unexpected message received");
+						log.warn("ERROR: unexpected message received");
 						bgp4Msg = false;
 					}
 
@@ -157,8 +158,8 @@ public class BGP4SessionClient extends GenericBGP4Session{
 				} 
 			}
 		}finally{
-			//log.severe("SESSION "+ internalSessionID+" IS KILLED");
-			log.severe("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
+			//log.error("SESSION "+ internalSessionID+" IS KILLED");
+			log.error("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
 			cancelDeadTimer();
 			cancelKeepAlive();
 			this.FSMstate=BGP4StateSession.BGP4_STATE_IDLE;
