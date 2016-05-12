@@ -127,7 +127,6 @@ public class BGPPeer {
 	 */
 	private ScheduledThreadPoolExecutor executor;
 
-	private Logger log = LoggerFactory.getLogger("TMController");
 	/**
 	 * Function to configure the BGP4 Peer without specifying the file. It will read a file with name: BGP4Parameters.xml
 	 */

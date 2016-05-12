@@ -21,7 +21,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class BGP4Parameters {
 	
-	private Logger log = LoggerFactory.getLogger("TMController");
+	private Logger log = LoggerFactory.getLogger("BGP4Peer");
 	/**
 	 * TCP port where the BGP is listening for incoming bgp4 connections
 	 * Experimental use only. Default and standard is 179
