@@ -41,7 +41,7 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
   ```bash
     git clone https://github.com/telefonicaid/netphony-topology.git
     cd netphony-topology
-    mvn clean compile -P bgp-ls-speaker assembly:single
+    mvn clean package -P bgp-ls-speaker assembly:single
     cd target
     sudo java -Dlog4j.configurationFile=log4j2.xml  -jar bgp-ls-speaker-jar-with-dependencies.jar BGP4Parameters.xml 
  ```
