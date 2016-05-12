@@ -8,10 +8,9 @@ install:
   - sudo docker build -t bgppeer . 
   - ifconfig 
   - ifconfig docker0
-  - ifconfig docker0 | grep 'inet:'
-  - ifconfig docker0 | grep 'inet:' | cut -d ':' -f2
-  - ifconfig docker0 | grep 'inet:' | cut -d ':' -f2 | awk '{ print $1}'
-  - docker_host=$(ifconfig docker0 | grep 'inet:' | cut -d ':' -f2 | awk '{ print $1}')
+  - ifconfig docker0 | grep 'inet' | cut -d ':' -f2
+  - ifconfig docker0 | grep 'inet' | cut -d ':' -f2 | awk '{ print $1}'
+  - docker_host=$(ifconfig docker0 | grep 'inet' | cut -d ':' -f2 | awk '{ print $1}')
   - echo $docker_host
 script:
   - mvn install -X -f ./pom.xml
