@@ -20,57 +20,57 @@
       <version>1.7.7</version>
     </dependency>
     <dependency>
-	<groupId>org.slf4j</groupId>
-	<artifactId>slf4j-log4j12</artifactId>
-	<version>1.7.7</version>
-</dependency>
-    <dependency>
-      <groupId>es.tid.netphony</groupId>
-      <artifactId>network-protocols</artifactId>
-      <version>1.3.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jgrapht</groupId>
-  <artifactId>jgrapht-core</artifactId>
-  <version>0.9.1</version>
+     <groupId>org.slf4j</groupId>
+     <artifactId>slf4j-log4j12</artifactId>
+     <version>1.7.7</version>
    </dependency>
    <dependency>
-	<groupId>com.google.code.gson</groupId>
-	<artifactId>gson</artifactId>
-	<version>2.2.2</version>
+    <groupId>es.tid.netphony</groupId>
+    <artifactId>network-protocols</artifactId>
+    <version>1.3.0</version>
+  </dependency>
+  <dependency>
+    <groupId>org.jgrapht</groupId>
+    <artifactId>jgrapht-core</artifactId>
+    <version>0.9.1</version>
+  </dependency>
+  <dependency>
+   <groupId>com.google.code.gson</groupId>
+   <artifactId>gson</artifactId>
+   <version>2.2.2</version>
+ </dependency>
+ <dependency>
+   <groupId>com.googlecode.json-simple</groupId>
+   <artifactId>json-simple</artifactId>
+   <version>1.1.1</version>
+ </dependency>
+ <dependency>
+   <groupId>com.metaparadigm</groupId>
+   <artifactId>json-rpc</artifactId>
+   <version>1.0</version>
+ </dependency>
+ <dependency>
+  <groupId>redis.clients</groupId>
+  <artifactId>jedis</artifactId>
+  <version>2.1.0</version>
 </dependency>
-   <dependency>
-	<groupId>com.googlecode.json-simple</groupId>
-	<artifactId>json-simple</artifactId>
-	<version>1.1.1</version>
-</dependency>
-<dependency>
-	<groupId>com.metaparadigm</groupId>
-	<artifactId>json-rpc</artifactId>
-	<version>1.0</version>
-</dependency>
-<dependency>
-        <groupId>redis.clients</groupId>
-        <artifactId>jedis</artifactId>
-        <version>2.1.0</version>
-</dependency>
-   
-  </dependencies>
-  <developers>
-        <developer>
-            <name>Telefonica I+D</name>
-            <email>oscar.gonzalezdedios@telefonica.com</email>
-            <organization>Telefonica I+D</organization>
-            <organizationUrl>https://www.tid.es</organizationUrl>
-        </developer>
-    </developers>
-    <scm>
-        <connection>scm:git:git@github.com:telefonicaid/netphony-topology.git</connection>
-        <developerConnection>scm:git:git@github.com:telefonicaid/netphony-topology.git</developerConnection>
-        <url>git@github.com:telefonicaid/netphony-topology.git</url>
-    </scm>
 
-  <distributionManagement>
+</dependencies>
+<developers>
+  <developer>
+    <name>Telefonica I+D</name>
+    <email>oscar.gonzalezdedios@telefonica.com</email>
+    <organization>Telefonica I+D</organization>
+    <organizationUrl>https://www.tid.es</organizationUrl>
+  </developer>
+</developers>
+<scm>
+  <connection>scm:git:git@github.com:telefonicaid/netphony-topology.git</connection>
+  <developerConnection>scm:git:git@github.com:telefonicaid/netphony-topology.git</developerConnection>
+  <url>git@github.com:telefonicaid/netphony-topology.git</url>
+</scm>
+
+<distributionManagement>
   <snapshotRepository>
     <id>ossrh</id>
     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -80,55 +80,55 @@
     <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
   </repository>
 </distributionManagement>
-  <build>
-    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+<build>
+  <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-        <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>es.tid.bgp.bgp4Peer.peer.BGPPeerMain</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-            <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
-        <executions>
-          <execution>
-            <id>copy-resources</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${basedir}/target</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/src/main/resources</directory>
-                  <filtering>true</filtering>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
+  <plugins>
+    <plugin>
+      <artifactId>maven-compiler-plugin</artifactId>
+      <version>3.1</version>
+      <configuration>
+        <source>1.6</source>
+        <target>1.6</target>
+      </configuration>
+    </plugin>
+    <plugin>
+      <artifactId>maven-assembly-plugin</artifactId>
+      <version>2.6</version>
+      <configuration>
+        <descriptorRefs>
+          <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+        <archive>
+          <manifest>
+            <mainClass>es.tid.bgp.bgp4Peer.peer.BGPPeerMain</mainClass>
+          </manifest>
+        </archive>
+      </configuration>
+    </plugin>
+    <plugin>
+      <artifactId>maven-resources-plugin</artifactId>
+      <version>2.6</version>
+      <executions>
+        <execution>
+          <id>copy-resources</id>
+          <phase>validate</phase>
+          <goals>
+            <goal>copy-resources</goal>
+          </goals>
+          <configuration>
+            <outputDirectory>${basedir}/target</outputDirectory>
+            <resources>
+              <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+              </resource>
+            </resources>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+    <plugin>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-source-plugin</artifactId>
       <version>2.2.1</version>
@@ -154,30 +154,56 @@
         </execution>
       </executions>
     </plugin>
+  </plugins>
+</build>
+<profiles>
+  <profile>
+    <id>integration-test</id>
+    <build>
+      <plugins>
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.13</version>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>verify</id>
+            <goals>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
-  </build>
-	<profiles>
-			<profile>
-				<id>deploy-maven-central</id>
-				<build>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-gpg-plugin</artifactId>
-							<version>1.6</version>
-							<executions>
-								<execution>
-									<id>sign-artifacts</id>
-									<phase>verify</phase>
-									<goals>
-										<goal>sign</goal>
-									</goals>
-								</execution>
-							</executions>
-						</plugin>
-					</plugins>
-				</build>
-			</profile>
-		</profiles>
+  </build>  
+</profile>
+<profile>
+  <id>deploy-maven-central</id>
+  <build>
+   <plugins>
+    <plugin>
+     <groupId>org.apache.maven.plugins</groupId>
+     <artifactId>maven-gpg-plugin</artifactId>
+     <version>1.6</version>
+     <executions>
+      <execution>
+       <id>sign-artifacts</id>
+       <phase>verify</phase>
+       <goals>
+        <goal>sign</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+</plugins>
+</build>
+</profile>
+</profiles>
 
 </project>
