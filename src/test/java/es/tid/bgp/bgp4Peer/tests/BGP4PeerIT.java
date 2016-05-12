@@ -41,7 +41,7 @@ public class BGP4PeerIT {
 		//bgpPeer.startManagementServer();
 		//bgpPeer.startSendTopology();
 		String topoOriginal=bgpPeer.getMultiDomainTEDB().printTopology();
-		
+		System.out.println("<----INTEGRATION TEST---->");
 		System.out.println("Topology1: ");
 		System.out.println(topoOriginal);
 		
