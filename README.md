@@ -1,4 +1,4 @@
-netphony-topology v1.3.1-SNAPSHOT
+netphony-topology v1.3.1
 =======
 Repository branch build status:
 
@@ -15,6 +15,12 @@ Netphony-topology is a BGP-LS Speaker and a Java based Traffic Engineering Datab
 BGP-LS is used for distributing Network Topologies to external elments, for example, a Path Computation Element. 
 
 The BGP-LS speaker can be run as a standalone application, or as a module attached to other software.
+
+## *Latest news!*
+- Apache 2.0 license
+- Moved to slf4j logging framework
+- Added method to pass multiple TEDs from en external program
+- Added docker support in travis
 
 ## Traffic Engineering Database
 
