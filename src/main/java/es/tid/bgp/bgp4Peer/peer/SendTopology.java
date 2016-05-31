@@ -9,6 +9,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.NodeNLRI;
 import es.tid.bgp.bgp4.update.fields.PathAttribute;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Attribute;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Segment;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.BGP_LS_MP_Reach_Attribute;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.LinkStateAttribute;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.OriginAttribute;
@@ -331,9 +333,11 @@ public class SendTopology implements Runnable {
 
 		//AS_PATH
 		AS_Path_Attribute as_path = new AS_Path_Attribute();
-		as_path.setType(PathAttributesTypeCode.PATH_ATTRIBUTE_ASPATH_AS_SEQUENCE);
-		as_path.setNumberASes(1);
-		as_path.setValue(65002);
+		AS_Path_Segment as_path_seg= new AS_Path_Segment();
+		int[] segs=new int[1];
+		segs[0]=65002;
+		as_path_seg.setSegments(segs);
+		as_path.getAsPathSegments().add(as_path_seg);
 		pathAttributes.add(as_path);
 
 		//Node Attribute
@@ -425,10 +429,13 @@ public class SendTopology implements Runnable {
 		pathAttributes.add(or);	
 
 		//1.2. AS-PATH
+		
 		AS_Path_Attribute as_path = new AS_Path_Attribute();
-		as_path.setType(PathAttributesTypeCode.PATH_ATTRIBUTE_ASPATH_AS_SEQUENCE);
-		as_path.setNumberASes(1);
-		as_path.setValue(300);
+		AS_Path_Segment as_path_seg= new AS_Path_Segment();
+		int[] segs=new int[1];
+		segs[0]=300;
+		as_path_seg.setSegments(segs);
+		as_path.getAsPathSegments().add(as_path_seg);
 		pathAttributes.add(as_path);
 
 
