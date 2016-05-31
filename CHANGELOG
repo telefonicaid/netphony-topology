@@ -1,4 +1,5 @@
-v1.3.1-SNAPSHOT (remove SNAPSHOT at release time)
+v1.3.1
+- Apache 2.0 license
 - Moved to slf4j logging framework
 - Added method to pass multiple TEDs from en external program
 - Added docker support in travis
