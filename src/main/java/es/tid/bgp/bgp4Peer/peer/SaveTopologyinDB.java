@@ -6,7 +6,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import es.tid.tedb.DatabaseControlSimplifiedLSA;
 import es.tid.tedb.DomainTEDB;
@@ -39,7 +40,7 @@ public class SaveTopologyinDB implements Runnable {
 	
 	
 	public SaveTopologyinDB(){
-		log = Logger.getLogger("BGP4Parser");
+		log = LoggerFactory.getLogger("BGP4Parser");
 		jedis = new Jedis(host,port); 
 	}
 
@@ -98,7 +99,7 @@ public class SaveTopologyinDB implements Runnable {
 		}
 		}catch (Exception e) {
 			e.printStackTrace();
-			log.severe("PROBLEM Writing TOPOLOGY: "+e.toString());
+			log.error("PROBLEM Writing TOPOLOGY: "+e.toString());
 		}
 
 	}

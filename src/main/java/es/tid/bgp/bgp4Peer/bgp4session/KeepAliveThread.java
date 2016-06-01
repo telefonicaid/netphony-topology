@@ -1,7 +1,8 @@
 package es.tid.bgp.bgp4Peer.bgp4session;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Keepalive;
 
@@ -20,7 +21,7 @@ public class KeepAliveThread extends Thread {
 		public KeepAliveThread(DataOutputStream out, int k) {
 			this.keepAlive = k;
 			this.out = out;
-			log=Logger.getLogger("BGP4Server");
+			log=LoggerFactory.getLogger("BGP4Server");
 		}
 		
 		/**
@@ -35,17 +36,17 @@ public class KeepAliveThread extends Thread {
 						sendKeepAlive();
 					}
 					else {
-						log.warning("Ending KEEPALIVE mechanism");
+						log.warn("Ending KEEPALIVE mechanism");
 						return;
 					}
 				} catch (InterruptedException e) {
 					if (running==false){
-						log.warning("Ending KeepAliveThread");
+						log.warn("Ending KeepAliveThread");
 						return;
 					}
 					else {
 						//Keepalive Timer is reseted
-						log.fine("Reseting Keepalive timer");
+						log.debug("Reseting Keepalive timer");
 					}
 				} 
 			}
@@ -70,11 +71,11 @@ public class KeepAliveThread extends Thread {
 //				e1.printStackTrace();
 //			}
 			try {
-				log.fine("Sending Keepalive message");
+				log.debug("Sending Keepalive message");
 				out.write(p_ka.getBytes());
 				out.flush();
 			} catch (IOException e) {
-				log.warning("Error sending KEEPALIVE: " + e.getMessage());
+				log.warn("Error sending KEEPALIVE: " + e.getMessage());
 			}
 		}
 		

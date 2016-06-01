@@ -1,5 +1,10 @@
 package es.tid.bgp.bgp4Peer.peer;
 
+import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
+import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
+import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
+import es.tid.tedb.*;
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -7,9 +12,12 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
@@ -21,6 +29,7 @@ import es.tid.tedb.MDTEDB;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.tedb.TEDB;
+
 
 /**
  * BGP-LS Speaker. 
@@ -117,8 +126,7 @@ public class BGPPeer {
 	 * Executor. To execute the session server, to execute periodically the session client.
 	 */
 	private ScheduledThreadPoolExecutor executor;
-	
-	
+
 	/**
 	 * Function to configure the BGP4 Peer without specifying the file. It will read a file with name: BGP4Parameters.xml
 	 */
@@ -132,7 +140,18 @@ public class BGPPeer {
 	 * @param nameParametersFile Name of the Parameters File
 	 */
 	public void configure(String nameParametersFile){
-		//First of all, read the parameters	
+		configure(nameParametersFile, null, null);
+	}
+	
+	/**
+	 * Function to configure the BGP4 peer. 
+	 * It created the loggers, the executor, 
+	 * @param nameParametersFile Name of the Parameters File
+	 * @param multiTEDB multidomain database
+	 * @param iTEDBs internal domains database 
+	 */
+	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> iTEDBs){
+		//First of all, read the parameters
 		if (nameParametersFile != null){
 			params=new BGP4Parameters(nameParametersFile);
 		}else{
@@ -142,34 +161,39 @@ public class BGPPeer {
 		peersToConnect = params.getPeersToConnect();
 		sendTopology = params.isSendTopology();
 		saveTopology = params.isSaveTopologyDB();
-		
-		//Initialize loggers
-		FileHandler fh;
-		FileHandler fh1;
-		FileHandler fh2;
-		try {			
-			fh=new FileHandler(params.getBGP4LogFile());		
-			logParser=Logger.getLogger("BGP4Parser");
-			logParser.addHandler(fh);
-			logParser.setLevel(Level.ALL);
-			fh1=new FileHandler(params.getBGP4LogFileClient());		
-			logClient=Logger.getLogger("BGP4Client");
-			logClient.addHandler(fh1);
-			logClient.setLevel(Level.ALL);		
-			fh2=new FileHandler(params.getBGP4LogFileServer());		
-			logServer=Logger.getLogger("BGP4Server");
-			logServer.addHandler(fh2);
-			logServer.setLevel(Level.ALL);
 
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			System.exit(1);
-		}
-		logParser.info("Inizializing BGP4 Peer");
-		intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
-		multiDomainTEDB = new MDTEDB();
+		//Initialize loggers
+//		FileHandler fh;
+//		FileHandler fh1;
+//		FileHandler fh2;
+//		try {
+//			fh=new FileHandler(params.getBGP4LogFile());
+			logParser=LoggerFactory.getLogger("BGP4Parser");
+//			logParser.addHandler(fh);
+//			logParser.setLevel(Level.ALL);
+//			fh1=new FileHandler(params.getBGP4LogFileClient());
+			logClient=LoggerFactory.getLogger("BGP4Client");
+//			logClient.addHandler(fh1);
+//			logClient.setLevel(Level.ALL);
+//			fh2=new FileHandler(params.getBGP4LogFileServer());
+			logServer=LoggerFactory.getLogger("BGP4Peer");
+//			logServer.addHandler(fh2);
+//			logServer.setLevel(Level.ALL);
+//
+//		} catch (Exception e1) {
+//			e1.printStackTrace();
+//			System.exit(1);
+//		}
+			logServer.info("Inizializing BGP4 Peer");
+		if (iTEDBs!= null) intraTEDBs=iTEDBs;
+		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 		
-		if (params.getLearnTopology().equals("fromXML")){	
+		if (multiTEDB!= null) multiDomainTEDB = multiTEDB;
+		else multiDomainTEDB = new MDTEDB();
+	
+		if (params.getLearnTopology().equals("fromXML")){
+			//intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
+			//multiDomainTEDB = new MDTEDB();
 			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
 			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
 		}
@@ -184,9 +208,8 @@ public class BGPPeer {
 		if (params.isSaveTopologyDB() == true){
 			saveTopologyDB.configure(intraTEDBs, multiDomainTEDB, params.isSaveTopologyDB(), params.getTopologyDBIP().getHostAddress(), params.getTopologyDBport());
 		}
-		
+
 	}
-	
 	
 	public void setWriteMultiTEDB(MultiDomainTEDB multiTEDB) {
 		
@@ -194,8 +217,18 @@ public class BGPPeer {
 		saveTopologyDB.setMultiDomainTEDB(multiTEDB);
 	}
 
+	/*
+	//new function from Andrea
+	public void setWriteMultiAndIntraTEDB(MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs) {
 
-	
+		this.multiDomainTEDB = multiTEDB;
+		this.intraTEDBs = intraTEDBs;
+		saveTopologyDB.setMultiDomainTEDB(multiTEDB);
+		saveTopologyDB.setIntraTEDBs(intraTEDBs);
+	}
+	 */
+
+
 	public void setReadDomainTEDB(DomainTEDB readDomainTEDB) {
 		//this.readDomainTEDB = readDomainTEDB;
 		this.intraTEDBs.put(readDomainTEDB.getDomainID(), readDomainTEDB);
@@ -266,7 +299,7 @@ public class BGPPeer {
 			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer(),peersToConnect );
 			executor.execute(bgp4SessionServer);
 		}else{
-			logServer.severe("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
+			logServer.error("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
 			System.exit(1);
 		}
 	}

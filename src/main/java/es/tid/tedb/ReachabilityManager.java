@@ -3,7 +3,8 @@ package es.tid.tedb;
 import java.net.Inet4Address;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.rsvp.objects.subobjects.EROSubobject;
 import es.tid.rsvp.objects.subobjects.IPv4prefixEROSubobject;
@@ -37,7 +38,7 @@ public class ReachabilityManager {
 	 * ReachabilityManager constructor
 	 */
 	public ReachabilityManager(){
-		log=Logger.getLogger("PCEServer");
+		log=LoggerFactory.getLogger("PCEServer");
 		reachability=new LinkedList<ReachabilityEntry>();
 	}
 	

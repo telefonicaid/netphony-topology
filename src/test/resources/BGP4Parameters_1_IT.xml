@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<!-- TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)  --> 
-	<BGP4Port>179</BGP4Port>
+	<BGP4Port>11179</BGP4Port>
 	<BGPIdentifier>10.95.205.12</BGPIdentifier>
 <!-- TCP port to connect to manage the BGP connection. Default value: 1112 -->
 	<BGP4ManagementPort>1111</BGP4ManagementPort> 
 	<!-- Peers to which this Peer is going to establish connection -->
     <configPeer>
-                <peer>10.95.86.37</peer>
-                <export>false</export>
-                <import>true</import>
-                <peerPort>179</peerPort>
+                <peer>docker_host</peer>
+                <export>true</export>
+                <import>false</import>
+                <peerPort>22179</peerPort>
     </configPeer>
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
 	<BGP4LogFile>BGP4Parser.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
@@ -41,13 +41,11 @@
 	<!-- Delay between topology updates sent in ms -->
 	<sendTopoDelay>5000</sendTopoDelay>
 	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
-	<sendIntradomainLinks>false</sendIntradomainLinks>
+	<sendIntradomainLinks>true</sendIntradomainLinks>
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
 	<learnTopology>fromXML</learnTopology>	
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
-	<topologyFile>../src/main/resources/network1.xml</topologyFile>
-	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
-	<!--<topologyFile>src/test/resources/network1.xml</topologyFile>-->
+	<topologyFile>src/test/resources/network1.xml</topologyFile>
 	<!-- Optional Parameter. Instance Identifier for node and link NLRI. See rfc 6549. Default value: 0-->
 	<!--<instanceID>0</instanceID>-->
 	<!-- Optional Parameter. Default value: localhost -->

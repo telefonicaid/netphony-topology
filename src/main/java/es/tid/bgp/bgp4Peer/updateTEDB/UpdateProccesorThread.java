@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Update;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
@@ -132,12 +133,12 @@ public class UpdateProccesorThread extends Thread {
 
 	private TE_Information te_info;
 
-	
+
 
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
 			MultiDomainTEDB multiTedb ,Hashtable<Inet4Address,DomainTEDB> intraTEDBs ){
-		log=Logger.getLogger("BGP4Server");
+		log=LoggerFactory.getLogger("BGP4Server");
 		running=true;
 		this.updateList=updateList;
 		this.multiTedb = multiTedb;
@@ -159,9 +160,9 @@ public class UpdateProccesorThread extends Thread {
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
 				updateMsg= updateList.take();
-				log.finest("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
+				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
 				String learntFrom = updateMsg.getLearntFrom();
-				log.fine("APRENDIDO DE "+learntFrom);
+				log.debug("APRENDIDO DE "+learntFrom);
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
 				ArrayList<PathAttribute> pathAttributeListUtil = new ArrayList<PathAttribute>();			
 
@@ -224,12 +225,12 @@ public class UpdateProccesorThread extends Thread {
 									fillPrefixNLRI((PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
 									continue;
 								default:
-									log.finest("Attribute Code unknown");
+									log.debug("Attribute Code unknown");
 								}
 							}
 							continue;
 						default:
-							log.finest("Attribute Code unknown");
+							log.debug("Attribute Code unknown");
 						}
 					}
 				}
@@ -405,7 +406,7 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
 			}
-			
+
 			DomainTEDB domainTEDB=intraTEDBs.get(localDomainID);
 			SimpleTEDB simpleTEDB=null;
 			if (domainTEDB instanceof SimpleTEDB){
@@ -415,29 +416,29 @@ public class UpdateProccesorThread extends Thread {
 				simpleTEDB.createGraph();
 				this.intraTEDBs.put(localDomainID, simpleTEDB);
 			}else {
-				log.severe("PROBLEM: TEDB not compatible");
+				log.error("PROBLEM: TEDB not compatible");
 				return;
 			}
 
 
 			/**Actualizando TED*/
-			
+
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(LocalNodeIGPId))){
-				
+
 				simpleTEDB.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
 			}
-//			else{ 
-//				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
-//			}
-		
+			//			else{ 
+			//				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
+			//			}
+
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
-				
+
 				simpleTEDB.getNetworkGraph().addVertex(RemoteNodeIGPId);
 
 			}
-//			else {
-//				log.info("Remote Vertex: "+RemoteNodeIGPId.toString() +" already present in TED...");
-//			}
+			//			else {
+			//				log.info("Remote Vertex: "+RemoteNodeIGPId.toString() +" already present in TED...");
+			//			}
 
 			te_info =  createTE_Info(simpleTEDB);
 			intraEdge.setTE_info(te_info);
@@ -457,22 +458,25 @@ public class UpdateProccesorThread extends Thread {
 
 			}
 			else{
-				
+
 				IntraDomainEdge edge;
 				edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
-				if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
-					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
-					
-					if (((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved()!=null){
-						((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyReservedBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved());
-						
+				if (this.availableLabels!=null){
+					if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
+						((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
+
+						if (((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved()!=null){
+							((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyReservedBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitmapReserved());
+
+						}
 					}
 				}
 			}
+
 		}
 
 		else{
-			log.fine("INTERDOMAIN...");
+			log.debug("INTERDOMAIN...");
 			InterDomainEdge interEdge = new InterDomainEdge();
 			if (linkNLRI.getLinkIdentifiersTLV() != null){				
 				interEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
@@ -481,11 +485,11 @@ public class UpdateProccesorThread extends Thread {
 			//terminamos de caracterizar el interedge...
 			interEdge.setSrc_router_id(LocalNodeIGPId);
 			interEdge.setDst_router_id(RemoteNodeIGPId);
-			
+
 			interEdge.setDomain_dst_router(remoteDomainID);
-			
+
 			interEdge.setDomain_src_router(localDomainID);
-			
+
 
 			/**Actualizando TED*/
 			//log.info("Updating Interdomain list...");
@@ -503,7 +507,7 @@ public class UpdateProccesorThread extends Thread {
 				((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)interEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
 			}
 			 */
-			
+
 			multiTedb.addInterdomainLink(localDomainID, LocalNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier(), remoteDomainID, RemoteNodeIGPId, linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier(), te_info);
 
 
@@ -608,7 +612,7 @@ public class UpdateProccesorThread extends Thread {
 		if (availableLabels!= null){
 			if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
 				if(domainTEDB.getSSONinfo()==null){
-					log.fine("NEW SSON INFO");
+					log.debug("NEW SSON INFO");
 					SSONInformation ssonInfo = new SSONInformation();
 					ssonInfo.setCs(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getChannelSpacing());
 					ssonInfo.setGrid(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getGrid());
@@ -618,7 +622,7 @@ public class UpdateProccesorThread extends Thread {
 					domainTEDB.setSSONinfo(ssonInfo);
 				}
 				if(domainTEDB.getWSONinfo()==null){
-					log.fine("NEW WSON INFO");
+					log.debug("NEW WSON INFO");
 					WSONInformation wsonInfo = new WSONInformation();
 					wsonInfo.setCs(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getChannelSpacing());
 					wsonInfo.setGrid(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel().getGrid());
@@ -635,7 +639,7 @@ public class UpdateProccesorThread extends Thread {
 		return te_info;
 	}
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
-		
+
 		Inet4Address as_number = null;
 		Inet4Address areaID= null ;
 		Inet4Address bgplsID = null;
@@ -658,7 +662,7 @@ public class UpdateProccesorThread extends Thread {
 			switch(IGP_type){
 			case 3:
 				IGPID = nodeNLRI.getLocalNodeDescriptors().getIGPRouterID().getIpv4AddressOSPF();
-				
+
 				node_info.setIpv4Address(IGPID);
 				break;
 			default:
@@ -666,13 +670,13 @@ public class UpdateProccesorThread extends Thread {
 			}
 		}
 
-		
+
 		if(iPv4RouterIDLocalNodeLATLV != null){
-			log.fine("adding ipv4 of local node to table......");
+			log.debug("adding ipv4 of local node to table......");
 			node_info.setIpv4AddressLocalNode(iPv4RouterIDLocalNodeLATLV.getIpv4Address());
 		}
 		if(nodeFlagBitsTLV!= null){
-			log.fine("adding flags of local node to table...");
+			log.debug("adding flags of local node to table...");
 			node_info.setAbr_bit(nodeFlagBitsTLV.isAbr_bit());
 			node_info.setAttached_bit(nodeFlagBitsTLV.isAttached_bit());
 			node_info.setExternal_bit(nodeFlagBitsTLV.isExternal_bit());
@@ -680,27 +684,27 @@ public class UpdateProccesorThread extends Thread {
 		}
 
 		if(nodeNameTLV != null){
-			log.fine("adding name of local node to table....");
+			log.debug("adding name of local node to table....");
 			node_info.setName(nodeNameTLV.getName());
 		}
 
 		if(areaIDTLV != null){
-			log.fine("adding areaID of local node to table....");
+			log.debug("adding areaID of local node to table....");
 			node_info.setIpv4areaIDs(areaIDTLV.getIpv4areaIDs());
 		}
 
 		if(sidTLV != null){
-			log.fine("adding SID of local node to table....");
+			log.debug("adding SID of local node to table....");
 			node_info.setSID(sidTLV.getSid());
 		}
 		//.... finally we set the 'learnt from' attribute
 		node_info.setLearntFrom(learntFrom);
 		log.info("learnt from: " +learntFrom);
 		if (as_number==null){
-			log.severe(" as_number is NULL");
+			log.error(" as_number is NULL");
 		}
 		DomainTEDB domainTEDB=intraTEDBs.get(as_number);
-		
+
 		SimpleTEDB simpleTEDB=null;
 		if (domainTEDB instanceof SimpleTEDB){
 			simpleTEDB = (SimpleTEDB) domainTEDB;
@@ -709,10 +713,10 @@ public class UpdateProccesorThread extends Thread {
 			simpleTEDB.createGraph();
 			this.intraTEDBs.put(as_number, simpleTEDB);
 		}else {
-			log.severe("PROBLEM: TEDB not compatible");
+			log.error("PROBLEM: TEDB not compatible");
 			return;
 		}
-					
+
 		NodeTable =simpleTEDB.getNodeTable();
 		if(NodeTable!=null){
 			if(NodeTable.containsKey(IGPID))

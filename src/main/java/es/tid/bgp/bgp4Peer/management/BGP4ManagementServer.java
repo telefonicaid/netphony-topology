@@ -3,7 +3,8 @@ package es.tid.bgp.bgp4Peer.management;
 import java.net.Inet4Address;
 import java.net.ServerSocket;
 import java.util.Hashtable;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.peer.SendTopology;
@@ -36,7 +37,7 @@ public class BGP4ManagementServer extends Thread {
 	private SendTopology sendTopology;
 	
 	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
-		log =Logger.getLogger("BGP4Server");
+		log =LoggerFactory.getLogger("BGP4Server");
 		this.BGP4ManagementPort = BGP4ManagementPort;
 		this.multiTEDB=multiTEDB;
 		this.intraTEDBs=intraTEDBs;
@@ -55,7 +56,7 @@ public class BGP4ManagementServer extends Thread {
 	          serverSocket = new ServerSocket(BGP4ManagementPort);
 		  }
 		catch (Exception e){
-			 log.severe("Could not listen management on port "+BGP4ManagementPort);
+			 log.error("Could not listen management on port "+BGP4ManagementPort);
 			e.printStackTrace();
 			return;
 		}

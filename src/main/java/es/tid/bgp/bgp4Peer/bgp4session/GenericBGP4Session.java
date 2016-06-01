@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.util.Timer;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Keepalive;
 import es.tid.bgp.bgp4.messages.BGP4Message;
@@ -179,7 +180,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 
 
 	public GenericBGP4Session(BGP4SessionsInformation bgp4SessionsInformation,int holdTime,Inet4Address BGPIdentifier,int version,int myAutonomousSystem,int mykeepAliveTimer) {
-		log=Logger.getLogger("BGP4Parser");
+		log=LoggerFactory.getLogger("BGP4Parser");
 		this.BGP4SessionsInformation=bgp4SessionsInformation;
 		this.holdTime=holdTime;
 		this.BGPIdentifier=BGPIdentifier;
@@ -216,10 +217,10 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 					r = in.read(hdr, offset, 1);
 				}
 			} catch (IOException e){
-				log.warning("Error reading data: "+ e.getMessage());
+				log.warn("Error reading data: "+ e.getMessage());
 				throw e;
 			}catch (Exception e) {
-				log.warning("readMsg Oops: " + e.getMessage());
+				log.warn("readMsg Oops: " + e.getMessage());
 				throw new IOException();
 			}
 
@@ -239,7 +240,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 				offset++;
 			}
 			else if (r==-1){
-				log.warning("End of stream has been reached");
+				log.warn("End of stream has been reached");
 				throw new IOException();
 			}
 		}
@@ -283,7 +284,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 
 					}
 					else if (r<0){
-						log.severe("End of stream has been reached reading data");
+						log.error("End of stream has been reached reading data");
 						throw new IOException();
 					}
 				}
@@ -291,7 +292,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 					//log.info("Vamos a leer la cabecera ");
 					r = in.read(hdr, offset, 4-offset);
 					if (r < 0) {
-						log.severe("End of stream has been reached reading header");
+						log.error("End of stream has been reached reading header");
 						throw new IOException();
 					}else if (r >0){
 						if ((offset+r)>=4){
@@ -311,11 +312,11 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 
 				}
 			} catch (IOException e){
-				log.severe("Error reading data: "+ e.getMessage());
+				log.error("Error reading data: "+ e.getMessage());
 				throw e;
 			}catch (Exception e) {
-				log.severe("readMsg Oops: " + e.getMessage());
-				log.severe("Failure reason : "+e.getStackTrace());
+				log.error("readMsg Oops: " + e.getMessage());
+				log.error("Failure reason : "+e.getStackTrace());
 				throw new IOException();
 			}
 
@@ -381,7 +382,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 	 * Ends the DeadTimer Thread
 	 */
 	protected void cancelDeadTimer() {
-		log.fine("Cancelling DeadTimer");
+		log.debug("Cancelling DeadTimer");
 		if (this.deadTimerT != null) {
 			this.deadTimerT.stopRunning();
 			this.deadTimerT.interrupt();
@@ -400,7 +401,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 	 * Ends the KeepAlive Thread
 	 */
 	public void cancelKeepAlive() {
-		log.fine("Cancelling KeepAliveTimer");
+		log.debug("Cancelling KeepAliveTimer");
 		if (this.keepAliveT != null) {
 			this.keepAliveT.stopRunning();
 			this.keepAliveT.interrupt();
@@ -420,12 +421,12 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 				out.close();
 			}
 			if (this.socket != null) {
-				log.warning("Closing socket");
+				log.warn("Closing socket");
 				this.socket.close();
 			}
 
 		} catch (Exception e) {
-			log.warning("Error closing connections: " + e.getMessage());
+			log.warn("Error closing connections: " + e.getMessage());
 		}
 	}
 
@@ -438,14 +439,14 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 	}
 
 	public void killSession(){	
-		log.warning("Killing Session");
+		log.warn("Killing Session");
 		timer.cancel();
 		this.endConnections();
 		this.cancelDeadTimer();
 		this.cancelKeepAlive();
 		this.endSession();
 		this.BGP4SessionsInformation.deleteSession(this.sessionId);
-		log.warning("Interrupting thread!!!!");
+		log.warn("Interrupting thread!!!!");
 		this.interrupt();				
 	}
 
@@ -467,7 +468,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 			out = new DataOutputStream(socket.getOutputStream());
 			in = new DataInputStream(socket.getInputStream());
 		} catch (IOException e) {
-			log.warning("Problem in the sockets, ending BGP4Session");
+			log.warn("Problem in the sockets, ending BGP4Session");
 			killSession();
 			return;
 		}
@@ -478,7 +479,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 		//STARTING PCEP SESSION ESTABLISHMENT PHASE
 		//It begins in Open Wait State
 		this.setFSMstate(BGP4StateSession.BGP4_STATE_OPEN_WAIT);
-		log.fine("Entering BGP4_STATE_OPEN_WAIT, Scheduling Open Wait Timer");
+		log.debug("Entering BGP4_STATE_OPEN_WAIT, Scheduling Open Wait Timer");
 
 		//Create the 60 seconds Open Wait Timer to wait for an OPEN message
 		OpenWaitTimerTask owtt= new OpenWaitTimerTask(this);
@@ -511,7 +512,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 				msg = readBGP4Msg(in);
 
 			}catch (IOException e){
-				log.warning("Error reading message, ending session"+e.getMessage());
+				log.warn("Error reading message, ending session"+e.getMessage());
 				killSession();
 				return;
 			}
@@ -525,7 +526,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 						BGP4Open open_received;
 						//								try {
 						open_received=new BGP4Open(msg);
-						log.fine("**** Open received ****\n"+ open_received.toString());//FIXME!!! Cambiar a finest
+						log.debug("**** Open received ****\n"+ open_received.toString());//FIXME!!! Cambiar a finest
 						owtt.cancel();
 						//Check parameters
 						if (openRetry==1){
@@ -595,7 +596,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 								}
 								else {
 									log.info("Entering STATE_KEEP_WAIT");
-									log.fine("Scheduling KeepwaitTimer");
+									log.debug("Scheduling KeepwaitTimer");
 									timer.schedule(kwtt, 60000);
 									this.setFSMstate(BGP4StateSession.BGP4_STATE_KEEP_WAIT);
 								}									
@@ -754,7 +755,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 			out.write(message.getBytes());
 			out.flush();
 		} catch (Exception e) {
-			log.severe("Problem writing message, finishing session "+e.getMessage());
+			log.error("Problem writing message, finishing session "+e.getMessage());
 			killSession();
 		}
 

@@ -43,7 +43,9 @@
 	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
 	<sendIntradomainLinks>false</sendIntradomainLinks>
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
-	<learnTopology>fromBGP</learnTopology>	
+	<learnTopology>fromXML</learnTopology>	
+	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
+	<topologyFile>network1.xml</topologyFile>
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
 	<!--<topologyFile>src/test/resources/network1.xml</topologyFile>-->
 	<!-- Optional Parameter. Instance Identifier for node and link NLRI. See rfc 6549. Default value: 0-->
