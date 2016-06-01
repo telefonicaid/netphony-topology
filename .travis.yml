@@ -9,9 +9,6 @@ install:
   - docker_host=$(ifconfig docker0 | grep 'inet' | cut -d ':' -f2 | awk '{ print $1}')
   - echo $docker_host
 script:
-  - git clone https://github.com/telefonicaid/netphony-network-protocols.git
-  - cd netphony-network-protocols
-  - git checkout develop
   - mvn clean install -X -f ./pom.xml
   - cd ..
   - mvn install -X -f ./pom.xml
