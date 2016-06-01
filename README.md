@@ -21,6 +21,8 @@ The BGP-LS speaker can be run as a standalone application, or as a module attach
 - Moved to slf4j logging framework
 - Added method to pass multiple TEDs from en external program
 - Added docker support in travis
+- Supports network-protocols 1.3.2 (chages in reading as_path were needed)
+- Update to support reading multiple AS_PATH
 
 ## Traffic Engineering Database
 
