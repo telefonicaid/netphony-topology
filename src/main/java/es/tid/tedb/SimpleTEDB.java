@@ -602,12 +602,18 @@ public class SimpleTEDB implements DomainTEDB{
 		for (int i=0;i<registeredAlgorithms.size();++i){
 			registeredAlgorithms.get(i).notifyNewVertex(vertex);
 		}	
+		for (int i=0;i<registeredAlgorithmssson.size();++i){
+			registeredAlgorithmssson.get(i).notifyNewVertex(vertex);
+		}	
 	}
 
 	@Override
 	public void notifyNewEdge(Object source, Object destination) {
 		for (int i=0;i<registeredAlgorithms.size();++i){
 			registeredAlgorithms.get(i).notifyNewEdge(source,destination);
+		}
+		for (int i=0;i<registeredAlgorithmssson.size();++i){
+			registeredAlgorithmssson.get(i).notifyNewEdge(source,destination);
 		}	
 	}
 
