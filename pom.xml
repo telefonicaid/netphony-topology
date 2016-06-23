@@ -11,11 +11,59 @@
 	<url>http://telefonicaid.github.io/netphony-topology/</url>
 	<licenses>
 		<license>
-			 <name>Apache License 2.0</name>
-        		 <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<name>Apache License 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 		</license>
 	</licenses>
 	<dependencies>
+
+		<!--Swagger pom dependences-->
+		<dependency>
+			<groupId>io.swagger</groupId>
+			<artifactId>swagger-jersey-jaxrs</artifactId>
+			<version>1.5.4</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.19</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-servlet</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.jersey.contribs</groupId>
+			<artifactId>jersey-multipart</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		<!--Swagger pom dependences-->
+
+
+
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -51,6 +99,47 @@
 			<artifactId>jedis</artifactId>
 			<version>2.1.0</version>
 		</dependency>
+
+
+		<!-- JSON processing: jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>2.1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>${jodatime-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>9.3.8.v20160314</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>9.3.8.v20160314</version>
+		</dependency>
+
+
+
 	</dependencies>
 	<developers>
 		<developer>
@@ -136,18 +225,18 @@
 			<build>
 				<plugins>
 					<plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>2.9.1</version>
-                                <executions>
-                                        <execution>
-                                                <id>attach-javadocs</id>
-                                                <goals>
-                                                        <goal>jar</goal>
-                                                </goals>
-                                        </execution>
-                                </executions>
-                        </plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
@@ -210,53 +299,64 @@
 
 
 		</profile>
-<profile>
-<id>generate-javadoc</id>
-<build>
-<plugins>
-<plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-javadoc-plugin</artifactId>
-                                <version>2.9.1</version>
-                                <executions>
-                                        <execution>
-                                                <id>attach-javadocs</id>
-                                                <goals>
-                                                        <goal>jar</goal>
-                                                </goals>
-                                        </execution>
-                                </executions>
-                        </plugin>
+		<profile>
+			<id>generate-javadoc</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.9.1</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 
-</plugins>
-</build>
-</profile>
-<profile>
-    <id>integration-test</id>
-    <build>
-      <plugins>
-       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.13</version>
-        <executions>
-          <execution>
-            <id>integration-test</id>
-            <goals>
-              <goal>integration-test</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>verify</id>
-            <goals>
-              <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-</profile>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>integration-test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+						<version>2.13</version>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<goals>
+									<goal>integration-test</goal>
+								</goals>
+							</execution>
+							<execution>
+								<id>verify</id>
+								<goals>
+									<goal>verify</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
+
+	<properties>
+		<swagger-core-version>1.5.4</swagger-core-version>
+		<jetty-version>8.1.11.v20130520</jetty-version>
+		<jersey-version>1.18.1</jersey-version>
+		<slf4j-version>1.6.3</slf4j-version>
+		<junit-version>4.8.1</junit-version>
+		<servlet-api-version>2.5</servlet-api-version>
+		<jackson-version>2.4.2</jackson-version>
+		<jodatime-version>2.3</jodatime-version>
+	</properties>
 
 </project>
