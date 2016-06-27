@@ -202,7 +202,7 @@ public class TranslateModel {
 	  
 	
 	  
-	public static Topology translateTopology(DomainTEDB ted){
+	public static Topology translateTopology(String topId, DomainTEDB ted){
 		  Topology topology = new Topology();
 		  /*if(ted==null){
 			  topology.setTopologyId("topology null Exception");
@@ -212,7 +212,7 @@ public class TranslateModel {
 			  topology.setTopologyId("getDomainID null Exception");
 			  return topology;
 		  }*/
-		  //topology.setTopologyId(ted.getDomainID().toString());
+		  topology.setTopologyId(topId);
 		  
 		  List<Edge> edges = new ArrayList<Edge>();
 		  for(IntraDomainEdge link : ted.getIntraDomainLinks()){

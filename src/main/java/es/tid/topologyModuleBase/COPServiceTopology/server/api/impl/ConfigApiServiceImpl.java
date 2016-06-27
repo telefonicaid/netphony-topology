@@ -18,6 +18,7 @@ import es.tid.topologyModuleBase.database.SimpleTopology;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.io.InputStream;
 
@@ -35,9 +36,10 @@ public class ConfigApiServiceImpl extends ConfigApiService {
     	  SimpleTopology ted = TopologyServerCOP.getActualTed();
     	  TopologiesSchema tSchema = new TopologiesSchema();
     	  List<Topology> tops = new ArrayList<Topology>();
-    	  for(TEDB t : ted.getAllDB()){
-    		 if(t != null)tops.add( TranslateModel.translateTopology((DomainTEDB) t));
-    	  }
+    	  for(Map.Entry<String, DomainTEDB>entry : ted.getTeds().entrySet() ){
+     		 System.out.println("Topologia servida con id: "+entry.getKey());
+    		  tops.add( TranslateModel.translateTopology(entry.getKey(),entry.getValue()));
+     	  }
     	  tSchema.setTopology(tops);
 	      return Response.ok().entity(tSchema).build();
 	  }
@@ -50,7 +52,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
     	  if(db == null)
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
     	  else
-    		  return Response.ok().entity(TranslateModel.translateTopology((DomainTEDB) db)).build();
+    		  return Response.ok().entity(TranslateModel.translateTopology(topologyId, (DomainTEDB) db)).build();
       }
   
       @Override

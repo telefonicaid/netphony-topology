@@ -2,6 +2,7 @@ package es.tid.topologyModuleBase.reader;
 
 
 import java.io.File;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
@@ -96,7 +97,7 @@ public class TopologyReaderXML extends TopologyReader
 				for (int k = 0; k < nodes_domain_id.getLength(); k++) {
 					Element domain_id_e = (Element) nodes_domain_id.item(0);
 					String domain_id = getCharacterDataFromElement(domain_id_e);
-					//((SimpleTEDB)ted.getDB()).setDomainID(domainID);
+					((SimpleTEDB)ted.getDB()).setDomainID((Inet4Address)Inet4Address.getByName(domain_id));
 				}
 				NodeList nodes = element1.getElementsByTagName("node");
 				log.info("Number of nodes: "+nodes.getLength());

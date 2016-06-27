@@ -44,6 +44,7 @@ public class TMModuleInitiater
 			if (actualLittleParams.isXML())
 			{
 				(new TopologyReaderXML(ted, actualLittleParams,lock)).readTopology();
+				log.info("topology readed from file. State:\n"+ted.printTopology());
 			}
 			
 			
@@ -71,6 +72,7 @@ public class TMModuleInitiater
 			//EXPORTERS
 			if (actualLittleParams.isBGPLSWriting())
 			{
+				log.info("Exporter bgpls. TED State:\n"+ted.printTopology());
 				(new TopologyWriterBGPLS(ted, actualLittleParams,lock)).serveTopology();
 			}
 			

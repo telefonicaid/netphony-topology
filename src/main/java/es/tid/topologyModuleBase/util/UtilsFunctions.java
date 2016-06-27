@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.LinkedList;
 import org.slf4j.Logger;
+//import java.util.logging.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.w3c.dom.CharacterData;
@@ -44,6 +45,8 @@ public class UtilsFunctions {
 		}
 			log.info(s);
 	}
+	
+	
 
 	public static String getCharacterDataFromElement(Element e)
 	{

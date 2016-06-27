@@ -198,7 +198,7 @@ public class TopologyModuleParams
 	/**
 	 * Active COP service-topology exporter
 	 */
-	private boolean isCOPwritting=true;
+	private boolean isCOPwritting=false;
 	/**
 	 * Active COP service-topology importer
 	 */

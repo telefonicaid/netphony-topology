@@ -124,6 +124,41 @@ public class TopologyModuleParamsArray
 				paramList.add(littleParams);
 			}
 			
+			
+			NodeList list_nodes_XML = doc.getElementsByTagName("XML");
+			
+			for (int i = 0; i < list_nodes_XML.getLength(); i++) 
+			{
+				Element nodes_xml = (Element) list_nodes_XML.item(i);
+
+				
+				TopologyModuleParams littleParams = new TopologyModuleParams();
+				littleParams.setModexml(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("mode").item(0))));
+				littleParams.setNetworkDescriptionFile(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("XMLFileTopology").item(0))));
+				littleParams.setXML(true);
+				log.info("XML configured with file: "+littleParams.getNetworkDescriptionFile());
+				paramList.add(littleParams);
+			}
+			
+			NodeList list_nodes_COP = doc.getElementsByTagName("COP");
+			
+			for (int i = 0; i < list_nodes_COP.getLength(); i++) 
+			{
+				Element nodes_cop = (Element) list_nodes_COP.item(i);
+				TopologyModuleParams littleParams = new TopologyModuleParams();
+				if(nodes_cop.getElementsByTagName("import_ip").getLength()>0){
+					
+					littleParams.setRemoteCOPhost((getCharacterDataFromElement(((Element) nodes_cop.getElementsByTagName("import_ip").item(0)))));
+					littleParams.setRemoteCOPPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_cop.getElementsByTagName("import_port").item(0))))));
+					littleParams.setCOPReading(true);
+				}
+				if(nodes_cop.getElementsByTagName("serve_port").getLength()>0){
+					littleParams.setExportCOPPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_cop.getElementsByTagName("serve_port").item(0))))));
+					littleParams.setCOPWriting(true);
+				}
+				paramList.add(littleParams);
+			}
+			
 			NodeList list_nodes_BGPLS = doc.getElementsByTagName("BGPLS");
 			
 			for (int i = 0; i < list_nodes_BGPLS.getLength(); i++) 
@@ -148,38 +183,7 @@ public class TopologyModuleParamsArray
 				paramList.add(littleParams);
 			}
 			
-			NodeList list_nodes_XML = doc.getElementsByTagName("XML");
 			
-			for (int i = 0; i < list_nodes_XML.getLength(); i++) 
-			{
-				Element nodes_xml = (Element) list_nodes_XML.item(i);
-
-				
-				TopologyModuleParams littleParams = new TopologyModuleParams();
-				littleParams.setModexml(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("mode").item(0))));
-				littleParams.setNetworkDescriptionFile(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("XMLFileTopology").item(0))));
-				littleParams.setXML(true);
-				paramList.add(littleParams);
-			}
-			
-			NodeList list_nodes_COP = doc.getElementsByTagName("COP");
-			
-			for (int i = 0; i < list_nodes_COP.getLength(); i++) 
-			{
-				Element nodes_cop = (Element) list_nodes_COP.item(i);
-				TopologyModuleParams littleParams = new TopologyModuleParams();
-				if(nodes_cop.getElementsByTagName("import_ip").getLength()>0){
-					
-					littleParams.setRemoteCOPhost((getCharacterDataFromElement(((Element) nodes_cop.getElementsByTagName("import_ip").item(0)))));
-					littleParams.setRemoteCOPPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_cop.getElementsByTagName("import_port").item(0))))));
-					littleParams.setCOPReading(true);
-				}
-				if(nodes_cop.getElementsByTagName("serve_port").getLength()>0){
-					littleParams.setExportCOPPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_cop.getElementsByTagName("serve_port").item(0))))));
-					littleParams.setCOPWriting(true);
-				}
-				paramList.add(littleParams);
-			}
 			
 			NodeList list_nodes_ws = doc.getElementsByTagName("WSOld");
 			

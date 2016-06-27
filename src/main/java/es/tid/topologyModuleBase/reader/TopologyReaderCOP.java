@@ -2,6 +2,7 @@ package es.tid.topologyModuleBase.reader;
 
 
 import java.io.File;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Timer;
@@ -86,16 +87,24 @@ public class TopologyReaderCOP extends TopologyReader
 				for(Topology top : retrieveTopologies.getTopology()){
 					boolean flagNewDb=false;
 					DomainTEDB db = (DomainTEDB)this.ted.getDB(top.getTopologyId());
+					System.out.println("COP reader, reading db with domainID: "+top.getTopologyId()+ " bd->"+db);
 					if(db == null){
 						db = new SimpleTEDB();
+						((SimpleTEDB)db).createGraph();
+						/*try{
+						((SimpleTEDB)db).setDomainID((Inet4Address)Inet4Address.getByName(top.getTopologyId()));
+						log.info("db null -> new db with domainID: "+db.getDomainID().toString());
+						}catch(Exception e){
+							log.info("CopReader exception, topologyId: "+top.getTopologyId()+ " is not an IP address");
+						}*/
 						flagNewDb=true;
-						log.info("db null -> new db");
+						
 					}else{
 						db.clearAllReservations();
 					}
 					for(Node n : top.getNodes()){
 						es.tid.tedb.elements.Node node = TranslateModel.translate2Node(n);
-						((SimpleTEDB)ted.getDB()).getNetworkGraph().addVertex(node);
+						((SimpleTEDB)db).getNetworkGraph().addVertex(node);
 					}
 					for(Edge e: top.getEdges()){
 						es.tid.tedb.elements.Link link = TranslateModel.translate2Link(e);
@@ -111,6 +120,7 @@ public class TopologyReaderCOP extends TopologyReader
 				//e.printStackTrace();
 			}catch (Exception e){
 				log.info("GeneralException in COPtopologyReader from: " + api.getApiClient().getBasePath());
+				e.printStackTrace();
 			}finally{
 				lock.unlock();
 			}
@@ -118,11 +128,12 @@ public class TopologyReaderCOP extends TopologyReader
 
 		private void fromLinkToIntradomainlink(SimpleTEDB db, es.tid.tedb.elements.Link link, Edge e){
 			boolean finished=false;
-			//System.out.println(link.toString());
-			Iterator<Object> vertices=((SimpleTEDB)this.ted.getDB()).getNetworkGraph().vertexSet().iterator();
+			//System.out.println("From link To Intradomianlink, link: "+link.toString());
+			Iterator<Object> vertices=db.getNetworkGraph().vertexSet().iterator();
 			es.tid.tedb.elements.Node src=null; es.tid.tedb.elements.Node dst=null;
 			while (vertices.hasNext() && !finished){
 				es.tid.tedb.elements.Node node=(es.tid.tedb.elements.Node) vertices.next();
+				//System.out.println("Nodes in graph: "+node.getNodeID());
 				if (link.getDest().getNode().equals(node.getNodeID()))
 					dst=node;
 				else if (link.getSource().getNode().equals(node.getNodeID()))

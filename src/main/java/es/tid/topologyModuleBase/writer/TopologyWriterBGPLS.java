@@ -16,14 +16,16 @@ public class TopologyWriterBGPLS extends TopologyServer{
 	
 	public void serveTopology() 
 	{
-		log.info("Acting as BGP Peer");
+		log.info("Acting as BGP Peer with ted:"+ted.printTopology());
 		BGPPeer bgpPeer = new BGPPeer();		
-
+		
 		//bgpPeer.configure("PCEServerConfiguration.xml");
-		bgpPeer.configure(params.getBGPSConfigurationFile());
-			
-		bgpPeer.setReadDomainTEDB((SimpleTEDB)(ted.getDB()));
-		bgpPeer.setSimpleTEDB((SimpleTEDB)(ted.getDB()));
+		bgpPeer.configure(params.getBGPSConfigurationFile() );
+		
+		//bgpPeer.setReadDomainTEDB((SimpleTEDB)(ted.getDB()));
+		//bgpPeer.setSimpleTEDB((SimpleTEDB)(ted.getDB()));
+		System.out.println("XXX, top: "+ted.printTopology());
+		bgpPeer.setIntraTEDBs(ted.getTeds());
 		
 		bgpPeer.createUpdateDispatcher();
 		bgpPeer.startClient();		

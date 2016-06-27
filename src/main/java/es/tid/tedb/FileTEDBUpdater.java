@@ -737,7 +737,7 @@ public class FileTEDBUpdater {
 		return graph;
 	}*/
 
-	public static Hashtable<Inet4Address,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
+	public static Hashtable<String,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
 		Logger log = LoggerFactory.getLogger("PCEPServer");
 		Object router_id_addr = null;
 		Object s_router_id_addr = null;
@@ -745,7 +745,7 @@ public class FileTEDBUpdater {
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
 
-		Hashtable<Inet4Address,DomainTEDB> TEDBs = new Hashtable<Inet4Address,DomainTEDB>();
+		Hashtable<String,DomainTEDB> TEDBs = new Hashtable<String,DomainTEDB>();
 		//First, create the graph
 		
 		log.info("1. SimpleDirectedWeightedGraph");
@@ -834,7 +834,7 @@ public class FileTEDBUpdater {
 				}
 				tedb.setNetworkGraph(graph);
 				tedb.setDomainID((Inet4Address) Inet4Address.getByName(domain_id));
-				TEDBs.put((Inet4Address) Inet4Address.getByName(domain_id),tedb);
+				TEDBs.put(domain_id,tedb);
 			}	
 
 
@@ -867,7 +867,8 @@ public class FileTEDBUpdater {
 						domain_id = getCharacterDataFromElement(domain_id_e);
 						log.info("Looking for links in domain: " + domain_id);
 					}
-					SimpleTEDB domainTEDB = (SimpleTEDB)TEDBs.get((Inet4Address) Inet4Address.getByName(domain_id));
+					//System.out.println("VVV debug domain id:"+domain_id);
+					SimpleTEDB domainTEDB = (SimpleTEDB)TEDBs.get( domain_id);
 					graph = domainTEDB.getNetworkGraph();
 					
 					int numLabels=0;

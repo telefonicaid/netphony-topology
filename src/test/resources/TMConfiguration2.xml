@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <managementIP>localhost</managementIP>
+    <managementPort>5007</managementPort>
+
+    <XML>
+        <mode>IP</mode>
+	<XMLFileTopology>src/test/resources/EmulatedTopology.xml</XMLFileTopology>
+    </XML>
+    <COP>
+      	<serve_port>8086</serve_port>
+    </COP>
+    <WSOld>
+	<ip>localhost</ip>
+	<port>9876</port>
+    </WSOld>
+    <InitFrom>
+        <Init>initFromXML</Init>
+    </InitFrom>
+</config>

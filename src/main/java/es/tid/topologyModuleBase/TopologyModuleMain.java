@@ -29,7 +29,9 @@ public class TopologyModuleMain
 		params.initialize();	
 		
 		
-		SimpleTopology sTop = new SimpleTopology(new SimpleTEDB());
+		SimpleTopology sTop = new SimpleTopology();
+		sTop.addTEDB("255.255.255.255", new SimpleTEDB() );
+		
 		((SimpleTEDB)sTop.getDB()).createGraph();
 		Lock lock = new ReentrantLock();
 		

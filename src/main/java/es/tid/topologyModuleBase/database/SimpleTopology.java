@@ -22,6 +22,8 @@ import es.tid.tedb.WSONInformation;
 
 public class SimpleTopology implements TopologyTEDB
 {
+	
+
 	/**
 	 * Used when there are several teds
 	 */
@@ -388,13 +390,29 @@ public class SimpleTopology implements TopologyTEDB
 	@Override
 	public String printTopology() 
 	{
-		return ted.printTopology();
+		if(ted!=null)
+			return ted.printTopology();
+		else{
+			if (teds.values().size()>0){
+				return teds.values().iterator().next().printTopology();
+			}else{
+				return null;
+			}
+		}
 	}
 
 	@Override
 	public TEDB getDB() 
 	{
-		return ted;
+		if(ted==null){
+			if (teds.values().size()>0){
+				return teds.values().iterator().next();
+			}else{
+				return null;
+			}
+		}else{
+			return ted;
+		}
 	}
 	public List<TEDB> getAllDB(){
 		List<TEDB> dbs = new ArrayList<TEDB>();
@@ -413,5 +431,9 @@ public class SimpleTopology implements TopologyTEDB
 	{
 		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
 		return ted;
+	}
+	
+	public Hashtable<String, DomainTEDB> getTeds() {
+		return teds;
 	}
 }

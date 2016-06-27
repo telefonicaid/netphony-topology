@@ -29,14 +29,14 @@ public class BGP4ManagementServer extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains.
 	 */
-	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	private Hashtable<String,DomainTEDB> intraTEDBs;
 
 	/**
 	 * Class to send the topology. It is needes to set the parameters sendTopology to true or false.
 	 */
 	private SendTopology sendTopology;
 	
-	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
+	public BGP4ManagementServer(int BGP4ManagementPort, MultiDomainTEDB multiTEDB, Hashtable<String,DomainTEDB> intraTEDBs, BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
 		log =LoggerFactory.getLogger("BGP4Server");
 		this.BGP4ManagementPort = BGP4ManagementPort;
 		this.multiTEDB=multiTEDB;

@@ -21,7 +21,7 @@ public class TopologyServerCOP extends TopologyServer
 {
 	
 	
-	static SimpleTopology actualTed;
+	public static SimpleTopology actualTed;
 	
 
 	public TopologyServerCOP(SimpleTopology ted, TopologyModuleParams params,
