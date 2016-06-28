@@ -1,5 +1,7 @@
 package es.tid.topologyModuleBase.COPServiceTopology.model;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -29,10 +31,17 @@ public class TranslateModel {
 	
 	public static Node translateNode(DomainTEDB db, es.tid.tedb.elements.Node n){
 		  Node node = new Node();
-		  node.setName(n.getNodeID());
+		  //node.setName(n.getNodeID());
+		  if(n.getAddress().size()>0){
+			  node.setName(n.getAddress().get(0));
+		  }else{
+			  node.setName(n.getNodeID());
+		  }
 		  node.setDomain(n.getDomain()+"");
 		  node.setNodetype(n.getLayer());
 		  node.setNodeId(n.getNodeID());
+		  
+		  
 		  List<EdgeEnd>intList = new ArrayList<EdgeEnd>();
 		  for (es.tid.tedb.elements.Intf i : n.getIntfList()){
 			  intList.add(translateEdgeEnd( n, i));
@@ -239,6 +248,14 @@ public class TranslateModel {
 		n.setDomain(Integer.parseInt(node.getDomain()));
 		n.setLayer(node.getNodetype());
 		n.setNodeID(node.getNodeId());
+		try{
+			Inet4Address addr = (Inet4Address)Inet4Address.getByName(node.getName());
+			ArrayList<String> l_addr= new ArrayList<String>();
+			l_addr.add(addr.getHostAddress());
+			n.setAddress(l_addr);
+		}catch(UnknownHostException e){
+			//TODO
+		}
 		ArrayList<es.tid.tedb.elements.Intf>intList = new ArrayList<es.tid.tedb.elements.Intf>();
 		  for (EdgeEnd end : node.getEdgeEnd()){
 			  intList.add(translate2EdgeEnd(node, end));
@@ -274,7 +291,7 @@ public class TranslateModel {
 	}
 
 	private static EndPoint translate2EndPoint(Node source, EdgeEnd edgeEnd) {
-		return (new EndPoint(source.getName(),edgeEnd.getName()));
+		return (new EndPoint(source.getNodeId(),edgeEnd.getName()));
 	}
 	  
 

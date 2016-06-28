@@ -128,12 +128,12 @@ public class TopologyReaderCOP extends TopologyReader
 
 		private void fromLinkToIntradomainlink(SimpleTEDB db, es.tid.tedb.elements.Link link, Edge e){
 			boolean finished=false;
-			//System.out.println("From link To Intradomianlink, link: "+link.toString());
+			System.out.println("From link To Intradomianlink, link: "+link.toString());
 			Iterator<Object> vertices=db.getNetworkGraph().vertexSet().iterator();
 			es.tid.tedb.elements.Node src=null; es.tid.tedb.elements.Node dst=null;
 			while (vertices.hasNext() && !finished){
 				es.tid.tedb.elements.Node node=(es.tid.tedb.elements.Node) vertices.next();
-				//System.out.println("Nodes in graph: "+node.getNodeID());
+				System.out.println("Nodes in graph: "+node.getNodeID());
 				if (link.getDest().getNode().equals(node.getNodeID()))
 					dst=node;
 				else if (link.getSource().getNode().equals(node.getNodeID()))
