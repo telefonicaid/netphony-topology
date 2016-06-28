@@ -85,23 +85,15 @@ public class TopologyReaderCOP extends TopologyReader
 				//EdgeEnd retrieveLocalIf = api.retrieveTopologiesTopologyEdgesLocalIfidLocalIfidById("1", "ADVA_2_CTTC_2");
 				//log.info(retrieveTopologies.toString());
 				for(Topology top : retrieveTopologies.getTopology()){
-					boolean flagNewDb=false;
+					
 					DomainTEDB db = (DomainTEDB)this.ted.getDB(top.getTopologyId());
 					System.out.println("COP reader, reading db with domainID: "+top.getTopologyId()+ " bd->"+db);
-					if(db == null){
-						db = new SimpleTEDB();
-						((SimpleTEDB)db).createGraph();
-						/*try{
-						((SimpleTEDB)db).setDomainID((Inet4Address)Inet4Address.getByName(top.getTopologyId()));
-						log.info("db null -> new db with domainID: "+db.getDomainID().toString());
-						}catch(Exception e){
-							log.info("CopReader exception, topologyId: "+top.getTopologyId()+ " is not an IP address");
-						}*/
-						flagNewDb=true;
-						
-					}else{
-						db.clearAllReservations();
+					if(db != null){
+						ted.getTeds().remove(top.getTopologyId());
 					}
+					db = new SimpleTEDB();
+					((SimpleTEDB)db).createGraph();
+						
 					for(Node n : top.getNodes()){
 						es.tid.tedb.elements.Node node = TranslateModel.translate2Node(n);
 						((SimpleTEDB)db).getNetworkGraph().addVertex(node);
@@ -110,9 +102,9 @@ public class TopologyReaderCOP extends TopologyReader
 						es.tid.tedb.elements.Link link = TranslateModel.translate2Link(e);
 						fromLinkToIntradomainlink((SimpleTEDB)db, link, e);
 					}
-					if(flagNewDb){
-						this.ted.addTEDB(top.getTopologyId(), db);
-					}
+					
+					this.ted.addTEDB(top.getTopologyId(), db);
+					
 				}
 			} catch (ApiException e) {
 				// TODO Auto-generated catch block

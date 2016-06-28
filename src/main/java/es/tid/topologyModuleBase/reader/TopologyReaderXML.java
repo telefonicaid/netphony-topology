@@ -98,6 +98,7 @@ public class TopologyReaderXML extends TopologyReader
 					Element domain_id_e = (Element) nodes_domain_id.item(0);
 					domain_id = getCharacterDataFromElement(domain_id_e);
 				}
+				System.out.println("Network from XML with domainID:"+domain_id+" (iteration "+j+" of "+nodes_domains.getLength()+" in "+fileName+")");
 				SimpleTEDB db =(SimpleTEDB)ted.getDB(domain_id);
 				if(db == null){
 					db = new SimpleTEDB();
@@ -289,7 +290,7 @@ public class TopologyReaderXML extends TopologyReader
 						}
 						//domain
 						int domain=1;
-						NodeList domain_node = element.getElementsByTagName("domain");
+						NodeList domain_node = element.getElementsByTagName("domainID");
 						if (domain_node.getLength()>0){
 							Element domain_e = (Element)domain_node.item(0);
 							String domain_s = getCharacterDataFromElement(domain_e);

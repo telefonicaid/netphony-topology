@@ -55,7 +55,7 @@
                                         <!--<parentInterfaceName></parentInterfaceName>-->
                                 </interface>
                         </interfacesList>
-                        <domain>1</domain>
+                        <domainID>1</domainID>
                         <location>
                                 <Xcord>2</Xcord>
                                 <Ycord>1</Ycord>
@@ -115,7 +115,7 @@
                                         <!--<parentInterfaceName></parentInterfaceName>-->
                                 </interface>
                         </interfacesList>
-                        <domain>1</domain>
+                        <domainID>1</domainID>
                         <location>
                                 <Xcord>2</Xcord>
                                 <Ycord>1</Ycord>
@@ -175,7 +175,7 @@
                                         <!--<parentInterfaceName></parentInterfaceName>-->
                                 </interface>
                         </interfacesList>
-                        <domain>1</domain>
+                        <domainID>1</domainID>
                         <location>
                                 <Xcord>2</Xcord>
                                 <Ycord>1</Ycord>
