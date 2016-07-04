@@ -949,7 +949,7 @@ public class FileTEDBUpdater {
 								}
 							}*/
 							//else if (type.equals("interlayer")){
-								if (layer.equals("interlayer")){
+								if (layer!=null && layer.equals("interlayer")){
 									type="intradomain";
 								}
 

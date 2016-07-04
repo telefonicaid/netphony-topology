@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<network>
+	<domain>
+		<layer type="mpls" ></layer>
+		
+		<domain_id>0.0.0.1</domain_id>
+		<reachability_entry>
+			<ipv4_address>192.168.1.0</ipv4_address>
+			<prefix>12</prefix>
+		</reachability_entry>
+
+		<node>
+			<router_id>192.168.1.1</router_id>
+		</node>
+		<node>
+			<router_id>192.168.1.2</router_id>
+		</node>
+		<node>
+			<router_id>192.168.1.3</router_id>
+		</node>		
+		<edgeCommon>
+			<AvailableLabels>
+				<LabelSetField type="4">
+					<numLabels>160</numLabels>
+					<!--<baseLabel grid="1" cs="2" min_frequency="1561.4" ></baseLabel>-->
+					<baseLabel grid="3" cs="5" n="0"></baseLabel>
+				</LabelSetField>
+			</AvailableLabels>
+		</edgeCommon>
+
+		
+		<!-- 1 al 3 -->
+		<edge type="intradomain">
+			<source>
+				<router_id>192.168.1.1</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>192.168.1.3</router_id>
+				<if_id>1</if_id>
+			</destination>
+			<delay>
+				3.14
+			</delay>
+			<maximum_bandwidth>
+				100
+			</maximum_bandwidth>
+			<unreserved_bandwidth priority="0">
+				100
+			</unreserved_bandwidth>		
+		</edge>
+
+		<!-- 3 al 1 -->
+		<edge>
+			<source>
+				<router_id>192.168.1.3</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>192.168.1.1</router_id>
+				<if_id>2</if_id>
+			</destination>
+			<delay>
+				3.14
+			</delay>
+			<maximum_bandwidth>
+				100
+			</maximum_bandwidth>
+			<unreserved_bandwidth priority="0">
+				100
+			</unreserved_bandwidth>		
+		</edge>
+		
+		<!-- 2 al 3 -->
+		<edge>
+			<source>
+				<router_id>192.168.1.2</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>192.168.1.3</router_id>
+				<if_id>2</if_id>
+			</destination>
+			<delay>
+				3.13
+			</delay>				
+			<maximum_bandwidth>
+				100
+			</maximum_bandwidth>
+			<unreserved_bandwidth priority="0">
+				100
+			</unreserved_bandwidth>			
+		</edge>
+		
+		<!-- 3 al 2 -->
+		<edge>
+			<source>
+				<router_id>192.168.1.3</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>192.168.1.2</router_id>
+				<if_id>2</if_id>
+			</destination>
+			<delay>
+				3.13
+			</delay>	
+			<maximum_bandwidth>
+				100
+			</maximum_bandwidth>
+			<unreserved_bandwidth priority="0">
+				100
+			</unreserved_bandwidth>	
+		</edge>
+
+		<!-- 1 al 2 -->
+		<edge>
+			<source>
+				<router_id>192.168.1.1</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>192.168.1.2</router_id>
+				<if_id>1</if_id>
+			</destination>
+			<delay>
+				3.12	
+			</delay>
+			<maximum_bandwidth>
+				100
+			</maximum_bandwidth>
+			<unreserved_bandwidth priority="0">
+				100
+			</unreserved_bandwidth>		
+		</edge>
+
+		<!-- 2 al 1 -->
+		<edge>
+			<source>
+				<router_id>192.168.1.2</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>192.168.1.1</router_id>
+				<if_id>1</if_id>
+			</destination>
+			<delay>
+				3.12
+			</delay>
+			<maximum_bandwidth>
+				100
+			</maximum_bandwidth>
+			<unreserved_bandwidth priority="0">
+				100
+			</unreserved_bandwidth>			
+		</edge>
+	</domain>
+</network>

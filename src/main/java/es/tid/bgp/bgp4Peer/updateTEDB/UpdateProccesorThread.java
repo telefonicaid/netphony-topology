@@ -426,6 +426,7 @@ public class UpdateProccesorThread extends Thread {
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(LocalNodeIGPId))){
 
 				simpleTEDB.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
+				simpleTEDB.notifyNewVertex(LocalNodeIGPId);
 			}
 			//			else{ 
 			//				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
@@ -434,6 +435,7 @@ public class UpdateProccesorThread extends Thread {
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
 
 				simpleTEDB.getNetworkGraph().addVertex(RemoteNodeIGPId);
+				simpleTEDB.notifyNewVertex(RemoteNodeIGPId);
 
 			}
 			//			else {
@@ -450,7 +452,10 @@ public class UpdateProccesorThread extends Thread {
 				log.info("Adding information of remote node to edge..." + simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				intraEdge.setRemote_Node_Info(simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				log.info("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
+				
 				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
+				simpleTEDB.notifyNewEdge(LocalNodeIGPId, RemoteNodeIGPId);
+				
 				simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId).setNumberFibers(1);
 				IntraDomainEdge edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(intraEdge.getTE_info().getAvailableLabels()!=null)
