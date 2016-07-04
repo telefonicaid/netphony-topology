@@ -16,13 +16,11 @@
     </WSOld>
     <COP>
         <serve_port>8088</serve_port>
-        <import_ip>localhost</import_ip>
-        <import_port>8087</import_port>
     </COP>
     <BGPLS>
-        <Reader>False</Reader>
-        <Writer>True</Writer>
-        <BGPLSconfigFile>src/test/resources/BGP4Parameters_TM.xml</BGPLSconfigFile>
+        <Reader>True</Reader>
+        <Writer>False</Writer>
+        <BGPLSconfigFile>src/test/resources/BGP4Parameters_2.xml</BGPLSconfigFile>
     </BGPLS>
    
 </config>

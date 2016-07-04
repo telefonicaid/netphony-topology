@@ -60,9 +60,15 @@ public class TranslateModel {
 	  }
 	public static Node translateNodeIp(DomainTEDB ted, Inet4Address n, Node_Info nodeInfo) {
 		Node node = new Node();
+		System.out.println("DEBUG translateNodeIP, nodeInfo (of node "+n+"):"+nodeInfo);
 		node.setName(n.getHostAddress());
 		node.setNodeId(n.getHostAddress());
-		node.setDomain(nodeInfo.getAs_number().getHostAddress());
+		if(nodeInfo==null){
+			System.out.println("No node Info: DomainID:"+ted.getDomainID());
+			node.setDomain(ted.getDomainID().getHostAddress());
+		}else{
+			node.setDomain(nodeInfo.getAs_number().getHostAddress());
+		}
 		node.setEdgeEnd(new ArrayList<EdgeEnd>());
 		return node;
 	}
