@@ -1,12 +1,12 @@
-package es.tid.topologyModuleBase.writer;
+package es.tid.topologyModuleBase.plugins.writer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.locks.Lock;
 
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
-import es.tid.topologyModuleBase.writer.gson.GsonSession;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.writer.gson.GsonSession;
 /**
  * 
  * @author jaume
@@ -14,7 +14,9 @@ import es.tid.topologyModuleBase.writer.gson.GsonSession;
  */
 public class TopologyServerGson extends TopologyServer
 {	
-	public TopologyServerGson(SimpleTopology ted, TopologyModuleParams params, Lock lock)
+	private boolean isRunning;
+
+	public TopologyServerGson(TopologiesDataBase ted, TopologyModuleParams params, Lock lock)
 	{
 		super(ted,params,lock);
 	}
@@ -22,7 +24,7 @@ public class TopologyServerGson extends TopologyServer
 	@Override
 	public void serveTopology() 
 	{
-		this.start();
+		this.run();
 	}
 	
 	@Override
@@ -54,5 +56,28 @@ public class TopologyServerGson extends TopologyServer
 
 		}
 
+	}
+	
+	@Override
+	public boolean isRunning() {
+		// TODO Auto-generated method stub
+		return isRunning;
+	}
+
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return "Gson exporter";
+	}
+
+	@Override
+	public String displayInfo() {
+		// TODO Auto-generated method stub
+		String str=getPluginName()+"\n";
+		str+="Status: ";
+		if(isRunning())str+="running";
+		else str+="stop";
+		
+		return str;
 	}
 }

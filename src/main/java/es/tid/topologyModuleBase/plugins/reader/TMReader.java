@@ -1,10 +1,10 @@
-package es.tid.topologyModuleBase.reader;
+package es.tid.topologyModuleBase.plugins.reader;
 
 import java.util.concurrent.locks.Lock;
 import java.util.logging.Logger;
 
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 
 public class TMReader 
 {
@@ -16,11 +16,11 @@ public class TMReader
 	
 	Logger log=Logger.getLogger("TMController");
 			
-	SimpleTopology ted;
+	TopologiesDataBase ted;
 	TopologyModuleParams params;
 	Lock lock;
 	
-	public TMReader(SimpleTopology ted, TopologyModuleParams params, Lock lock)
+	public TMReader(TopologiesDataBase ted, TopologyModuleParams params, Lock lock)
 	{
 		this.ted = ted;
 		this.params = params;

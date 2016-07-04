@@ -157,7 +157,7 @@ public class TranslateModel {
 		  return dwdmEdge;
 	  }
 	public static Edge translateEthEdge(DomainTEDB db,IntraDomainEdge e){
-		  System.out.println("DEBUG translateEdge: edgeInput= source (class "+e.getSource().getClass()+")="+e.getSource());//+" | getSrc_Numif_id (class "+e.getSrc_Numif_id().getClass()+")="+e.getSrc_Numif_id());
+		  //System.out.println("DEBUG translateEdge: edgeInput= source (class "+e.getSource().getClass()+")="+e.getSource());//+" | getSrc_Numif_id (class "+e.getSrc_Numif_id().getClass()+")="+e.getSrc_Numif_id());
 		  Edge edge = new Edge();
 		  edge.setName(e.getLinkID());
 		  edge.setEdgeId(e.getLinkID());
@@ -241,7 +241,7 @@ public class TranslateModel {
 	
 	  
 	public static Topology translateTopology(String topId, DomainTEDB ted){
-		System.out.println("DEBUG translateTopology: TEDinput: "+ted.printTopology());
+		//System.out.println("DEBUG translateTopology: TEDinput: "+ted.printTopology());
 		  Topology topology = new Topology();
 		  /*if(ted==null){
 			  topology.setTopologyId("topology null Exception");

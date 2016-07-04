@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.writer;
+package es.tid.topologyModuleBase.plugins.writer;
 
 import java.util.concurrent.locks.Lock;
 
@@ -9,7 +9,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import es.tid.bgp.bgp4Peer.peer.BGPPeer;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 
 //import javax.servlet.Servlet;
 import org.eclipse.jetty.server.Server;
@@ -21,10 +21,11 @@ public class TopologyServerCOP extends TopologyServer
 {
 	
 	
-	public static SimpleTopology actualTed;
+	public static TopologiesDataBase actualTed;
+	private boolean isRunning=false;
 	
 
-	public TopologyServerCOP(SimpleTopology ted, TopologyModuleParams params,
+	public TopologyServerCOP(TopologiesDataBase ted, TopologyModuleParams params,
 			Lock lock) 
 	{
 		super(ted, params, lock);
@@ -32,14 +33,14 @@ public class TopologyServerCOP extends TopologyServer
 	}
 	
 	
-	public static SimpleTopology getActualTed(){
+	public static TopologiesDataBase getActualTed(){
 		return actualTed;
 	}
 
 	@Override
 	public void serveTopology() 
 	{
-		this.start();
+		this.run();
 	}
 	@Override
 	public void run() 
@@ -71,6 +72,7 @@ public class TopologyServerCOP extends TopologyServer
 		
         
         try {
+        	isRunning=true;
             jettyServer.start();
             //jettyServer.dumpStdErr();
             jettyServer.join();
@@ -80,5 +82,28 @@ public class TopologyServerCOP extends TopologyServer
             jettyServer.destroy();
         }
 		
+	}
+	
+	@Override
+	public boolean isRunning() {
+		// TODO Auto-generated method stub
+		return isRunning;
+	}
+
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return "COP server-exporter";
+	}
+
+	@Override
+	public String displayInfo() {
+		// TODO Auto-generated method stub
+		String str=getPluginName()+"\n";
+		str+="Status: ";
+		if(isRunning())str+="running";
+		else str+="stop";
+		str+="\nPort:"+params.getExportCOPPort();
+		return str;
 	}
 }

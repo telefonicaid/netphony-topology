@@ -10,7 +10,8 @@ import java.util.logging.Logger;
 
 //import es.tid.pce.server.DomainPCESession;
 import es.tid.topologyModuleBase.TopologyModuleParamsArray;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.TMPlugin;
 
 /**
  * 
@@ -41,19 +42,22 @@ public class TMManagementSession extends Thread {
 	/**
 	 * The TEDB 
 	 */
-	private SimpleTopology tedb;
+	private TopologiesDataBase tedb;
 	
 	/*
 	 * 
 	 */
 	TopologyModuleParamsArray params;
 	
+	ArrayList<TMPlugin> pluginsList;
+	
 	//public static ArrayList<DomainPCESession> oneSession = new ArrayList<DomainPCESession>();
 	
-	public TMManagementSession(Socket s,SimpleTopology tedb, TopologyModuleParamsArray params){
+	public TMManagementSession(Socket s,TopologiesDataBase tedb, TopologyModuleParamsArray params, ArrayList<TMPlugin> pluginsList ){
 		this.socket=s;
 		this.tedb=tedb;
 		this.params = params;
+		this.pluginsList=pluginsList;
 		log=Logger.getLogger("TMController");
 	}
 	
@@ -105,7 +109,8 @@ public class TMManagementSession extends Thread {
 				}
 				out.print("Available commands:\r\n\n");
 				out.print("\t1) showTED\r\n");
-				out.print("\t2) help\r\n");
+				out.print("\t2) showPlugins\r\n");
+				out.print("\t3) help\r\n");
 				out.print("\tENTER) quit\r\n");	
 				
 				out.print("TM:>");
@@ -138,7 +143,34 @@ public class TMManagementSession extends Thread {
 				if (command.equals("showTED") || command.equals("1")) {
 					out.print(tedb.printTopology()+"\n");
 				} 
-				else if (command.equals("help") || command.equals("2")) {
+				else if (command.equals("showPlguins") || command.equals("2")) {
+					int i=1;
+					for(TMPlugin p : this.pluginsList){
+						out.print(i+") "+p.getPluginName());
+						if(p.isRunning()) out.print(" [Running]\n");
+						else out.print(" [Stop]\n");
+						i++;
+					}
+					out.print("ENTER) back\n\nTM:>");
+					String command2;
+					try {
+						command2 = br.readLine();
+					} catch (IOException ioe) {
+						log.warning("IO error trying to read your command");
+						return;
+					}
+					if(command2 == null)
+					{
+						continue;
+					}
+					try{
+						int option = Integer.parseInt(command2);
+						out.print(this.pluginsList.get(option-1).displayInfo()+"\n\n");
+					}catch(java.lang.NumberFormatException e){
+						continue;
+					}
+				}
+				else if (command.equals("help") || command.equals("3")) {
 					out.print("Available commands:\r\n\n");
 					out.print("\t1) showTED\r\n");
 					out.print("\t2) help\r\n");

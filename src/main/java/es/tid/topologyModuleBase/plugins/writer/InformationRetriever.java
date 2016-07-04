@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.writer;
+package es.tid.topologyModuleBase.plugins.writer;
 
 
 import java.util.concurrent.locks.Lock;
@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 import es.tid.tedb.SimpleTEDB;
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 /**
  * 
  * @author jaume
@@ -16,11 +16,11 @@ import es.tid.topologyModuleBase.database.SimpleTopology;
 public class InformationRetriever 
 {
 	
-	SimpleTopology ted;
+	TopologiesDataBase ted;
 	TopologyModuleParams params;
 	Lock lock;
 	
-	public InformationRetriever(SimpleTopology ted, TopologyModuleParams params, Lock lock)
+	public InformationRetriever(TopologiesDataBase ted, TopologyModuleParams params, Lock lock)
 	{
 		this.ted = ted;
 		this.params = params;

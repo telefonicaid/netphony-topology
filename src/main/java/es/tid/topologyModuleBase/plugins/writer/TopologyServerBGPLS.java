@@ -1,15 +1,17 @@
-package es.tid.topologyModuleBase.writer;
+package es.tid.topologyModuleBase.plugins.writer;
 
 import java.util.concurrent.locks.Lock;
 
 import es.tid.bgp.bgp4Peer.peer.BGPPeer;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 
 public class TopologyServerBGPLS extends TopologyServer
 {
-	public TopologyServerBGPLS(SimpleTopology ted, TopologyModuleParams params,
+	private boolean isRunning;
+
+	public TopologyServerBGPLS(TopologiesDataBase ted, TopologyModuleParams params,
 			Lock lock) 
 	{
 		super(ted, params, lock);
@@ -33,5 +35,33 @@ public class TopologyServerBGPLS extends TopologyServer
 		bgpPeer.startManagementServer();
 		bgpPeer.startSendTopology();	
 		
+	}
+	
+	@Override
+	public boolean isRunning() {
+		// TODO Auto-generated method stub
+		return isRunning;
+	}
+
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return "BGPLS exporter peer";
+	}
+
+	@Override
+	public String displayInfo() {
+		// TODO Auto-generated method stub
+		String str=getPluginName()+"\n";
+		str+="Status: ";
+		if(isRunning())str+="running";
+		else str+="stop";
+		str+="\nParameters file:"+params.getBGPSConfigurationFile();
+		return str;
+	}
+
+	@Override
+	public void run() {
+		serveTopology();
 	}
 }

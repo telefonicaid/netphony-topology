@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.reader;
+package es.tid.topologyModuleBase.plugins.reader;
 
 
 import java.io.File;
@@ -33,13 +33,15 @@ import es.tid.topologyModuleBase.COPServiceTopology.model.EdgeEnd;
 import es.tid.topologyModuleBase.COPServiceTopology.model.TopologiesSchema;
 import es.tid.topologyModuleBase.COPServiceTopology.model.Edge.EdgeTypeEnum;
 import es.tid.topologyModuleBase.COPServiceTopology.model.*;
-import es.tid.topologyModuleBase.database.SimpleTopology;
-import es.tid.topologyModuleBase.reader.TopologyReader;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.reader.TopologyReader;
 
 public class TopologyReaderCOP extends TopologyReader
 {
 
-	public TopologyReaderCOP(SimpleTopology ted,TopologyModuleParams params, Lock lock)
+	private boolean isRunning=false;
+
+	public TopologyReaderCOP(TopologiesDataBase ted,TopologyModuleParams params, Lock lock)
 	{
 		super(ted,params,lock);
 	}
@@ -61,14 +63,18 @@ public class TopologyReaderCOP extends TopologyReader
 		
 
 	}
+	@Override
+	public void run(){
+		readTopology();
+	}
  private class ReadTopologyTask extends TimerTask {
-		private SimpleTopology ted;
+		private TopologiesDataBase ted;
 		private Lock lock;
 		private DefaultApi api;
 		
 		
 		
-		public ReadTopologyTask(SimpleTopology ted, Lock lock, DefaultApi api) {
+		public ReadTopologyTask(TopologiesDataBase ted, Lock lock, DefaultApi api) {
 			super();
 			this.ted = ted;
 			this.lock = lock;
@@ -80,6 +86,7 @@ public class TopologyReaderCOP extends TopologyReader
 			// TODO Auto-generated method stub
 			
 			lock.lock();
+			isRunning=true;
 			try {
 				TopologiesSchema retrieveTopologies = api.retrieveTopologies();
 				//EdgeEnd retrieveLocalIf = api.retrieveTopologiesTopologyEdgesLocalIfidLocalIfidById("1", "ADVA_2_CTTC_2");
@@ -114,6 +121,7 @@ public class TopologyReaderCOP extends TopologyReader
 				log.info("GeneralException in COPtopologyReader from: " + api.getApiClient().getBasePath());
 				e.printStackTrace();
 			}finally{
+				isRunning=false;
 				lock.unlock();
 			}
 		}
@@ -179,4 +187,26 @@ public class TopologyReaderCOP extends TopologyReader
 		}*/
  
  }
+@Override
+public boolean isRunning() {
+	// TODO Auto-generated method stub
+	return isRunning;
+}
+
+@Override
+public String getPluginName() {
+	// TODO Auto-generated method stub
+	return "COP client-importer";
+}
+
+@Override
+public String displayInfo() {
+	// TODO Auto-generated method stub
+	String str=getPluginName()+"\n";
+	str+="Status: ";
+	if(isRunning())str+="running";
+	else str+="stop";
+	str+="\nBase path:"+"http://"+params.getRemoteCOPhost()+":"+params.getRemoteCOPPort()+"/restconf";
+	return str;
+}
 }

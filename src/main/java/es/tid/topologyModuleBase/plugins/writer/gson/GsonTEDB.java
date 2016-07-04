@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.writer.gson;
+package es.tid.topologyModuleBase.plugins.writer.gson;
 
 import java.util.Collection;
 
