@@ -47,7 +47,7 @@ public class BGP4ManagementSession extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains.
 	 */
-	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	private Hashtable<String,DomainTEDB> intraTEDBs;
 	
 	/**
 	 * The infomation of all the active sessions
@@ -58,7 +58,7 @@ public class BGP4ManagementSession extends Thread {
 	 */
 	private SendTopology sendTopology;
 	
-	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
+	public BGP4ManagementSession(Socket s,MultiDomainTEDB multiTEDB, Hashtable<String,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation, SendTopology sendTopology){
 		this.socket=s;
 		log=LoggerFactory.getLogger("BGP4Server");
 		this.multiTEDB=multiTEDB;
@@ -135,9 +135,9 @@ public class BGP4ManagementSession extends Thread {
 					//Print intradomain and interDomain links
 					if (multiTEDB != null)
 						out.println(multiTEDB.printTopology());
-					Enumeration<Inet4Address> domainTedbs=intraTEDBs.keys();
+					Enumeration<String> domainTedbs=intraTEDBs.keys();
 					while (domainTedbs.hasMoreElements()){		
-						Inet4Address domainID=domainTedbs.nextElement();
+						String domainID=domainTedbs.nextElement();
 						DomainTEDB ted=intraTEDBs.get(domainID);
 						out.println("Intradomain TEDB with ID "+domainID);
 						out.println(ted.printTopology());

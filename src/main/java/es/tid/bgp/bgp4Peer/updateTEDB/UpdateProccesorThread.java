@@ -127,7 +127,7 @@ public class UpdateProccesorThread extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains and.
 	 */
-	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	private Hashtable<String,DomainTEDB> intraTEDBs;
 
 	private LinkedList<UpdateLink> updateLinks;
 
@@ -137,7 +137,7 @@ public class UpdateProccesorThread extends Thread {
 
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
-			MultiDomainTEDB multiTedb ,Hashtable<Inet4Address,DomainTEDB> intraTEDBs ){
+			MultiDomainTEDB multiTedb ,Hashtable<String,DomainTEDB> intraTEDBs ){
 		log=LoggerFactory.getLogger("BGP4Server");
 		running=true;
 		this.updateList=updateList;
@@ -407,14 +407,14 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
 			}
 
-			DomainTEDB domainTEDB=intraTEDBs.get(localDomainID);
+			DomainTEDB domainTEDB=intraTEDBs.get(localDomainID.getHostAddress());
 			SimpleTEDB simpleTEDB=null;
 			if (domainTEDB instanceof SimpleTEDB){
 				simpleTEDB = (SimpleTEDB) domainTEDB;
 			}else if (domainTEDB==null){
 				simpleTEDB = new SimpleTEDB();
 				simpleTEDB.createGraph();
-				this.intraTEDBs.put(localDomainID, simpleTEDB);
+				this.intraTEDBs.put(localDomainID.getHostAddress(), simpleTEDB);
 			}else {
 				log.error("PROBLEM: TEDB not compatible");
 				return;
@@ -708,7 +708,7 @@ public class UpdateProccesorThread extends Thread {
 		if (as_number==null){
 			log.error(" as_number is NULL");
 		}
-		DomainTEDB domainTEDB=intraTEDBs.get(as_number);
+		DomainTEDB domainTEDB=intraTEDBs.get(as_number.getHostAddress());
 
 		SimpleTEDB simpleTEDB=null;
 		if (domainTEDB instanceof SimpleTEDB){
@@ -716,7 +716,7 @@ public class UpdateProccesorThread extends Thread {
 		}else if (domainTEDB==null){
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
-			this.intraTEDBs.put(as_number, simpleTEDB);
+			this.intraTEDBs.put(as_number.getHostAddress(), simpleTEDB);
 		}else {
 			log.error("PROBLEM: TEDB not compatible");
 			return;

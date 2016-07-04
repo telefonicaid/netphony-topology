@@ -27,7 +27,7 @@ public class UpdateDispatcher {
 	private UpdateProccesorThread upt;
 
 	
-	public UpdateDispatcher(MultiDomainTEDB multiTedb,Hashtable<Inet4Address,DomainTEDB> intraTEDBs ){
+	public UpdateDispatcher(MultiDomainTEDB multiTedb,Hashtable<String,DomainTEDB> intraTEDBs ){
 		this.updateList=new LinkedBlockingQueue<BGP4Update>();
 		this.upt=new UpdateProccesorThread(updateList, multiTedb,intraTEDBs );		
 		upt.start();
