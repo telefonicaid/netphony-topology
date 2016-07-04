@@ -9,6 +9,7 @@ import java.util.Set;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.IntraDomainEdge;
+import es.tid.tedb.Node_Info;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.tedb.TE_Information;
 import es.tid.tedb.elements.EndPoint;
@@ -24,13 +25,19 @@ public class TranslateModel {
   			  if(node.getNodeId().equals(nodeId)){
   				  return node;
   			  }
+  		  }else if(n instanceof Inet4Address){
+  			  Node node= translateNodeIp(db, (Inet4Address)n, db.getNodeTable().get(n));
+  			  if(node.getNodeId().equals(nodeId)){
+  				  return node;
+  			  }
   		  }
   	  }
   	  return null;
     }
 	
 	public static Node translateNode(DomainTEDB db, es.tid.tedb.elements.Node n){
-		  Node node = new Node();
+		  //System.out.println("DEBUG translateNode: NodeInput: "+n);
+			Node node = new Node();
 		  //node.setName(n.getNodeID());
 		  if(n.getAddress().size()>0){
 			  node.setName(n.getAddress().get(0));
@@ -47,13 +54,18 @@ public class TranslateModel {
 			  intList.add(translateEdgeEnd( n, i));
 		  }
 		  node.setEdgeEnd(intList);
-		  
-		  
-		  
 		  //node.setUnderlayAbstractTopology(underlayAbstractTopology);
 		  
 		  return node;
 	  }
+	public static Node translateNodeIp(DomainTEDB ted, Inet4Address n, Node_Info nodeInfo) {
+		Node node = new Node();
+		node.setName(n.getHostAddress());
+		node.setNodeId(n.getHostAddress());
+		node.setDomain(nodeInfo.getAs_number().getHostAddress());
+		node.setEdgeEnd(new ArrayList<EdgeEnd>());
+		return node;
+	}
 	  
 	public static EdgeEnd translateEdgeEnd(es.tid.tedb.elements.Node n, es.tid.tedb.elements.Intf i){
 		  EdgeEnd edgeEnd = new EdgeEnd();
@@ -145,7 +157,7 @@ public class TranslateModel {
 		  return dwdmEdge;
 	  }
 	public static Edge translateEthEdge(DomainTEDB db,IntraDomainEdge e){
-		  
+		  System.out.println("DEBUG translateEdge: edgeInput= source (class "+e.getSource().getClass()+")="+e.getSource());//+" | getSrc_Numif_id (class "+e.getSrc_Numif_id().getClass()+")="+e.getSrc_Numif_id());
 		  Edge edge = new Edge();
 		  edge.setName(e.getLinkID());
 		  edge.setEdgeId(e.getLinkID());
@@ -157,8 +169,17 @@ public class TranslateModel {
 			  edge.setUnreservBw(e.getBw().getUnreservedBw()+"");
 		  }
 		  Object src = e.getSrc_Numif_id();
-		  if( src instanceof es.tid.tedb.elements.EndPoint ){
-			  Node node = TranslateModel.getNodeById( db, ((es.tid.tedb.elements.EndPoint) src).getNode());
+		  if( e.getSource() instanceof  java.net.Inet4Address){
+			  Node node = TranslateModel.getNodeById( db, ((java.net.Inet4Address)e.getSource()).getHostAddress());
+			  edge.setSource(node);
+			  for(EdgeEnd end : node.getEdgeEnd()){
+				  if(end.getName().equals(e.getSrc_if_id())){
+					  edge.setLocalIfid(end);
+				  }
+			  }
+		  }else if( src instanceof es.tid.tedb.elements.EndPoint ){
+			 
+			  Node node = TranslateModel.getNodeById( db, ((es.tid.tedb.elements.Node)e.getSource()).getNodeID());
 			  edge.setSource(node);
 			  for(EdgeEnd end : node.getEdgeEnd()){
 				  if(end.getName().equals(((es.tid.tedb.elements.EndPoint) src).getIntf()) ){
@@ -169,7 +190,15 @@ public class TranslateModel {
 		  }
 		  
 		  Object dst = e.getDst_Numif_id();
-		  if( dst instanceof es.tid.tedb.elements.EndPoint ){
+		  if( e.getTarget() instanceof  java.net.Inet4Address){
+			  Node node = TranslateModel.getNodeById( db, ((java.net.Inet4Address)e.getTarget()).getHostAddress());
+			  edge.setTarget(node);
+			  for(EdgeEnd end : node.getEdgeEnd()){
+				  if(end.getName().equals(e.getDst_if_id())){
+					  edge.setRemoteIfid(end);
+				  }
+			  }
+		  }else if( dst instanceof es.tid.tedb.elements.EndPoint ){
 			  Node node = TranslateModel.getNodeById( db, ((es.tid.tedb.elements.EndPoint) dst).getNode());
 			  edge.setTarget(node);
 			  for(EdgeEnd end : node.getEdgeEnd()){
@@ -212,6 +241,7 @@ public class TranslateModel {
 	
 	  
 	public static Topology translateTopology(String topId, DomainTEDB ted){
+		System.out.println("DEBUG translateTopology: TEDinput: "+ted.printTopology());
 		  Topology topology = new Topology();
 		  /*if(ted==null){
 			  topology.setTopologyId("topology null Exception");
@@ -231,8 +261,12 @@ public class TranslateModel {
 		  
 		  List<Node> nodes = new ArrayList<Node>();
 		  for(Object node : ted.getIntraDomainLinksvertexSet()){
+			  System.out.println("DEBUG nodeInTopology, (class "+node.getClass()+"):" +node );
 			  if(node instanceof es.tid.tedb.elements.Node){
 				  nodes.add(translateNode(ted, (es.tid.tedb.elements.Node)node));
+			  }
+			  else if(node instanceof java.net.Inet4Address){
+				  nodes.add(translateNodeIp(ted, (java.net.Inet4Address)node, ted.getNodeTable().get(node)));
 			  }
 		  }
 		  topology.setNodes(nodes);
@@ -241,6 +275,8 @@ public class TranslateModel {
 		  
 		  return topology;
 	  }
+
+	
 
 	public static es.tid.tedb.elements.Node translate2Node(Node node) {
 		es.tid.tedb.elements.Node n = new es.tid.tedb.elements.Node();
