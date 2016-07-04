@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.writer.gson;
+package es.tid.topologyModuleBase.plugins.writer.gson;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -10,8 +10,8 @@ import java.net.Socket;
 import java.util.logging.Logger;
 
 import es.tid.topologyModuleBase.TopologyModuleConstants;
-import es.tid.topologyModuleBase.database.SimpleTopology;
-import es.tid.topologyModuleBase.writer.InformationRetriever;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.writer.InformationRetriever;
 import es.tid.topologyModuleBase.util.UtilsFunctions;
 /**
  * 
@@ -37,14 +37,14 @@ public class GsonSession extends Thread
 	 */
 	Logger log;
 	InformationRetriever informationRetriever;
-	SimpleTopology ted;
+	TopologiesDataBase ted;
 	
 	/**
 	 * It indicates wether to continue serving
 	 */
 	private boolean continueServing = true;
 	
-	public GsonSession(Socket s,InformationRetriever informationRetriever,SimpleTopology ted)
+	public GsonSession(Socket s,InformationRetriever informationRetriever,TopologiesDataBase ted)
 	{
 		this.socket=s;
 		log=Logger.getLogger("TMController");

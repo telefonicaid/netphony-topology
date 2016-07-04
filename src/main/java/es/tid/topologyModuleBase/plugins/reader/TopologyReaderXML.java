@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.reader;
+package es.tid.topologyModuleBase.plugins.reader;
 
 
 import java.io.File;
@@ -24,21 +24,28 @@ import es.tid.tedb.elements.Link;
 import es.tid.tedb.elements.Location;
 import es.tid.tedb.elements.Node;
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 
 public class TopologyReaderXML extends TopologyReader
 {
 
-	public TopologyReaderXML(SimpleTopology ted,TopologyModuleParams params, Lock lock)
+	private boolean isRunning=false;
+	
+	public TopologyReaderXML(TopologiesDataBase topologies,TopologyModuleParams params, Lock lock)
 	{
 
-		super(ted,params,lock);
+		super(topologies,params,lock);
+	}
+	@Override
+	public void run(){
+		readTopology();
 	}
 
 	@Override
 	public void readTopology() 
 	{
 		lock.lock();
+		isRunning=true;
 		//Initialize Traffic Engineering Database
 		if (params.getModexml()!=null){
 			if (params.getModexml().equals("IP"))
@@ -68,6 +75,7 @@ public class TopologyReaderXML extends TopologyReader
 				}
 			}
 		}
+		isRunning=false;
 		lock.unlock();
 
 	}
@@ -482,5 +490,24 @@ public class TopologyReaderXML extends TopologyReader
 		} else {
 			return "?";
 		}
+	}
+	@Override
+	public boolean isRunning() {
+		// TODO Auto-generated method stub
+		return isRunning;
+	}
+	@Override
+	public String displayInfo() {
+		
+		String str = getPluginName()+"Status: ";
+		if(isRunning())str+="running";
+		else str+="stop";
+		str+="\nImporter from XML file";
+		return str;
+	}
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return "XMLimporter";
 	}
 }

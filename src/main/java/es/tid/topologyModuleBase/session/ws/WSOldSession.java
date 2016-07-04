@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 
 import com.google.gson.Gson;
 
@@ -69,9 +69,9 @@ public class WSOldSession extends Thread{
 	 */
 	Logger log;
 	
-	private SimpleTopology ted;
+	private TopologiesDataBase ted;
 	
-	public WSOldSession(Socket s, SimpleTopology ted ){
+	public WSOldSession(Socket s, TopologiesDataBase ted ){
 		this.socket=s;
 		log=Logger.getLogger("TopologyModule");
 		this.ted=ted;

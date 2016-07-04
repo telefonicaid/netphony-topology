@@ -20,7 +20,7 @@ import es.tid.tedb.TEDListener;
 import es.tid.tedb.TE_Information;
 import es.tid.tedb.WSONInformation;
 
-public class SimpleTopology implements TopologyTEDB
+public class TopologiesDataBase implements TopologyTEDB
 {
 	
 
@@ -35,12 +35,12 @@ public class SimpleTopology implements TopologyTEDB
 	 */
 	DomainTEDB ted = null;
 	
-	public SimpleTopology()
+	public TopologiesDataBase()
 	{
 		teds = new Hashtable<String, DomainTEDB>();
 	}
 	
-	public SimpleTopology(DomainTEDB ted)
+	public TopologiesDataBase(DomainTEDB ted)
 	{
 		this.ted = ted; 
 	}

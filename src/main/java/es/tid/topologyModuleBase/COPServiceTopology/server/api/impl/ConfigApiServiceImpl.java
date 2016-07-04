@@ -5,7 +5,6 @@ import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.Node_Info;
 import es.tid.tedb.TEDB;
-import es.tid.topologyModuleBase.writer.TopologyServerCOP;
 
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -13,7 +12,8 @@ import es.tid.topologyModuleBase.COPServiceTopology.model.*;
 import es.tid.topologyModuleBase.COPServiceTopology.model.Edge.EdgeTypeEnum;
 import es.tid.topologyModuleBase.COPServiceTopology.model.EdgeEnd.SwitchingCapEnum;
 import es.tid.topologyModuleBase.COPServiceTopology.server.api.*;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.writer.TopologyServerCOP;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,7 +33,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologies()
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TopologiesSchema tSchema = new TopologiesSchema();
     	  List<Topology> tops = new ArrayList<Topology>();
     	  for(Map.Entry<String, DomainTEDB>entry : ted.getTeds().entrySet() ){
@@ -58,7 +58,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesEdgesById(String topologyId,String edgeId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -77,7 +77,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesLocalIfidLocalIfidById(String topologyId,String edgeId)
 	      throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -96,7 +96,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesRemoteIfidRemoteIfidById(String topologyId,String edgeId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -115,7 +115,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesSourceSourceById(String topologyId,String edgeId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -133,7 +133,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesSourceEdgeEndEdgeEndById(String topologyId,String edgeId,String edgeEndId)
       throws NotFoundException {
-      	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+      	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
 		  TEDB db = ted.getDB(topologyId);
 		  if(db==null){
 			  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -159,7 +159,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesTargetTargetById(String topologyId,String edgeId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -179,7 +179,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyEdgesTargetEdgeEndEdgeEndById(String topologyId,String edgeId,String edgeEndId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
 		  TEDB db = ted.getDB(topologyId);
 		  if(db==null){
 			  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -206,7 +206,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyNodesNodesById(String topologyId,String nodeId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);
@@ -222,7 +222,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologiesTopologyNodesEdgeEndEdgeEndById(String topologyId,String nodeId,String edgeEndId)
       throws NotFoundException {
-    	  SimpleTopology ted = TopologyServerCOP.getActualTed();
+    	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TEDB db = ted.getDB(topologyId);
     	  if(db==null){
     		  throw new NotFoundException(0, "No found topology with id:"+topologyId);

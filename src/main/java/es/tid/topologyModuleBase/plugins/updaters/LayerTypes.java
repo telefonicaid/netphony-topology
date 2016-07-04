@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.updaters;
+package es.tid.topologyModuleBase.plugins.updaters;
 
 public class LayerTypes {
 	/**

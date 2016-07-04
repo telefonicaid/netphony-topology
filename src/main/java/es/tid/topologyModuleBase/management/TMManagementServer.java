@@ -4,10 +4,12 @@ package es.tid.topologyModuleBase.management;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import es.tid.topologyModuleBase.TopologyModuleParamsArray;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.TMPlugin;
 
 /**
  * 
@@ -19,14 +21,17 @@ public class TMManagementServer extends Thread {
 	
 	private Logger log;
 		
-	private SimpleTopology tedb;
+	private TopologiesDataBase tedb;
 	 
 	private TopologyModuleParamsArray params;
 	
-	public TMManagementServer(SimpleTopology tedb, TopologyModuleParamsArray params){
+	private ArrayList<TMPlugin> pluginsList;
+	
+	public TMManagementServer(TopologiesDataBase tedb, TopologyModuleParamsArray params, ArrayList<TMPlugin> pluginsList){
 		log =Logger.getLogger("TMController");
 		this.tedb=tedb;
 		this.params = params;
+		this.pluginsList=pluginsList;
 		
 	}
 	
@@ -45,7 +50,7 @@ public class TMManagementServer extends Thread {
 		
 		try {
 	       	while (listening) {
-	       		new TMManagementSession(serverSocket.accept(), tedb, params).start();
+	       		new TMManagementSession(serverSocket.accept(), tedb, params, pluginsList).start();
 	       	}	    
 	       	serverSocket.close();
 		} catch (Exception e) {

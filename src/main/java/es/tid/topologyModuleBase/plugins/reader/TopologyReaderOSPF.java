@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.reader;
+package es.tid.topologyModuleBase.plugins.reader;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -7,8 +7,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Lock;
 
 import es.tid.ospf.ospfv2.OSPFv2LinkStateUpdatePacket;
-import es.tid.topologyModuleBase.updaters.RedisTEDUpdaterThread;
-import es.tid.topologyModuleBase.updaters.TopologyUpdaterThread;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.FileTEDBUpdater;
 import es.tid.tedb.ReachabilityEntry;
@@ -16,7 +14,9 @@ import es.tid.tedb.SimpleTEDB;
 import es.tid.tedb.ospfv2.OSPFSessionServer;
 import es.tid.tedb.ospfv2.OSPFTCPSessionServer;
 import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.SimpleTopology;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.updaters.RedisTEDUpdaterThread;
+import es.tid.topologyModuleBase.plugins.updaters.TopologyUpdaterThread;
 import es.tid.topologyModuleBase.util.UtilsFunctions;
 /**
  * 
@@ -26,7 +26,9 @@ import es.tid.topologyModuleBase.util.UtilsFunctions;
 public class TopologyReaderOSPF extends TopologyReader
 {
 
-	public TopologyReaderOSPF(SimpleTopology ted, TopologyModuleParams params, Lock lock)
+	private boolean isRunning=false;
+
+	public TopologyReaderOSPF(TopologiesDataBase ted, TopologyModuleParams params, Lock lock)
 	{
 		super(ted,params,lock);
 	}
@@ -54,6 +56,7 @@ public class TopologyReaderOSPF extends TopologyReader
 		{
 			tut = new TopologyUpdaterThread(ospfv2PacketQueue, (DomainTEDB)ted.getDB(),params.getLambdaIni(),params.getLambdaEnd());
 		}
+		isRunning=true;
 		tut.start();
 		
 		/*
@@ -106,5 +109,28 @@ public class TopologyReaderOSPF extends TopologyReader
 				log.info(UtilsFunctions.exceptionToString(e));
 			}
 		}
+	}
+
+	@Override
+	public boolean isRunning() {
+		// TODO Auto-generated method stub
+		return isRunning;
+	}
+
+	@Override
+	public String getPluginName() {
+		// TODO Auto-generated method stub
+		return "OSPFimporter";
+	}
+
+	@Override
+	public String displayInfo() {
+		// TODO Auto-generated method stub
+		return getPluginName();
+	}
+
+	@Override
+	public void run() {
+		readTopology();
 	}
 }
