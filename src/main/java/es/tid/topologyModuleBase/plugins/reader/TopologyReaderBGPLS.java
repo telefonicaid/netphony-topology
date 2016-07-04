@@ -27,8 +27,9 @@ public class TopologyReaderBGPLS extends TopologyReader{
 			//bgpPeer.configure("PCEServerConfiguration.xml");
 			bgpPeer.configure(params.getBGPSConfigurationFile());
 				
-			bgpPeer.setReadDomainTEDB((SimpleTEDB)(ted.getDB()));
-			bgpPeer.setSimpleTEDB((SimpleTEDB)(ted.getDB()));
+			//bgpPeer.setReadDomainTEDB((SimpleTEDB)(ted.getDB()));
+			//bgpPeer.setSimpleTEDB((SimpleTEDB)(ted.getDB()));
+			bgpPeer.setIntraTEDBs(ted.getTeds());
 			
 			bgpPeer.createUpdateDispatcher();
 			log.info("Testing change");

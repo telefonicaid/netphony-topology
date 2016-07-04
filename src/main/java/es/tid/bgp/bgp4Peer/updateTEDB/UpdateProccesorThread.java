@@ -415,6 +415,7 @@ public class UpdateProccesorThread extends Thread {
 				simpleTEDB = new SimpleTEDB();
 				simpleTEDB.createGraph();
 				this.intraTEDBs.put(localDomainID.getHostAddress(), simpleTEDB);
+				simpleTEDB.setDomainID(localDomainID);
 			}else {
 				log.error("PROBLEM: TEDB not compatible");
 				return;
@@ -712,6 +713,7 @@ public class UpdateProccesorThread extends Thread {
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
 			this.intraTEDBs.put(as_number.getHostAddress(), simpleTEDB);
+			simpleTEDB.setDomainID(as_number);
 		}else {
 			log.error("PROBLEM: TEDB not compatible");
 			return;

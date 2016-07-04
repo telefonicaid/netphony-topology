@@ -19,7 +19,7 @@
 	<!-- If the tcp no delay option is used or not. Optional Parameter. Default value: false. -->
 	<nodelay>true</nodelay>
 	<!-- Waiting Time to re-connect to clients. Default value: 6000 ms. -->
-	<delay>40000</delay>
+	<delay>10000</delay>
 	<setTraces>false</setTraces>
 	<!-- OPEN Parameters -->
 	<!-- RFC 4271. This 2-octet unsigned integer indicates the number of seconds the sender proposes for the value of the Hold Timer.  
