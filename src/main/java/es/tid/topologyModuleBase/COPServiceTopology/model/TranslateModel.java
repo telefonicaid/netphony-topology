@@ -267,7 +267,7 @@ public class TranslateModel {
 		  
 		  List<Node> nodes = new ArrayList<Node>();
 		  for(Object node : ted.getIntraDomainLinksvertexSet()){
-			  System.out.println("DEBUG nodeInTopology, (class "+node.getClass()+"):" +node );
+			 // System.out.println("DEBUG nodeInTopology, (class "+node.getClass()+"):" +node );
 			  if(node instanceof es.tid.tedb.elements.Node){
 				  nodes.add(translateNode(ted, (es.tid.tedb.elements.Node)node));
 			  }

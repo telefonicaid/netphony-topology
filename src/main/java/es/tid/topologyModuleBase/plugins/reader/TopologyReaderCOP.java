@@ -88,15 +88,14 @@ public class TopologyReaderCOP extends TopologyReader
 			lock.lock();
 			isRunning=true;
 			try {
-				System.out.println("ANTES");
 				TopologiesSchema retrieveTopologies = api.retrieveTopologies();
 				//EdgeEnd retrieveLocalIf = api.retrieveTopologiesTopologyEdgesLocalIfidLocalIfidById("1", "ADVA_2_CTTC_2");
 				//log.info(retrieveTopologies.toString());
-				System.out.println("DESPUES retrieveTopologies: "+retrieveTopologies.toString());
-				Topology top = api.retrieveTopologiesTopologyTopologyById("1");
-				System.out.println("DESPUES topology: "+top.toString());
-				top.setTopologyId("0.0.0.1");
-				//for(Topology top : retrieveTopologies.getTopology()){
+				//System.out.println("DESPUES retrieveTopologies: "+retrieveTopologies.toString());
+				//Topology top = api.retrieveTopologiesTopologyTopologyById("0.0.0.1");
+			
+				
+				for(Topology top : retrieveTopologies.getTopology()){
 					
 					DomainTEDB db = (DomainTEDB)this.ted.getDB(top.getTopologyId());
 					System.out.println("COP reader, reading db with domainID: "+top.getTopologyId()+ " bd->"+db);
@@ -117,7 +116,7 @@ public class TopologyReaderCOP extends TopologyReader
 					
 					this.ted.addTEDB(top.getTopologyId(), db);
 					
-				//}
+				}
 			} catch (ApiException e) {
 				// TODO Auto-generated catch block
 				log.info("APIException in COPtopologyReader from: " + api.getApiClient().getBasePath());
