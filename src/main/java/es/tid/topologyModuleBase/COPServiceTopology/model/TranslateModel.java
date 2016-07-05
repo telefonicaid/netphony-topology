@@ -321,6 +321,7 @@ public class TranslateModel {
 	}
 
 	public static Link translate2Link(Edge e) {
+		System.out.println("translate2Link, Edge: "+e);
 		Link link= new Link();
 		link.setLinkID(e.getEdgeId());
 		link.setSource(translate2EndPoint(e.getSource(),e.getLocalIfid()));
@@ -333,6 +334,7 @@ public class TranslateModel {
 	}
 
 	private static EndPoint translate2EndPoint(Node source, EdgeEnd edgeEnd) {
+		System.out.println("translate2EndPoint, node: "+source+"\nEdgeEnd: "+edgeEnd);
 		return (new EndPoint(source.getNodeId(),edgeEnd.getName()));
 	}
 	  

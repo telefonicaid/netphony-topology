@@ -372,7 +372,9 @@ public class ApiClient {
     if (contentTypes != null && !contentTypes.isEmpty())
       contentType = contentTypes.get(0);
     if (contentType == null)
-      throw new ApiException(500, "missing Content-Type in response");
+      //throw new ApiException(500, "missing Content-Type in response");
+    //FIXME	
+    	contentType="application/json";
 
     String body="";
     if (response.hasEntity()){
@@ -500,8 +502,10 @@ public class ApiClient {
     } else if (response.getStatusInfo().getFamily() == Family.SUCCESSFUL) {
       if (returnType == null)
         return null;
-      else
-        return deserialize(response, returnType);
+      else{
+    	  //System.out.println("DEBUG: "+response.toString());
+    	  return deserialize(response, returnType);
+      }
     } else {
       String message = "error";
       String respBody = null;

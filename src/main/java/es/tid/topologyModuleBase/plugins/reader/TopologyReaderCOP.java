@@ -58,9 +58,9 @@ public class TopologyReaderCOP extends TopologyReader
 		ApiClient defaultClient = new ApiClient();
 		defaultClient.setBasePath("http://"+params.getRemoteCOPhost()+":"+params.getRemoteCOPPort()+"/restconf");
 		log.info("New COPTopologyReader trying to read topology from: "+defaultClient.getBasePath());
-		Timer timer = new Timer();
-		timer.schedule(new ReadTopologyTask(ted,lock,new DefaultApi(defaultClient)), 0, 20000);
-		
+		//Timer timer = new Timer();
+		//timer.schedule(new ReadTopologyTask(ted,lock,new DefaultApi(defaultClient)), 0, 20000);
+		(new ReadTopologyTask(ted,lock,new DefaultApi(defaultClient))).run();
 
 	}
 	@Override
@@ -88,10 +88,15 @@ public class TopologyReaderCOP extends TopologyReader
 			lock.lock();
 			isRunning=true;
 			try {
+				System.out.println("ANTES");
 				TopologiesSchema retrieveTopologies = api.retrieveTopologies();
 				//EdgeEnd retrieveLocalIf = api.retrieveTopologiesTopologyEdgesLocalIfidLocalIfidById("1", "ADVA_2_CTTC_2");
 				//log.info(retrieveTopologies.toString());
-				for(Topology top : retrieveTopologies.getTopology()){
+				System.out.println("DESPUES retrieveTopologies: "+retrieveTopologies.toString());
+				Topology top = api.retrieveTopologiesTopologyTopologyById("1");
+				System.out.println("DESPUES topology: "+top.toString());
+				top.setTopologyId("0.0.0.1");
+				//for(Topology top : retrieveTopologies.getTopology()){
 					
 					DomainTEDB db = (DomainTEDB)this.ted.getDB(top.getTopologyId());
 					System.out.println("COP reader, reading db with domainID: "+top.getTopologyId()+ " bd->"+db);
@@ -112,11 +117,11 @@ public class TopologyReaderCOP extends TopologyReader
 					
 					this.ted.addTEDB(top.getTopologyId(), db);
 					
-				}
+				//}
 			} catch (ApiException e) {
 				// TODO Auto-generated catch block
 				log.info("APIException in COPtopologyReader from: " + api.getApiClient().getBasePath());
-				//e.printStackTrace();
+				e.printStackTrace();
 			}catch (Exception e){
 				log.info("GeneralException in COPtopologyReader from: " + api.getApiClient().getBasePath());
 				e.printStackTrace();

@@ -16,8 +16,8 @@
     </WSOld>
     <COP>
         <serve_port>8088</serve_port>
-        <import_ip>localhost</import_ip>
-        <import_port>8087</import_port>
+        <import_ip>10.95.86.27</import_ip>
+        <import_port>8070</import_port>
     </COP>
     <BGPLS>
         <Reader>False</Reader>
