@@ -17,10 +17,10 @@ import com.sun.jersey.multipart.FormDataParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.*;
 
-@Path("/restconf/config")
+@Path("/restconf/data")
 
 
-@io.swagger.annotations.Api(value = "/config", description = "the config API")
+@io.swagger.annotations.Api(value = "/data", description = "the config API")
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JaxRSServerCodegen", date = "2016-05-23T12:45:37.903+02:00")
 public class ConfigApi  {
 
