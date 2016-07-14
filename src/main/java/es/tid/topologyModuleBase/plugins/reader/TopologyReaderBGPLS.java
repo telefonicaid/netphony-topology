@@ -29,8 +29,8 @@ public class TopologyReaderBGPLS extends TopologyReader{
 				
 			//bgpPeer.setReadDomainTEDB((SimpleTEDB)(ted.getDB()));
 			//bgpPeer.setSimpleTEDB((SimpleTEDB)(ted.getDB()));
-			bgpPeer.setIntraTEDBs(ted.getTeds());
-			
+			bgpPeer.setIntraTEDBs(ted.getDomainTeds());
+			bgpPeer.setMultiDomainTEDB(ted.getMdTed());
 			bgpPeer.createUpdateDispatcher();
 			log.info("Testing change");
 			//bgpPeer.startClient();		

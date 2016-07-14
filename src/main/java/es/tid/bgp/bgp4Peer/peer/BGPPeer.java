@@ -373,6 +373,11 @@ public class BGPPeer {
 	public void setIntraTEDBs(Hashtable<String, DomainTEDB> intraTEDBs) {
 		this.intraTEDBs = intraTEDBs;
 	}
+
+	public void setMultiDomainTEDB(MultiDomainTEDB multiDomainTEDB) {
+		this.multiDomainTEDB = multiDomainTEDB;
+	}
+	
 	
 	
 	

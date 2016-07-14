@@ -8,7 +8,9 @@ import java.util.Set;
 
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.DomainTEDB;
+import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
+import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.Node_Info;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.tedb.TE_Information;
@@ -108,6 +110,15 @@ public class TranslateModel {
 		//	return translateDwdmEdge(db, e);
 		//}
 	}
+	
+	public static Edge translateEdge(MultiDomainTEDB db,InterDomainEdge e){
+		//if(e.getTE_info()==null){
+			return translateEthEdge(db, e);
+		//}else{
+		//	return translateDwdmEdge(db, e);
+		//}
+	}
+	
 	public static DwdmEdge translateDwdmEdge(DomainTEDB db, IntraDomainEdge e){
 		  DwdmEdge dwdmEdge = new DwdmEdge();
 		  dwdmEdge.setName(e.getLinkID());
@@ -215,6 +226,80 @@ public class TranslateModel {
 		  }	  
 		  return edge;
 	  }
+	
+	public static Edge translateEthEdge(MultiDomainTEDB db,InterDomainEdge e){
+		  //System.out.println("DEBUG translateEdge: edgeInput= source (class "+e.getSource().getClass()+")="+e.getSource());//+" | getSrc_Numif_id (class "+e.getSrc_Numif_id().getClass()+")="+e.getSrc_Numif_id());
+		  Edge edge = new Edge();
+		  edge.setName(e.domain_src_router.toString()+":"+e.domain_dst_router.toString());
+		  edge.setEdgeId("0");
+		  edge.setEdgeType(EdgeTypeEnum.eth_edge);
+		  if (e.getTE_info()!=null) {
+			  if (e.getTE_info().getDefaultTEMetric()!=null) {
+				  edge.setMetric(e.getTE_info().getDefaultTEMetric().toString());
+			  } 
+			  if (e.getTE_info().getMaximumBandwidth()!=null) {
+				  edge.setMaxResvBw(e.getTE_info().getMaximumBandwidth().toString());
+			  } 
+			  if (e.getTE_info().getUnreservedBandwidth()!=null) {
+				  edge.setMaxResvBw(e.getTE_info().getUnreservedBandwidth().toString());
+			  } 
+			  
+			 
+		  }
+		  
+//		  edge.s
+		  Node src_node = new Node();
+		  src_node.setDomain(e.getDomain_src_router().toString());
+		  edge.setSource(src_node);
+		  Node dst_node = new Node();
+		  dst_node.setDomain(e.getDomain_dst_router().toString());
+		  edge.setTarget(dst_node);
+		  
+		  
+//		  node.setDomain(de)
+//
+//		  Object src = e.getSrc_Numif_id();
+//		  
+//		  if( e.getSource() instanceof  java.net.Inet4Address){
+//			  Node node = TranslateModel.getNodeById( db, ((java.net.Inet4Address)e.getSource()).getHostAddress());
+//			  edge.setSource(node);
+//			  for(EdgeEnd end : node.getEdgeEnd()){
+//				  if(end.getName().equals(e.getSrc_if_id())){
+//					  edge.setLocalIfid(end);
+//				  }
+//			  }
+//		  }else if( src instanceof es.tid.tedb.elements.EndPoint ){
+//			 
+//			  Node node = TranslateModel.getNodeById( db, ((es.tid.tedb.elements.Node)e.getSource()).getNodeID());
+//			  edge.setSource(node);
+//			  for(EdgeEnd end : node.getEdgeEnd()){
+//				  if(end.getName().equals(((es.tid.tedb.elements.EndPoint) src).getIntf()) ){
+//					  edge.setLocalIfid(end);
+//				  }
+//			  }
+//			  
+//		  }
+//		  
+//		  Object dst = e.getDst_Numif_id();
+//		  if( e.getTarget() instanceof  java.net.Inet4Address){
+//			  Node node = TranslateModel.getNodeById( db, ((java.net.Inet4Address)e.getTarget()).getHostAddress());
+//			  edge.setTarget(node);
+//			  for(EdgeEnd end : node.getEdgeEnd()){
+//				  if(end.getName().equals(e.getDst_if_id())){
+//					  edge.setRemoteIfid(end);
+//				  }
+//			  }
+//		  }else if( dst instanceof es.tid.tedb.elements.EndPoint ){
+//			  Node node = TranslateModel.getNodeById( db, ((es.tid.tedb.elements.EndPoint) dst).getNode());
+//			  edge.setTarget(node);
+//			  for(EdgeEnd end : node.getEdgeEnd()){
+//				  if(end.getName().equals(((es.tid.tedb.elements.EndPoint) dst).getIntf()) ){
+//					  edge.setRemoteIfid(end);
+//				  }
+//			  }
+//		  }	  
+		  return edge;
+	  }
 	  /*private Edge translateEdge(InterDomainEdge e){
 		  Edge edge = new Edge();
 		  edge.setName(e.getDomain_src_router()+"-"+e.getDomain_dst_router());
@@ -281,6 +366,43 @@ public class TranslateModel {
 		  
 		  return topology;
 	  }
+	
+	public static Topology translateTopology(String topId, MultiDomainTEDB ted){
+		//System.out.println("DEBUG translateTopology: TEDinput: "+ted.printTopology());
+		  Topology topology = new Topology();
+		  /*if(ted==null){
+			  topology.setTopologyId("topology null Exception");
+			  return topology;
+		  }
+		  if(ted.getDomainID()==null){
+			  topology.setTopologyId("getDomainID null Exception");
+			  return topology;
+		  }*/
+		  topology.setTopologyId(topId);
+		  
+		  List<Edge> edges = new ArrayList<Edge>();
+		  for(InterDomainEdge link : ted.getInterDomainLinks()){
+			  edges.add(translateEdge(ted, link));
+		  }
+		  topology.setEdges(edges);
+		  
+//		  List<Node> nodes = new ArrayList<Node>();
+//		  for(Object node : ted.getIntraDomainLinksvertexSet()){
+//			 // System.out.println("DEBUG nodeInTopology, (class "+node.getClass()+"):" +node );
+//			  if(node instanceof es.tid.tedb.elements.Node){
+//				  nodes.add(translateNode(ted, (es.tid.tedb.elements.Node)node));
+//			  }
+//			  else if(node instanceof java.net.Inet4Address){
+//				  nodes.add(translateNodeIp(ted, (java.net.Inet4Address)node, ted.getNodeTable().get(node)));
+//			  }
+//		  }
+//		  topology.setNodes(nodes);
+		  
+		  //topology.setUnderlayTopology(); //TODO
+		  
+		  return topology;
+	  }
+
 
 	
 

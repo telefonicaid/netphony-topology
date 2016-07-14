@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import es.tid.tedb.MDTEDB;
 import es.tid.tedb.SimpleTEDB;
 import es.tid.topologyModuleBase.database.TopologiesDataBase;
 import es.tid.topologyModuleBase.management.TMManagementServer;
 import es.tid.topologyModuleBase.plugins.TMPlugin;
-
+import es.tid.tedb.MultiDomainTEDB;
 
 /**
  *  
@@ -32,7 +33,8 @@ public class TopologyModuleMain
 		
 		
 		TopologiesDataBase sTop = new TopologiesDataBase();
-		sTop.addTEDB("255.255.255.255", new SimpleTEDB() );
+		MultiDomainTEDB mdTed = new MDTEDB();
+		sTop.setMdTed(mdTed);
 		
 		((SimpleTEDB)sTop.getDB()).createGraph();
 		Lock lock = new ReentrantLock();

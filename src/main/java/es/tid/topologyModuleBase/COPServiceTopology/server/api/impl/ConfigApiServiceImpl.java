@@ -36,9 +36,11 @@ public class ConfigApiServiceImpl extends ConfigApiService {
     	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TopologiesSchema tSchema = new TopologiesSchema();
     	  List<Topology> tops = new ArrayList<Topology>();
-    	  for(Map.Entry<String, DomainTEDB>entry : ted.getTeds().entrySet() ){
+    	  for(Map.Entry<String, TEDB>entry : ted.getTeds().entrySet() ){
      		 System.out.println("Topologia servida con id: "+entry.getKey());
-    		  tops.add( TranslateModel.translateTopology(entry.getKey(),entry.getValue()));
+     		  if (entry.getValue() instanceof DomainTEDB) {
+        		  tops.add( TranslateModel.translateTopology(entry.getKey(),(DomainTEDB)entry.getValue()));
+     		  }
      	  }
     	  tSchema.setTopology(tops);
 	      return Response.ok().entity(tSchema).build();

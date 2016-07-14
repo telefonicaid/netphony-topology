@@ -1,6 +1,7 @@
 package es.tid.topologyModuleBase.database;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,7 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
+import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.ReachabilityEntry;
 import es.tid.tedb.SSONInformation;
 import es.tid.tedb.SSONListener;
@@ -27,7 +29,7 @@ public class TopologiesDataBase implements TopologyTEDB
 	/**
 	 * Used when there are several teds
 	 */
-	Hashtable<String, DomainTEDB> teds = null;
+	Hashtable<String, TEDB> teds = null;
 	
 	/**
 	 * Used when there is only one ted
@@ -35,9 +37,14 @@ public class TopologiesDataBase implements TopologyTEDB
 	 */
 	DomainTEDB ted = null;
 	
+	/**
+	 * 
+	 */
+	MultiDomainTEDB mdTed = null;
+	
 	public TopologiesDataBase()
 	{
-		teds = new Hashtable<String, DomainTEDB>();
+		teds = new Hashtable<String, TEDB>();
 	}
 	
 	public TopologiesDataBase(DomainTEDB ted)
@@ -48,57 +55,92 @@ public class TopologiesDataBase implements TopologyTEDB
 	@Override
 	public boolean belongsToDomain(String id, Object addr) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.belongsToDomain(addr);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).belongsToDomain(addr);
+		} else {
+			return false;
+		}
+		
 	}
 
 	@Override
 	public ReachabilityEntry getReachabilityEntry(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.getReachabilityEntry();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).getReachabilityEntry();
+		} else {
+			return null;
+		}
+		
 	}
 
 	@Override
 	public LinkedList<InterDomainEdge> getInterDomainLinks(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.getInterDomainLinks();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).getInterDomainLinks();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public Set<IntraDomainEdge> getIntraDomainLinks(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.getIntraDomainLinks();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).getIntraDomainLinks();
+		} else {
+			return null;
+		}
+		
 	}
 
 	@Override
 	public String printInterDomainLinks(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.printInterDomainLinks();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).printInterDomainLinks();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public boolean containsVertex(String id, Object vertex) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.containsVertex(vertex);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).containsVertex(vertex);
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public WSONInformation getWSONinfo(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.getWSONinfo();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).getWSONinfo();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public SSONInformation getSSONinfo(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.getSSONinfo();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).getSSONinfo();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -107,8 +149,10 @@ public class TopologiesDataBase implements TopologyTEDB
 			LinkedList<Object> targetVertexList, int wavelength,
 			boolean bidirectional) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyWavelengthReservation(sourceVertexList, targetVertexList, wavelength, bidirectional);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyWavelengthReservation(sourceVertexList, targetVertexList, wavelength, bidirectional);
+		}
 	}
 
 	@Override
@@ -117,8 +161,11 @@ public class TopologiesDataBase implements TopologyTEDB
 			LinkedList<Object> targetVertexList, int wavelength,
 			boolean bidirectional, int m) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyWavelengthReservationSSON(sourceVertexList,targetVertexList,wavelength,bidirectional,m);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyWavelengthReservationSSON(sourceVertexList,targetVertexList,wavelength,bidirectional,m);
+	
+		}
 	}
 
 	@Override
@@ -127,9 +174,10 @@ public class TopologiesDataBase implements TopologyTEDB
 			LinkedList<Object> targetVertexList, int wavelength,
 			boolean bidirectional) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyWavelengthEndReservation(sourceVertexList, targetVertexList, wavelength, bidirectional);
-		
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyWavelengthEndReservation(sourceVertexList, targetVertexList, wavelength, bidirectional);
+		}
 	}
 
 	@Override
@@ -138,55 +186,66 @@ public class TopologiesDataBase implements TopologyTEDB
 			BitmapLabelSet previousBitmapLabelSet,
 			BitmapLabelSet newBitmapLabelSet) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyWavelengthChange(localInterfaceIPAddress, remoteInterfaceIPAddress, previousBitmapLabelSet, newBitmapLabelSet);
-		
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyWavelengthChange(localInterfaceIPAddress, remoteInterfaceIPAddress, previousBitmapLabelSet, newBitmapLabelSet);
+		}
 	}
 
 	@Override
 	public void notifyNewEdgeIP(String id, Object source, Object destination,
 			TE_Information informationTEDB) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyNewEdgeIP(source, destination, informationTEDB);
-		
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyNewEdgeIP(source, destination, informationTEDB);
+		}
 	}
 
 	@Override
 	public void register(String id,
 			TEDListener compAlgPreComp) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.register(compAlgPreComp);
-		
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).register(compAlgPreComp);
+		}
 	}
 
 	@Override
 	public void registerSSON(String id,
 			SSONListener compAlgPreComp) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.registerSSON(compAlgPreComp);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).registerSSON(compAlgPreComp);
+		}
 	}
 
 	@Override
 	public void notifyNewVertex(String id, Object vertex) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyNewVertex(vertex);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyNewVertex(vertex);
+		}
 	}
 
 	@Override
 	public void notifyNewEdge(String id, Object source, Object destination) {
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyNewEdge(source, destination);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyNewEdge(source, destination);
+		}
 	}
 
 	@Override
 	public void clearAllReservations(String id)
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.clearAllReservations();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).clearAllReservations();
+		}
 	}
 
 	@Override
@@ -194,8 +253,11 @@ public class TopologiesDataBase implements TopologyTEDB
 			LinkedList<Object> sourceVertexList,
 			LinkedList<Object> targetVertexList, int wavelength,
 			boolean bidirectional, int m) {
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyWavelengthEndReservationSSON(sourceVertexList, targetVertexList, wavelength, bidirectional, m);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyWavelengthEndReservationSSON(sourceVertexList, targetVertexList, wavelength, bidirectional, m);
+
+		}
 	}
 
 	@Override
@@ -204,33 +266,51 @@ public class TopologiesDataBase implements TopologyTEDB
 			LinkedList<Object> targetVertexList, LinkedList<Integer> wlans,
 			boolean bidirectional) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.notifyWavelengthReservationWLAN(sourceVertexList, targetVertexList, wlans, bidirectional);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).notifyWavelengthReservationWLAN(sourceVertexList, targetVertexList, wlans, bidirectional);
+
+		}
 	}
 
 	@Override
 	public void initializeFromFile(String id, String file) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		ted.initializeFromFile(file);
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			((DomainTEDB)ted).initializeFromFile(file);
+		}
 	}
 
 	@Override
 	public boolean isITtedb(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.isITtedb();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).isITtedb();
+		}else {
+			return false;
+		}
 	}
 
 	@Override
 	public String printTopology(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
-		return ted.printTopology();
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		if (ted instanceof DomainTEDB) {
+			return ((DomainTEDB)ted).printTopology();
+		}else {
+			return "";
+		}
 	}
 
 	@Override
 	public void addTEDB(String id, DomainTEDB ted) 
+	{
+		teds.put(id, ted);
+	}
+	
+	public void addTEDB(String id, TEDB ted) 
 	{
 		teds.put(id, ted);
 	}
@@ -417,7 +497,7 @@ public class TopologiesDataBase implements TopologyTEDB
 	public List<TEDB> getAllDB(){
 		List<TEDB> dbs = new ArrayList<TEDB>();
 		if(this.ted==null){
-			for(DomainTEDB tedb : teds.values()){
+			for(TEDB tedb : teds.values()){
 				dbs.add(tedb);
 			}
 		}else{
@@ -426,14 +506,41 @@ public class TopologiesDataBase implements TopologyTEDB
 		return dbs;
 	}
 	
+	
+	
 	@Override
 	public TEDB getDB(String id) 
 	{
-		DomainTEDB ted = this.ted == null ? teds.get(id) : this.ted;
+		TEDB ted = this.ted == null ? teds.get(id) : this.ted;
 		return ted;
 	}
 	
-	public Hashtable<String, DomainTEDB> getTeds() {
+	public Hashtable<String, TEDB> getTeds() {
 		return teds;
 	}
+	
+	public Hashtable<String, DomainTEDB> getDomainTeds() {
+		Hashtable<String, DomainTEDB> domainTEDS= new Hashtable<String, DomainTEDB>();
+		Enumeration <String> tedks= teds.keys();
+		while (tedks.hasMoreElements()){
+			String teddk= tedks.nextElement();
+			TEDB tedd= teds.get(teddk);
+			if (tedd instanceof DomainTEDB) {
+				domainTEDS.put(teddk, (DomainTEDB) tedd);
+			}
+		}
+		return domainTEDS;
+	}
+
+	public MultiDomainTEDB getMdTed() {
+		return mdTed;
+	}
+
+	public void setMdTed(MultiDomainTEDB mdTed) {
+		this.mdTed = mdTed;
+		this.teds.put("multidomain", mdTed);
+	}
+	
+	
+	
 }
