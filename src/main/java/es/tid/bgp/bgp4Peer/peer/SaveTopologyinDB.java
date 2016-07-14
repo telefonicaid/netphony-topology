@@ -6,14 +6,17 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.Jedis;
 import es.tid.tedb.DatabaseControlSimplifiedLSA;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
+import es.tid.tedb.TEDB;
 import es.tid.tedb.TE_Information;
 
 /**
@@ -29,7 +32,7 @@ public class SaveTopologyinDB implements Runnable {
 		private int port=6379;
 		
 	//TEDBs 
-	 private Hashtable<String,DomainTEDB> intraTEDBs;
+	 private Hashtable<String,TEDB> intraTEDBs;
 	
 	// Multi-domain TEDB to redistribute Multi-domain Topology
 	private MultiDomainTEDB multiDomainTEDB;
@@ -44,7 +47,7 @@ public class SaveTopologyinDB implements Runnable {
 		jedis = new Jedis(host,port); 
 	}
 
-	public void configure( Hashtable<String,DomainTEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
+	public void configure( Hashtable<String,TEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
 		this.intraTEDBs=intraTEDBs;
 		this.writeTopology=writeTopology;
 		this.multiDomainTEDB=multiTED;
@@ -79,7 +82,7 @@ public class SaveTopologyinDB implements Runnable {
 				}
 				else {
 					log.info("save form TEDB");
-					Enumeration<DomainTEDB> iter = intraTEDBs.elements();
+					Enumeration<TEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						writeLinkDBInter( iter.nextElement().getInterDomainLinks());
 					}
@@ -90,7 +93,7 @@ public class SaveTopologyinDB implements Runnable {
 					while (iter.hasMoreElements()){						
 						String domainID = iter.nextElement();
 						log.info("Sending TED from domain "+domainID);
-						DomainTEDB ted=intraTEDBs.get(domainID);
+						DomainTEDB ted=(DomainTEDB)intraTEDBs.get(domainID);
 						//writeLinkDB( ted.getNetworkGraph().edgeSet(),domainID);
 						writeLinkDB(ted.getIntraDomainLinks(),domainID);
 					}

@@ -28,7 +28,7 @@ public class TopologyServerBGPLS extends TopologyServer
 			
 		//bgpPeer.setReadDomainTEDB((SimpleTEDB)(ted.getDB()));
 		//bgpPeer.setSimpleTEDB((SimpleTEDB)(ted.getDB()));
-		bgpPeer.setIntraTEDBs(ted.getDomainTeds());
+		bgpPeer.setIntraTEDBs(ted.getTeds());
 		
 		bgpPeer.createUpdateDispatcher();
 		bgpPeer.startClient();		

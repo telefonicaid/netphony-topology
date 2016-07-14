@@ -33,10 +33,15 @@ public class TopologyModuleMain
 		
 		
 		TopologiesDataBase sTop = new TopologiesDataBase();
+		
+	    sTop.addTEDB("255.255.255.255", new SimpleTEDB() );
+		
+		((SimpleTEDB)sTop.getDB()).createGraph();
+		
 		MultiDomainTEDB mdTed = new MDTEDB();
 		sTop.setMdTed(mdTed);
 		
-		((SimpleTEDB)sTop.getDB()).createGraph();
+		//((SimpleTEDB)sTop.getDB()).createGraph();
 		Lock lock = new ReentrantLock();
 		
 		

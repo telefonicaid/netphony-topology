@@ -72,7 +72,7 @@ public class BGPPeer {
 	 * Table with domainID - TEDB.
 	 * The BGP-LS Peer can have several domains
 	 */
-	private Hashtable<String,DomainTEDB> intraTEDBs;
+	private Hashtable<String,TEDB> intraTEDBs;
 	
 	/**
 	 * Full TEDB with all Links
@@ -150,7 +150,7 @@ public class BGPPeer {
 	 * @param multiTEDB multidomain database
 	 * @param iTEDBs internal domains database 
 	 */
-	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<String,DomainTEDB> iTEDBs){
+	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<String,TEDB> iTEDBs){
 		//First of all, read the parameters
 		if (nameParametersFile != null){
 			params=new BGP4Parameters(nameParametersFile);
@@ -186,7 +186,7 @@ public class BGPPeer {
 //		}
 			logServer.info("Inizializing BGP4 Peer");
 		if (iTEDBs!= null) intraTEDBs=iTEDBs;
-		else intraTEDBs=new Hashtable<String,DomainTEDB>();
+		else intraTEDBs=new Hashtable<String,TEDB>();
 		
 		if (multiTEDB!= null) multiDomainTEDB = multiTEDB;
 		else multiDomainTEDB = new MDTEDB();
@@ -366,11 +366,11 @@ public class BGPPeer {
 	}
 	
 
-	public Hashtable<String, DomainTEDB> getIntraTEDBs() {
+	public Hashtable<String, TEDB> getIntraTEDBs() {
 		return intraTEDBs;
 	}
 
-	public void setIntraTEDBs(Hashtable<String, DomainTEDB> intraTEDBs) {
+	public void setIntraTEDBs(Hashtable<String, TEDB> intraTEDBs) {
 		this.intraTEDBs = intraTEDBs;
 	}
 

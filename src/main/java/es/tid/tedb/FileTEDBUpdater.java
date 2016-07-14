@@ -737,7 +737,7 @@ public class FileTEDBUpdater {
 		return graph;
 	}*/
 
-	public static Hashtable<String,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
+	public static Hashtable<String,TEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
 		Logger log = LoggerFactory.getLogger("PCEPServer");
 		Object router_id_addr = null;
 		Object s_router_id_addr = null;
@@ -745,7 +745,7 @@ public class FileTEDBUpdater {
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
 
-		Hashtable<String,DomainTEDB> TEDBs = new Hashtable<String,DomainTEDB>();
+		Hashtable<String,TEDB> TEDBs = new Hashtable<String,TEDB>();
 		//First, create the graph
 		
 		log.info("1. SimpleDirectedWeightedGraph");

@@ -68,6 +68,7 @@ import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.Node_Info;
 import es.tid.tedb.SimpleTEDB;
+import es.tid.tedb.TEDB;
 import es.tid.tedb.TE_Information;
 
 /**
@@ -84,7 +85,7 @@ public class SendTopology implements Runnable {
 	private int identifier=1;
 
 	//TEDBs 
-	 private Hashtable<String,DomainTEDB> intraTEDBs;
+	 private Hashtable<String,TEDB> intraTEDBs;
 	
 	// Multi-domain TEDB to redistribute Multi-domain Topology
 	private MultiDomainTEDB multiDomainTEDB;
@@ -106,7 +107,7 @@ public class SendTopology implements Runnable {
 		log = LoggerFactory.getLogger("BGP4Parser");
 	}
 
-	public void configure( Hashtable<String,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
+	public void configure( Hashtable<String,TEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
 		this.intraTEDBs=intraTEDBs;
 		this.bgp4SessionsInformation=bgp4SessionsInformation;
 		this.sendTopology= sendTopology;
@@ -138,7 +139,7 @@ public class SendTopology implements Runnable {
 				}
 				else {
 					log.info("Sending form TEDB");
-					Enumeration<DomainTEDB> iter = intraTEDBs.elements();
+					Enumeration<TEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						sendLinkNLRI( iter.nextElement().getInterDomainLinks());
 					}
@@ -150,12 +151,15 @@ public class SendTopology implements Runnable {
 					while (iter.hasMoreElements()){						
 						String domainID = iter.nextElement();
 						log.info("Sending TED from domain "+domainID);
-						DomainTEDB ted=intraTEDBs.get(domainID);
-						sendLinkNLRI( ted.getIntraDomainLinks(),domainID);
-						//log.info(" XXXX ted.getNodeTable():"+ted.getNodeTable());
-						sendNodeNLRI( ted.getIntraDomainLinksvertexSet(), ted.getNodeTable());
-						//sendNodeNLRI( ted.getNetworkGraph().vertexSet(), ted.getNodeTable());
-					}
+						TEDB ted=intraTEDBs.get(domainID);
+						if (ted instanceof DomainTEDB) {
+							sendLinkNLRI( ((DomainTEDB)ted).getIntraDomainLinks(),domainID);
+							//log.info(" XXXX ted.getNodeTable():"+ted.getNodeTable());
+							sendNodeNLRI( ((DomainTEDB)ted).getIntraDomainLinksvertexSet(), ((DomainTEDB)ted).getNodeTable());
+							//sendNodeNLRI( ted.getNetworkGraph().vertexSet(), ted.getNodeTable());
+			
+						}
+				}
 				}
 						
 			}

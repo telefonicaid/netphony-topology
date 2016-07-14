@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,7 @@ import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.Node_Info;
 import es.tid.tedb.SSONInformation;
 import es.tid.tedb.SimpleTEDB;
+import es.tid.tedb.TEDB;
 import es.tid.tedb.TE_Information;
 import es.tid.tedb.WSONInformation;
 /**
@@ -127,7 +129,7 @@ public class UpdateProccesorThread extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains and.
 	 */
-	private Hashtable<String,DomainTEDB> intraTEDBs;
+	private Hashtable<String,TEDB> intraTEDBs;
 
 	private LinkedList<UpdateLink> updateLinks;
 
@@ -137,7 +139,7 @@ public class UpdateProccesorThread extends Thread {
 
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
-			MultiDomainTEDB multiTedb ,Hashtable<String,DomainTEDB> intraTEDBs ){
+			MultiDomainTEDB multiTedb ,Hashtable<String,TEDB> intraTEDBs ){
 		log=LoggerFactory.getLogger("BGP4Server");
 		running=true;
 		this.updateList=updateList;
@@ -407,7 +409,7 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
 			}
 
-			DomainTEDB domainTEDB=intraTEDBs.get(localDomainID.getHostAddress());
+			DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(localDomainID.getHostAddress());
 			SimpleTEDB simpleTEDB=null;
 			if (domainTEDB instanceof SimpleTEDB){
 				simpleTEDB = (SimpleTEDB) domainTEDB;
@@ -709,7 +711,7 @@ public class UpdateProccesorThread extends Thread {
 		if (as_number==null){
 			log.error(" as_number is NULL");
 		}
-		DomainTEDB domainTEDB=intraTEDBs.get(as_number.getHostAddress());
+		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(as_number.getHostAddress());
 
 		SimpleTEDB simpleTEDB=null;
 		if (domainTEDB instanceof SimpleTEDB){

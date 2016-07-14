@@ -33,9 +33,11 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologies()
       throws NotFoundException {
+    	  System.out.println("HOLA");
     	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TopologiesSchema tSchema = new TopologiesSchema();
     	  List<Topology> tops = new ArrayList<Topology>();
+    	  
     	  for(Map.Entry<String, TEDB>entry : ted.getTeds().entrySet() ){
      		 System.out.println("Topologia servida con id: "+entry.getKey());
      		  if (entry.getValue() instanceof DomainTEDB) {
