@@ -3,6 +3,7 @@ package es.tid.topologyModuleBase.COPServiceTopology.server.api.impl;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
+import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.Node_Info;
 import es.tid.tedb.TEDB;
 
@@ -42,6 +43,9 @@ public class ConfigApiServiceImpl extends ConfigApiService {
      		 System.out.println("Topologia servida con id: "+entry.getKey());
      		  if (entry.getValue() instanceof DomainTEDB) {
         		  tops.add( TranslateModel.translateTopology(entry.getKey(),(DomainTEDB)entry.getValue()));
+     		  }else {
+        		  tops.add( TranslateModel.translateTopology(entry.getKey(),(MultiDomainTEDB)entry.getValue()));
+
      		  }
      	  }
     	  tSchema.setTopology(tops);

@@ -34,10 +34,10 @@ public class TopologyModuleMain
 		
 		TopologiesDataBase sTop = new TopologiesDataBase();
 		
-	    sTop.addTEDB("255.255.255.255", new SimpleTEDB() );
-		
-		((SimpleTEDB)sTop.getDB()).createGraph();
-		
+//	    sTop.addTEDB("255.255.255.255", new SimpleTEDB() );
+//		
+//		((SimpleTEDB)sTop.getDB()).createGraph();
+//		
 		MultiDomainTEDB mdTed = new MDTEDB();
 		sTop.setMdTed(mdTed);
 		
