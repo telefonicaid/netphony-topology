@@ -250,9 +250,11 @@ public class TranslateModel {
 //		  edge.s
 		  Node src_node = new Node();
 		  src_node.setDomain(e.getDomain_src_router().toString());
+		  src_node.setNodeId(e.getSrc_router_id().toString());
 		  edge.setSource(src_node);
 		  Node dst_node = new Node();
 		  dst_node.setDomain(e.getDomain_dst_router().toString());
+		  dst_node.setNodeId(e.getDst_router_id().toString());
 		  edge.setTarget(dst_node);
 		  
 		  
