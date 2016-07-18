@@ -196,11 +196,33 @@ public class TopologyModuleParams
 	private boolean isRestInfinera = false;
 	
 	/**
+	 * Active IETF service-topology exporter
+	 */
+	private boolean isIETFPwritting=false;
+	/**
+	 * Active IETF service-topology importer
+	 */
+	private boolean isIETFReading=false;
+	/**
+	 * Port of service-topology Server API
+	 */
+	private int exportIETFPort=8087;
+	/**
+	 * Host of service-topology remote Server API
+	 */
+	private String remoteIETFhost="localhost";
+	/**
+	 * Port of service-topology remote Server API
+	 */
+	private int remoteIETFPort=8081;
+	
+	/**
 	 * Active COP service-topology exporter
 	 */
 	private boolean isCOPwritting=false;
+	
 	/**
-	 * Active COP service-topology importer
+	 * Active IETF service-topology importer
 	 */
 	private boolean isCOPReading=false;
 	/**
@@ -689,5 +711,48 @@ public class TopologyModuleParams
 	public void setRemoteCOPPort(int remoteCOPPort) {
 		this.remoteCOPPort = remoteCOPPort;
 	}
+	public String getTopologyLinksPath() {
+		return topologyLinksPath;
+	}
+	public void setTopologyLinksPath(String topologyLinksPath) {
+		this.topologyLinksPath = topologyLinksPath;
+	}
+	public boolean isIETFPwritting() {
+		return isIETFPwritting;
+	}
+	public void setIETFPwritting(boolean isIETFPwritting) {
+		this.isIETFPwritting = isIETFPwritting;
+	}
+	public boolean isIETFReading() {
+		return isIETFReading;
+	}
+	public void setIETFReading(boolean isIETFReading) {
+		this.isIETFReading = isIETFReading;
+	}
+	public int getExportIETFPort() {
+		return exportIETFPort;
+	}
+	public void setExportIETFPort(int exportIETFPort) {
+		this.exportIETFPort = exportIETFPort;
+	}
+	public String getRemoteIETFhost() {
+		return remoteIETFhost;
+	}
+	public void setRemoteIETFhost(String remoteIETFhost) {
+		this.remoteIETFhost = remoteIETFhost;
+	}
+	public int getRemoteIETFPort() {
+		return remoteIETFPort;
+	}
+	public void setRemoteIETFPort(int remoteIETFPort) {
+		this.remoteIETFPort = remoteIETFPort;
+	}
+	public boolean isCOPwritting() {
+		return isCOPwritting;
+	}
+	public void setCOPwritting(boolean isCOPwritting) {
+		this.isCOPwritting = isCOPwritting;
+	}
+	
 	
 }

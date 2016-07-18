@@ -159,6 +159,25 @@ public class TopologyModuleParamsArray
 				paramList.add(littleParams);
 			}
 			
+			NodeList list_nodes_IETF = doc.getElementsByTagName("IETF");
+			
+			for (int i = 0; i < list_nodes_COP.getLength(); i++) 
+			{
+				Element nodes_IETF = (Element) list_nodes_IETF.item(i);
+				TopologyModuleParams littleParams = new TopologyModuleParams();
+				if(nodes_IETF.getElementsByTagName("import_ip").getLength()>0){
+					
+					littleParams.setRemoteIETFhost((getCharacterDataFromElement(((Element) nodes_IETF.getElementsByTagName("import_ip").item(0)))));
+					littleParams.setRemoteIETFPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_IETF.getElementsByTagName("import_port").item(0))))));
+					littleParams.setIETFReading(true);
+				}
+				if(nodes_IETF.getElementsByTagName("serve_port").getLength()>0){
+					littleParams.setExportIETFPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_IETF.getElementsByTagName("serve_port").item(0))))));
+					littleParams.setIETFPwritting(true);
+				}
+				paramList.add(littleParams);
+			}
+			
 			NodeList list_nodes_BGPLS = doc.getElementsByTagName("BGPLS");
 			
 			for (int i = 0; i < list_nodes_BGPLS.getLength(); i++) 

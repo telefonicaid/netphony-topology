@@ -249,8 +249,18 @@ public class TranslateModel {
 		  
 //		  edge.s
 		  Node src_node = new Node();
-		  src_node.setDomain(e.getDomain_src_router().toString());
-		  src_node.setNodeId(e.getSrc_router_id().toString());
+		  if (e.getDomain_src_router() instanceof Inet4Address) {
+			  src_node.setDomain(((Inet4Address)(e.getDomain_src_router())).getHostName());
+		  } else {
+			  src_node.setDomain(e.getDomain_src_router().toString());
+
+		  }
+		  if (e.getSrc_router_id() instanceof Inet4Address) {
+			  src_node.setNodeId(((Inet4Address)(e.getSrc_router_id())).getHostName());
+		  }else {
+			  src_node.setNodeId(e.getSrc_router_id().toString());
+		  }
+		 
 		  edge.setSource(src_node);
 		  Node dst_node = new Node();
 		  dst_node.setDomain(e.getDomain_dst_router().toString());
