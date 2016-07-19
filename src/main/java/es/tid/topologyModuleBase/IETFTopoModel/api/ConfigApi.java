@@ -1,6 +1,6 @@
 package es.tid.topologyModuleBase.IETFTopoModel.api;
 
-import io.swagger.model.*;
+import es.tid.topologyModuleBase.IETFTopoModel.model.*;
 import es.tid.topologyModuleBase.IETFTopoModel.api.ConfigApiService;
 import es.tid.topologyModuleBase.IETFTopoModel.api.factories.ConfigApiServiceFactory;
 
@@ -13,7 +13,6 @@ import es.tid.topologyModuleBase.IETFTopoModel.model.NetworkSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.NodeSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.SupportingNodeSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.SupportingNetworkSchema;
-import es.tid.topologyModuleBase.IETFTopoModel.model.NetworksStateSchema;
 
 import java.util.List;
 import es.tid.topologyModuleBase.IETFTopoModel.api.NotFoundException;
@@ -32,7 +31,7 @@ import javax.ws.rs.*;
 
 
 @io.swagger.annotations.Api(description = "the config API")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-17T16:14:00.229+02:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-18T18:59:38.916+02:00")
 public class ConfigApi  {
    private final ConfigApiService delegate = ConfigApiServiceFactory.getConfigApi();
 
@@ -259,33 +258,6 @@ public class ConfigApi  {
         @Context SecurityContext securityContext)
     throws NotFoundException {
         return delegate.retrieveNetworksNetworkSupportingNetworkSupportingNetworkById(networkId,networkRef,securityContext);
-    }
-    @GET
-    @Path("/networks-state/")
-    @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Retrieve networks-state", notes = "Retrieve operation of resource: networks-state", response = NetworksStateSchema.class, tags={  })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = NetworksStateSchema.class),
-        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = NetworksStateSchema.class) })
-    public Response retrieveNetworksState(
-        @Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.retrieveNetworksState(securityContext);
-    }
-    @GET
-    @Path("/networks-state/network/{networkRef}/")
-    @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Retrieve network by ID", notes = "Retrieve operation of resource: network", response = NetworkSchema.class, tags={  })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = NetworkSchema.class),
-        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = NetworkSchema.class) })
-    public Response retrieveNetworksStateNetworkNetworkById(
-        @ApiParam(value = "ID of networkRef",required=true) @PathParam("networkRef") String networkRef,
-        @Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.retrieveNetworksStateNetworkNetworkById(networkRef,securityContext);
     }
     @PUT
     @Path("/networks/")

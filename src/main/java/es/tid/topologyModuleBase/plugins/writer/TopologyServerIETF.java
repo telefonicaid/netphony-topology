@@ -49,8 +49,8 @@ public class TopologyServerIETF extends TopologyServer
 		
 		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        log.info("Service-Topology Port: "+params.getExportCOPPort());
-        Server jettyServer = new Server(params.getExportCOPPort());
+        log.info("Service-Topology Port: "+params.getExportIETFPort());
+        Server jettyServer = new Server(params.getExportIETFPort());
         jettyServer.setHandler(context);
         ServletHolder jerseyServlet =  
         		context.addServlet( com.sun.jersey.spi.container.servlet.ServletContainer.class, "/*");

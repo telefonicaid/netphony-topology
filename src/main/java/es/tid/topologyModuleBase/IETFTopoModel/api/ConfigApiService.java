@@ -1,7 +1,7 @@
 package es.tid.topologyModuleBase.IETFTopoModel.api;
 
 import es.tid.topologyModuleBase.IETFTopoModel.api.*;
-import io.swagger.model.*;
+import es.tid.topologyModuleBase.IETFTopoModel.model.*;
 
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -10,7 +10,6 @@ import es.tid.topologyModuleBase.IETFTopoModel.model.NetworkSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.NodeSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.SupportingNodeSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.SupportingNetworkSchema;
-import es.tid.topologyModuleBase.IETFTopoModel.model.NetworksStateSchema;
 
 import java.util.List;
 import es.tid.topologyModuleBase.IETFTopoModel.api.NotFoundException;
@@ -23,7 +22,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-17T16:14:00.229+02:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-18T18:59:38.916+02:00")
 public abstract class ConfigApiService {
       public abstract Response createNetworksById(NetworksSchema networks,SecurityContext securityContext)
       throws NotFoundException;
@@ -54,10 +53,6 @@ public abstract class ConfigApiService {
       public abstract Response retrieveNetworksNetworkNodeSupportingNodeSupportingNodeById(String networkId,String nodeId,String networkRefNodeRef,SecurityContext securityContext)
       throws NotFoundException;
       public abstract Response retrieveNetworksNetworkSupportingNetworkSupportingNetworkById(String networkId,String networkRef,SecurityContext securityContext)
-      throws NotFoundException;
-      public abstract Response retrieveNetworksState(SecurityContext securityContext)
-      throws NotFoundException;
-      public abstract Response retrieveNetworksStateNetworkNetworkById(String networkRef,SecurityContext securityContext)
       throws NotFoundException;
       public abstract Response updateNetworksById(NetworksSchema networks,SecurityContext securityContext)
       throws NotFoundException;

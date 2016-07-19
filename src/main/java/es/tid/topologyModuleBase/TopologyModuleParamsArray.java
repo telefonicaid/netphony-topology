@@ -161,7 +161,7 @@ public class TopologyModuleParamsArray
 			
 			NodeList list_nodes_IETF = doc.getElementsByTagName("IETF");
 			
-			for (int i = 0; i < list_nodes_COP.getLength(); i++) 
+			for (int i = 0; i < list_nodes_IETF.getLength(); i++) 
 			{
 				Element nodes_IETF = (Element) list_nodes_IETF.item(i);
 				TopologyModuleParams littleParams = new TopologyModuleParams();

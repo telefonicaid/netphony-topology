@@ -1,8 +1,7 @@
 package es.tid.topologyModuleBase.IETFTopoModel.api.impl;
 
 import es.tid.topologyModuleBase.IETFTopoModel.api.*;
-
-import io.swagger.model.*;
+import es.tid.topologyModuleBase.IETFTopoModel.model.*;
 
 import com.sun.jersey.multipart.FormDataParam;
 
@@ -11,9 +10,9 @@ import es.tid.topologyModuleBase.IETFTopoModel.model.NetworkSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.NodeSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.SupportingNodeSchema;
 import es.tid.topologyModuleBase.IETFTopoModel.model.SupportingNetworkSchema;
-import es.tid.topologyModuleBase.IETFTopoModel.model.NetworksStateSchema;
 
 import java.util.List;
+
 import es.tid.topologyModuleBase.IETFTopoModel.api.NotFoundException;
 
 import java.io.InputStream;
@@ -24,7 +23,7 @@ import com.sun.jersey.multipart.FormDataParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-17T16:14:00.229+02:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-18T19:03:40.260+02:00")
 public class ConfigApiServiceImpl extends ConfigApiService {
     @Override
     public Response createNetworksById(NetworksSchema networks, SecurityContext securityContext)
@@ -90,6 +89,8 @@ public class ConfigApiServiceImpl extends ConfigApiService {
     public Response retrieveNetworks(SecurityContext securityContext)
     throws NotFoundException {
         // do some magic!
+  	  System.out.println("HOLA BOLA");
+
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
@@ -112,18 +113,6 @@ public class ConfigApiServiceImpl extends ConfigApiService {
     }
     @Override
     public Response retrieveNetworksNetworkSupportingNetworkSupportingNetworkById(String networkId, String networkRef, SecurityContext securityContext)
-    throws NotFoundException {
-        // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
-    }
-    @Override
-    public Response retrieveNetworksState(SecurityContext securityContext)
-    throws NotFoundException {
-        // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
-    }
-    @Override
-    public Response retrieveNetworksStateNetworkNetworkById(String networkRef, SecurityContext securityContext)
     throws NotFoundException {
         // do some magic!
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();

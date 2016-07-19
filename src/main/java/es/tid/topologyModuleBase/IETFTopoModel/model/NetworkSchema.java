@@ -2,39 +2,81 @@ package es.tid.topologyModuleBase.IETFTopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import es.tid.topologyModuleBase.IETFTopoModel.model.NetworksSchemaNode;
+import es.tid.topologyModuleBase.IETFTopoModel.model.NetworksSchemaSupportingNetwork;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
 
 
 
 
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-17T12:23:33.037+02:00")
-public class NetworkSchema extends NetworkRef  {
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-18T18:59:38.916+02:00")
+public class NetworkSchema   {
   
-  private String networkRef = null;
+  private String networkId = null;
+  private List<NetworksSchemaNode> node = new ArrayList<NetworksSchemaNode>();
+  private List<NetworksSchemaSupportingNetwork> supportingNetwork = new ArrayList<NetworksSchemaSupportingNetwork>();
   private Boolean serverProvided = null;
 
   /**
-   * Used to reference a network, for example an underlay\nnetwork.
+   * Identifies a network.
    **/
-  public NetworkSchema networkRef(String networkRef) {
-    this.networkRef = networkRef;
+  public NetworkSchema networkId(String networkId) {
+    this.networkId = networkId;
     return this;
   }
 
   
-  @ApiModelProperty(value = "Used to reference a network, for example an underlay\nnetwork.")
-  @JsonProperty("networkRef")
-  public String getNetworkRef() {
-    return networkRef;
+  @ApiModelProperty(value = "Identifies a network.")
+  @JsonProperty("networkId")
+  public String getNetworkId() {
+    return networkId;
   }
-  public void setNetworkRef(String networkRef) {
-    this.networkRef = networkRef;
+  public void setNetworkId(String networkId) {
+    this.networkId = networkId;
   }
 
   /**
-   * Indicates whether the information concerning this\nparticular network is populated by the server\n(server-provided true, the general case for network\ninformation discovered from the server),\nor whether it is configured by a client\n(server-provided true, possible e.g. for\nservice overlays managed through a controller).
+   * The inventory of nodes of this network.
+   **/
+  public NetworkSchema node(List<NetworksSchemaNode> node) {
+    this.node = node;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "The inventory of nodes of this network.")
+  @JsonProperty("node")
+  public List<NetworksSchemaNode> getNode() {
+    return node;
+  }
+  public void setNode(List<NetworksSchemaNode> node) {
+    this.node = node;
+  }
+
+  /**
+   * An underlay network, used to represent layered network\ntopologies.
+   **/
+  public NetworkSchema supportingNetwork(List<NetworksSchemaSupportingNetwork> supportingNetwork) {
+    this.supportingNetwork = supportingNetwork;
+    return this;
+  }
+
+  
+  @ApiModelProperty(value = "An underlay network, used to represent layered network\ntopologies.")
+  @JsonProperty("supportingNetwork")
+  public List<NetworksSchemaSupportingNetwork> getSupportingNetwork() {
+    return supportingNetwork;
+  }
+  public void setSupportingNetwork(List<NetworksSchemaSupportingNetwork> supportingNetwork) {
+    this.supportingNetwork = supportingNetwork;
+  }
+
+  /**
+   * Indicates whether the information concerning this\nparticular network is populated by the server\n(server-provided true, the general case for network\ninformation discovered from the server),\nor whether it is configured by a client\n(server-provided true, possible e.g. for\nservice overlays managed through a controller).\nClients should not attempt to make modifications\nto network instances with server-provided set to\ntrue; when they do, they need to be aware that\nany modifications they make are subject to be\nreverted by the server.\nFor servers that support NACM (Netconf Access Control\nModel), data node rules should ideally prevent\nwrite access by other clients to the network instance\nwhen server-provided is set to true.
    **/
   public NetworkSchema serverProvided(Boolean serverProvided) {
     this.serverProvided = serverProvided;
@@ -42,7 +84,7 @@ public class NetworkSchema extends NetworkRef  {
   }
 
   
-  @ApiModelProperty(value = "Indicates whether the information concerning this\nparticular network is populated by the server\n(server-provided true, the general case for network\ninformation discovered from the server),\nor whether it is configured by a client\n(server-provided true, possible e.g. for\nservice overlays managed through a controller).")
+  @ApiModelProperty(value = "Indicates whether the information concerning this\nparticular network is populated by the server\n(server-provided true, the general case for network\ninformation discovered from the server),\nor whether it is configured by a client\n(server-provided true, possible e.g. for\nservice overlays managed through a controller).\nClients should not attempt to make modifications\nto network instances with server-provided set to\ntrue; when they do, they need to be aware that\nany modifications they make are subject to be\nreverted by the server.\nFor servers that support NACM (Netconf Access Control\nModel), data node rules should ideally prevent\nwrite access by other clients to the network instance\nwhen server-provided is set to true.")
   @JsonProperty("serverProvided")
   public Boolean getServerProvided() {
     return serverProvided;
@@ -61,21 +103,25 @@ public class NetworkSchema extends NetworkRef  {
       return false;
     }
     NetworkSchema networkSchema = (NetworkSchema) o;
-    return Objects.equals(networkRef, networkSchema.networkRef) &&
+    return Objects.equals(networkId, networkSchema.networkId) &&
+        Objects.equals(node, networkSchema.node) &&
+        Objects.equals(supportingNetwork, networkSchema.supportingNetwork) &&
         Objects.equals(serverProvided, networkSchema.serverProvided);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(networkRef, serverProvided);
+    return Objects.hash(networkId, node, supportingNetwork, serverProvided);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class NetworkSchema {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    networkRef: ").append(toIndentedString(networkRef)).append("\n");
+    
+    sb.append("    networkId: ").append(toIndentedString(networkId)).append("\n");
+    sb.append("    node: ").append(toIndentedString(node)).append("\n");
+    sb.append("    supportingNetwork: ").append(toIndentedString(supportingNetwork)).append("\n");
     sb.append("    serverProvided: ").append(toIndentedString(serverProvided)).append("\n");
     sb.append("}");
     return sb.toString();
