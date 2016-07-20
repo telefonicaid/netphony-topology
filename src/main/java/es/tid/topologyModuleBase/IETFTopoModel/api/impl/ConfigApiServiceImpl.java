@@ -106,7 +106,7 @@ public class ConfigApiServiceImpl extends ConfigApiService {
   		 System.out.println("Topologia servida con id: "+entry.getKey());
   		  if (entry.getValue() instanceof DomainTEDB) {
   			nsList.add( TranslateModel.translateTopology(entry.getKey(),(DomainTEDB)entry.getValue()));
-  		  }else {
+  		  }else if (entry.getValue() instanceof MultiDomainTEDB){
   			nsList.add( TranslateModel.translateTopology(entry.getKey(),(MultiDomainTEDB)entry.getValue()));
 
   		  }
