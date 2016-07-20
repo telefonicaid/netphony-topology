@@ -30,8 +30,8 @@ public abstract class ConfigApiService {
       throws NotFoundException;
       public abstract Response createNetworksNetworkNodeNodeById(String networkId,String nodeId,NodeSchema node,SecurityContext securityContext)
       throws NotFoundException;
-      public abstract Response createNetworksNetworkNodeSupportingNodeSupportingNodeById(String networkId,String nodeId,String networkRefNodeRef,SupportingNodeSchema supportingNode,SecurityContext securityContext)
-      throws NotFoundException;
+     // public abstract Response createNetworksNetworkNodeSupportingNodeSupportingNodeById(String networkId,String nodeId,String networkRefNodeRef,SupportingNodeSchema supportingNode,SecurityContext securityContext)
+     // throws NotFoundException;
       public abstract Response createNetworksNetworkSupportingNetworkSupportingNetworkById(String networkId,String networkRef,SupportingNetworkSchema supportingNetwork,SecurityContext securityContext)
       throws NotFoundException;
       public abstract Response deleteNetworksById(SecurityContext securityContext)

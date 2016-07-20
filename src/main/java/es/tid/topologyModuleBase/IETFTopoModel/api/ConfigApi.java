@@ -27,7 +27,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.*;
 
-@Path("/config")
+@Path("/restconf/data")
 
 
 @io.swagger.annotations.Api(description = "the config API")
@@ -80,23 +80,23 @@ public class ConfigApi  {
     throws NotFoundException {
         return delegate.createNetworksNetworkNodeNodeById(networkId,nodeId,node,securityContext);
     }
-    @POST
-    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
-    @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Create supporting-node by ID", notes = "Create operation of resource: supporting-node", response = void.class, tags={  })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = void.class),
-        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = void.class) })
-    public Response createNetworksNetworkNodeSupportingNodeSupportingNodeById(
-        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
-        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
-        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
-        @ApiParam(value = "supporting-nodebody object" ,required=true) SupportingNodeSchema supportingNode,
-        @Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.createNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,supportingNode,securityContext);
-    }
+//    @POST
+//    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
+//    @Consumes({ "application/json" })
+//    @Produces({ "application/json" })
+//    @io.swagger.annotations.ApiOperation(value = "Create supporting-node by ID", notes = "Create operation of resource: supporting-node", response = void.class, tags={  })
+//    @io.swagger.annotations.ApiResponses(value = { 
+//        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = void.class),
+//        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = void.class) })
+//    public Response createNetworksNetworkNodeSupportingNodeSupportingNodeById(
+//        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
+//        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
+//        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
+//        @ApiParam(value = "supporting-nodebody object" ,required=true) SupportingNodeSchema supportingNode,
+//        @Context SecurityContext securityContext)
+//    throws NotFoundException {
+//        return delegate.createNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,supportingNode,securityContext);
+//    }
     @POST
     @Path("/networks/network/{networkId}/supporting-network/{networkRef}/")
     @Consumes({ "application/json" })
@@ -155,22 +155,22 @@ public class ConfigApi  {
     throws NotFoundException {
         return delegate.deleteNetworksNetworkNodeNodeById(networkId,nodeId,securityContext);
     }
-    @DELETE
-    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
-    @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Delete supporting-node by ID", notes = "Delete operation of resource: supporting-node", response = void.class, tags={  })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = void.class),
-        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = void.class) })
-    public Response deleteNetworksNetworkNodeSupportingNodeSupportingNodeById(
-        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
-        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
-        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
-        @Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.deleteNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,securityContext);
-    }
+//    @DELETE
+//    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
+//    @Consumes({ "application/json" })
+//    @Produces({ "application/json" })
+//    @io.swagger.annotations.ApiOperation(value = "Delete supporting-node by ID", notes = "Delete operation of resource: supporting-node", response = void.class, tags={  })
+//    @io.swagger.annotations.ApiResponses(value = { 
+//        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = void.class),
+//        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = void.class) })
+//    public Response deleteNetworksNetworkNodeSupportingNodeSupportingNodeById(
+//        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
+//        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
+//        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
+//        @Context SecurityContext securityContext)
+//    throws NotFoundException {
+//        return delegate.deleteNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,securityContext);
+//    }
     @DELETE
     @Path("/networks/network/{networkId}/supporting-network/{networkRef}/")
     @Consumes({ "application/json" })
@@ -228,22 +228,22 @@ public class ConfigApi  {
     throws NotFoundException {
         return delegate.retrieveNetworksNetworkNodeNodeById(networkId,nodeId,securityContext);
     }
-    @GET
-    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
-    @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Retrieve supporting-node by ID", notes = "Retrieve operation of resource: supporting-node", response = SupportingNodeSchema.class, tags={  })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = SupportingNodeSchema.class),
-        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = SupportingNodeSchema.class) })
-    public Response retrieveNetworksNetworkNodeSupportingNodeSupportingNodeById(
-        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
-        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
-        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
-        @Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.retrieveNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,securityContext);
-    }
+//    @GET
+//    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
+//    @Consumes({ "application/json" })
+//    @Produces({ "application/json" })
+//    @io.swagger.annotations.ApiOperation(value = "Retrieve supporting-node by ID", notes = "Retrieve operation of resource: supporting-node", response = SupportingNodeSchema.class, tags={  })
+//    @io.swagger.annotations.ApiResponses(value = { 
+//        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = SupportingNodeSchema.class),
+//        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = SupportingNodeSchema.class) })
+//    public Response retrieveNetworksNetworkNodeSupportingNodeSupportingNodeById(
+//        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
+//        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
+//        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
+//        @Context SecurityContext securityContext)
+//    throws NotFoundException {
+//        return delegate.retrieveNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,securityContext);
+//    }
     @GET
     @Path("/networks/network/{networkId}/supporting-network/{networkRef}/")
     @Consumes({ "application/json" })
@@ -304,23 +304,23 @@ public class ConfigApi  {
     throws NotFoundException {
         return delegate.updateNetworksNetworkNodeNodeById(networkId,nodeId,node,securityContext);
     }
-    @PUT
-    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
-    @Consumes({ "application/json" })
-    @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "Update supporting-node by ID", notes = "Update operation of resource: supporting-node", response = void.class, tags={  })
-    @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = void.class),
-        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = void.class) })
-    public Response updateNetworksNetworkNodeSupportingNodeSupportingNodeById(
-        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
-        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
-        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
-        @ApiParam(value = "supporting-nodebody object" ,required=true) SupportingNodeSchema supportingNode,
-        @Context SecurityContext securityContext)
-    throws NotFoundException {
-        return delegate.updateNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,supportingNode,securityContext);
-    }
+//    @PUT
+//    @Path("/networks/network/{networkId}/node/{nodeId}/supporting-node/{networkRef nodeRef}/")
+//    @Consumes({ "application/json" })
+//    @Produces({ "application/json" })
+//    @io.swagger.annotations.ApiOperation(value = "Update supporting-node by ID", notes = "Update operation of resource: supporting-node", response = void.class, tags={  })
+//    @io.swagger.annotations.ApiResponses(value = { 
+//        @io.swagger.annotations.ApiResponse(code = 200, message = "Successful operation", response = void.class),
+//        @io.swagger.annotations.ApiResponse(code = 400, message = "Internal Error", response = void.class) })
+//    public Response updateNetworksNetworkNodeSupportingNodeSupportingNodeById(
+//        @ApiParam(value = "ID of networkId",required=true) @PathParam("networkId") String networkId,
+//        @ApiParam(value = "ID of nodeId",required=true) @PathParam("nodeId") String nodeId,
+//        @ApiParam(value = "ID of networkRef nodeRef",required=true) @PathParam("networkRef nodeRef") String networkRefNodeRef,
+//        @ApiParam(value = "supporting-nodebody object" ,required=true) SupportingNodeSchema supportingNode,
+//        @Context SecurityContext securityContext)
+//    throws NotFoundException {
+//        return delegate.updateNetworksNetworkNodeSupportingNodeSupportingNodeById(networkId,nodeId,networkRefNodeRef,supportingNode,securityContext);
+//    }
     @PUT
     @Path("/networks/network/{networkId}/supporting-network/{networkRef}/")
     @Consumes({ "application/json" })

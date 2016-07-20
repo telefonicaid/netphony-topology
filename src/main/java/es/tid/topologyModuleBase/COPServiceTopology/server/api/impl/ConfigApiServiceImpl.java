@@ -34,7 +34,6 @@ public class ConfigApiServiceImpl extends ConfigApiService {
       @Override
       public Response retrieveTopologies()
       throws NotFoundException {
-    	  System.out.println("HOLA");
     	  TopologiesDataBase ted = TopologyServerCOP.getActualTed();
     	  TopologiesSchema tSchema = new TopologiesSchema();
     	  List<Topology> tops = new ArrayList<Topology>();
