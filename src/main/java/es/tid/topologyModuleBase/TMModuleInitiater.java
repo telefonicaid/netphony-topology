@@ -18,6 +18,7 @@ import es.tid.topologyModuleBase.plugins.writer.TopologyServerBGPLS;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerCOP;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerGson;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerIETF;
+import es.tid.topologyModuleBase.plugins.writer.TopologyServerUnify;
 
 
 public class TMModuleInitiater
@@ -122,9 +123,15 @@ public class TMModuleInitiater
 				pluginsList.add(p);
 			}
 			
-			if (actualLittleParams.isIETFPwritting())
+			if (actualLittleParams.isIETFWritting())
 			{
 				TMPlugin p = new TopologyServerIETF(ted, actualLittleParams,lock);
+				executor.execute(p);
+				pluginsList.add(p);
+			}
+			if (actualLittleParams.isUnifyWritting())
+			{
+				TMPlugin p = new TopologyServerUnify(ted, actualLittleParams,lock);
 				executor.execute(p);
 				pluginsList.add(p);
 			}

@@ -198,7 +198,7 @@ public class TopologyModuleParams
 	/**
 	 * Active IETF service-topology exporter
 	 */
-	private boolean isIETFPwritting=false;
+	private boolean isIETFWritting=false;
 	/**
 	 * Active IETF service-topology importer
 	 */
@@ -215,6 +215,29 @@ public class TopologyModuleParams
 	 * Port of service-topology remote Server API
 	 */
 	private int remoteIETFPort=8081;
+	
+	/**
+	 * Active Unify service-topology exporter
+	 */
+	private boolean isUnifyWritting=false;
+	/**
+	 * Active Unify service-topology importer
+	 */
+	private boolean isUnifyReading=false;
+	/**
+	 * Port of service-topology Server API
+	 */
+	private int exportUnifyPort=8087;
+	/**
+	 * Host of service-topology remote Server API
+	 */
+	private String remoteUnifyhost="localhost";
+	/**
+	 * Port of service-topology remote Server API
+	 */
+	private int remoteUnifyPort=8081;
+	
+	
 	
 	/**
 	 * Active COP service-topology exporter
@@ -717,11 +740,11 @@ public class TopologyModuleParams
 	public void setTopologyLinksPath(String topologyLinksPath) {
 		this.topologyLinksPath = topologyLinksPath;
 	}
-	public boolean isIETFPwritting() {
-		return isIETFPwritting;
+	public boolean isIETFWritting() {
+		return isIETFWritting;
 	}
-	public void setIETFPwritting(boolean isIETFPwritting) {
-		this.isIETFPwritting = isIETFPwritting;
+	public void setIETFWritting(boolean isIETFWritting) {
+		this.isIETFWritting = isIETFWritting;
 	}
 	public boolean isIETFReading() {
 		return isIETFReading;
@@ -752,6 +775,36 @@ public class TopologyModuleParams
 	}
 	public void setCOPwritting(boolean isCOPwritting) {
 		this.isCOPwritting = isCOPwritting;
+	}
+	public boolean isUnifyWritting() {
+		return isUnifyWritting;
+	}
+	public void setUnifyWritting(boolean isUnifyWritting) {
+		this.isUnifyWritting = isUnifyWritting;
+	}
+	public boolean isUnifyReading() {
+		return isUnifyReading;
+	}
+	public void setUnifyReading(boolean isUnifyReading) {
+		this.isUnifyReading = isUnifyReading;
+	}
+	public int getExportUnifyPort() {
+		return exportUnifyPort;
+	}
+	public void setExportUnifyPort(int exportUnifyPort) {
+		this.exportUnifyPort = exportUnifyPort;
+	}
+	public String getRemoteUnifyhost() {
+		return remoteUnifyhost;
+	}
+	public void setRemoteUnifyhost(String remoteUnifyhost) {
+		this.remoteUnifyhost = remoteUnifyhost;
+	}
+	public int getRemoteUnifyPort() {
+		return remoteUnifyPort;
+	}
+	public void setRemoteUnifyPort(int remoteUnifyPort) {
+		this.remoteUnifyPort = remoteUnifyPort;
 	}
 	
 	

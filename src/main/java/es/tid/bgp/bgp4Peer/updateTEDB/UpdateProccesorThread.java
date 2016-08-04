@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4.update.fields.ITNodeNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkStateNLRI;
 import es.tid.bgp.bgp4.update.fields.NLRITypes;
@@ -56,6 +57,7 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.DomainTEDB;
+import es.tid.tedb.IT_Resources;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
@@ -162,7 +164,7 @@ public class UpdateProccesorThread extends Thread {
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
 				updateMsg= updateList.take();
-				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
+				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());
 				String learntFrom = updateMsg.getLearntFrom();
 				log.debug("APRENDIDO DE "+learntFrom);
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
@@ -225,6 +227,9 @@ public class UpdateProccesorThread extends Thread {
 									continue;
 								case NLRITypes.Prefix_v4_NLRI://POR HACER...
 									fillPrefixNLRI((PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
+									continue;
+								case NLRITypes.IT_Node_NLRI:
+									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
 									continue;
 								default:
 									log.debug("Attribute Code unknown");
@@ -646,6 +651,16 @@ public class UpdateProccesorThread extends Thread {
 
 		return te_info;
 	}
+	
+	private void fillITNodeInformation(ITNodeNLRI itNodeNLRI, String learntFrom){
+		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
+		IT_Resources itResources = new IT_Resources();
+		itResources.setCpu(itNodeNLRI.getCpu());
+		itResources.setMem(itNodeNLRI.getMem());
+		itResources.setStorage(itNodeNLRI.getStorage());
+		domainTEDB.setItResources(itResources);
+	}
+	
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
 
 		Inet4Address as_number = null;

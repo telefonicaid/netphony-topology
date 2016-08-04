@@ -173,7 +173,26 @@ public class TopologyModuleParamsArray
 				}
 				if(nodes_IETF.getElementsByTagName("serve_port").getLength()>0){
 					littleParams.setExportIETFPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_IETF.getElementsByTagName("serve_port").item(0))))));
-					littleParams.setIETFPwritting(true);
+					littleParams.setIETFWritting(true);
+				}
+				paramList.add(littleParams);
+			}
+			
+			NodeList list_nodes_Unify = doc.getElementsByTagName("UNIFY");
+			
+			for (int i = 0; i < list_nodes_Unify.getLength(); i++) 
+			{
+				Element nodes_Unify = (Element) list_nodes_Unify.item(i);
+				TopologyModuleParams littleParams = new TopologyModuleParams();
+				if(nodes_Unify.getElementsByTagName("import_ip").getLength()>0){
+					
+					littleParams.setRemoteUnifyhost((getCharacterDataFromElement(((Element) nodes_Unify.getElementsByTagName("import_ip").item(0)))));
+					littleParams.setRemoteUnifyPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_Unify.getElementsByTagName("import_port").item(0))))));
+					littleParams.setUnifyReading(true);
+				}
+				if(nodes_Unify.getElementsByTagName("serve_port").getLength()>0){
+					littleParams.setExportUnifyPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_Unify.getElementsByTagName("serve_port").item(0))))));
+					littleParams.setUnifyWritting(true);
 				}
 				paramList.add(littleParams);
 			}

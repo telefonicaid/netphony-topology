@@ -4,11 +4,24 @@
 	<domain>
 		<layer type="transport" ></layer>
 
+<<<<<<< HEAD
 		<domain_id>0.0.0.1</domain_id>
 		<reachability_entry>
 			<ipv4_address>172.16.101.0</ipv4_address>
 			<prefix>29</prefix>
 		</reachability_entry>
+=======
+        <domain_id>0.0.0.1</domain_id>
+        <reachability_entry>
+                <ipv4_address>172.16.101.0</ipv4_address>
+                <prefix>29</prefix>
+        </reachability_entry>
+        <it_resources>
+        	<cpu>100cpu</cpu>
+            <mem>100mem</mem>
+            <storage>100storage</storage>
+        </it_resources>
+>>>>>>> feature/BGPLS-IT
 
 		<node>
 			<router_id>172.16.101.101</router_id>
@@ -166,6 +179,7 @@
 
 
 	
+<<<<<<< HEAD
 
 	<domain>
 		<layer type="transport" ></layer>
@@ -176,6 +190,19 @@
 			<prefix>29</prefix>
 		</reachability_entry>
 		<node>
+=======
+        <domain_id>0.0.0.2</domain_id>
+        <reachability_entry>
+                <ipv4_address>172.16.102.0</ipv4_address>
+                <prefix>29</prefix>
+        </reachability_entry>
+        <it_resources>
+        	<cpu>100cpu</cpu>
+            <mem>100mem</mem>
+            <storage>100storage</storage>
+        </it_resources>
+        <node>
+>>>>>>> feature/BGPLS-IT
 			<router_id>172.16.102.101</router_id>
 		</node>
 		<node>
