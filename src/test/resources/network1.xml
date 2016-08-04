@@ -11,6 +11,7 @@
 		</reachability_entry>
 
         <it_resources>
+        	<controller_it>https://openstack.5Gex.com/url</controller_it>
         	<cpu>100</cpu>
             <mem>100Gbyte</mem>
             <storage>100Tbyte</storage>
@@ -184,6 +185,7 @@
 
 
         <it_resources>
+        	<controller_it>https://UC3MController.5Gex.com/url</controller_it>
         	<cpu>222</cpu>
             <mem>222Gbyte</mem>
             <storage>222Tbyte</storage>

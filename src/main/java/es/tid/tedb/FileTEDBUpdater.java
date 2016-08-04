@@ -804,6 +804,10 @@ public class FileTEDBUpdater {
 					for (int i = 0; i < itResourcesElement.getLength(); i++) {
 						Element element = (Element) itResourcesElement.item(i);
 						
+						NodeList itResourcesControllerITList = element.getElementsByTagName("controller_it");
+						Element itResourcesControllerITElement = (Element) itResourcesControllerITList.item(0);
+						String itResourcesControllerIT = getCharacterDataFromElement(itResourcesControllerITElement);
+						
 						NodeList itResourcesCpuList = element.getElementsByTagName("cpu");
 						Element itResourcesCpuElement = (Element) itResourcesCpuList.item(0);
 						String itResourcesCpu = getCharacterDataFromElement(itResourcesCpuElement);
@@ -817,6 +821,7 @@ public class FileTEDBUpdater {
 						String itResourcesStorage = getCharacterDataFromElement(itResourcesStorageElement);
 												
 						IT_Resources itResources = new IT_Resources();
+						if (itResourcesControllerIT!=null) itResources.setControllerIT(itResourcesControllerIT);
 						if (itResourcesCpu!=null) itResources.setCpu(itResourcesCpu);
 						if (itResourcesMem!=null) itResources.setMem(itResourcesMem);
 						if (itResourcesStorage!=null) itResources.setStorage(itResourcesStorage);

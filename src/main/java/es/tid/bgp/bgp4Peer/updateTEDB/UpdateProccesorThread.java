@@ -655,6 +655,7 @@ public class UpdateProccesorThread extends Thread {
 	private void fillITNodeInformation(ITNodeNLRI itNodeNLRI, String learntFrom){
 		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
 		IT_Resources itResources = new IT_Resources();
+		itResources.setControllerIT(itNodeNLRI.getControllerIT());
 		itResources.setCpu(itNodeNLRI.getCpu());
 		itResources.setMem(itNodeNLRI.getMem());
 		itResources.setStorage(itNodeNLRI.getStorage());

@@ -31,6 +31,7 @@ import es.tid.rsvp.constructs.gmpls.DWDMWavelengthLabel;
 
 public class IT_Resources {
 	
+	private String controllerIT;
 	private String cpu;
 	private String mem;
 	private String storage;
@@ -85,6 +86,9 @@ public class IT_Resources {
 	public String toString(){
 		String ret="";
 
+		if (controllerIT!=null){
+			ret=ret+controllerIT.toString()+"\t";
+		}
 		if (cpu!=null){
 			ret=ret+cpu.toString()+"\t";
 		}
@@ -97,6 +101,14 @@ public class IT_Resources {
 		
 		
 		return ret;
+	}
+
+	public String getControllerIT() {
+		return controllerIT;
+	}
+
+	public void setControllerIT(String controllerIT) {
+		this.controllerIT = controllerIT;
 	}
 
 	

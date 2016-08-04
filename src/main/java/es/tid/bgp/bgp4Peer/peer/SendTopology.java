@@ -508,6 +508,7 @@ public class SendTopology implements Runnable {
 			//NLRI
 			ITNodeNLRI itNodeNLRI = new ITNodeNLRI();
 			itNodeNLRI.setNodeId(domainID);
+			itNodeNLRI.setControllerIT(itResources.getControllerIT());
 			itNodeNLRI.setCpu(itResources.getCpu());
 			itNodeNLRI.setMem(itResources.getMem());
 			itNodeNLRI.setStorage(itResources.getStorage());
