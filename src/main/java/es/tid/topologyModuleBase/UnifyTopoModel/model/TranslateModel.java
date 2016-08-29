@@ -130,7 +130,10 @@ public class TranslateModel {
 			} else {
 				System.out.println("Type of link not implemented for UnifyModel");
 			}
-			
+			LinkResource linkResource = new LinkResource();
+			if (linkTed.getTE_info().getUndirLinkDelay() != null) linkResource.setDelay(String.valueOf(linkTed.getTE_info().getUndirLinkDelay().getDelay()));
+			if (linkTed.getTE_info().getUndirAvailableBw() != null) linkResource.setBandwidth(String.valueOf(linkTed.getTE_info().getUndirAvailableBw().getAvailableBw()));
+			if (linkResource != null) link.setResources(linkResource);
 			linklist.add(link);
 		}
 		links.setLink(linklist);
