@@ -159,8 +159,9 @@ public class SendTopology implements Runnable {
 							sendLinkNLRI( ((DomainTEDB)ted).getIntraDomainLinks(),domainID);
 							//log.info(" XXXX ted.getNodeTable():"+ted.getNodeTable());
 							sendNodeNLRI( ((DomainTEDB)ted).getIntraDomainLinksvertexSet(), ((DomainTEDB)ted).getNodeTable());
-							sendITNodeNLRI( domainID, ((DomainTEDB)ted).getItResources());
-							//sendNodeNLRI( ted.getNetworkGraph().vertexSet(), ted.getNodeTable());
+							if (((DomainTEDB)ted).getItResources()!=null){
+								sendITNodeNLRI( domainID, ((DomainTEDB)ted).getItResources());
+							}
 			
 						}
 				

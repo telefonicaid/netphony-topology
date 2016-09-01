@@ -58,12 +58,13 @@ public class TranslateModel {
 		  }
 		  
 		  node.setLinks(translateIntraDomainLinks(domainID, ted));
-		  SoftwareResource resources = new SoftwareResource();
-		  //System.out.println(" --- --------------- controlerrr ittttt: "+ted.getItResources().getControllerIT());
-		  resources.setCpu(ted.getItResources().getCpu());
-		  resources.setMem(ted.getItResources().getMem());
-		  resources.setStorage(ted.getItResources().getStorage());
-		  node.setResources(resources);
+		  if (ted.getItResources()!=null){
+			  SoftwareResource resources = new SoftwareResource();		  
+			  resources.setCpu(ted.getItResources().getCpu());
+			  resources.setMem(ted.getItResources().getMem());
+			  resources.setStorage(ted.getItResources().getStorage());
+			  node.setResources(resources);
+		  }
 				  
 		  ports.setPort(portlist);
 		  node.setPorts(ports);
