@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4.update.fields.ITNodeNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkStateNLRI;
 import es.tid.bgp.bgp4.update.fields.NLRITypes;
@@ -55,12 +57,14 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.DomainTEDB;
+import es.tid.tedb.IT_Resources;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
 import es.tid.tedb.Node_Info;
 import es.tid.tedb.SSONInformation;
 import es.tid.tedb.SimpleTEDB;
+import es.tid.tedb.TEDB;
 import es.tid.tedb.TE_Information;
 import es.tid.tedb.WSONInformation;
 /**
@@ -127,7 +131,7 @@ public class UpdateProccesorThread extends Thread {
 	/**
 	 * Topology database for intradomain Links. It owns several domains and.
 	 */
-	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	private Hashtable<String,TEDB> intraTEDBs;
 
 	private LinkedList<UpdateLink> updateLinks;
 
@@ -137,7 +141,7 @@ public class UpdateProccesorThread extends Thread {
 
 
 	public UpdateProccesorThread(LinkedBlockingQueue<BGP4Update> updateList,
-			MultiDomainTEDB multiTedb ,Hashtable<Inet4Address,DomainTEDB> intraTEDBs ){
+			MultiDomainTEDB multiTedb ,Hashtable<String,TEDB> intraTEDBs ){
 		log=LoggerFactory.getLogger("BGP4Server");
 		running=true;
 		this.updateList=updateList;
@@ -160,7 +164,7 @@ public class UpdateProccesorThread extends Thread {
 				PathAttribute att_mpreach  = null; 
 				PathAttribute att = null;
 				updateMsg= updateList.take();
-				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());	
+				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());
 				String learntFrom = updateMsg.getLearntFrom();
 				log.debug("APRENDIDO DE "+learntFrom);
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
@@ -223,6 +227,9 @@ public class UpdateProccesorThread extends Thread {
 									continue;
 								case NLRITypes.Prefix_v4_NLRI://POR HACER...
 									fillPrefixNLRI((PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
+									continue;
+								case NLRITypes.IT_Node_NLRI:
+									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
 									continue;
 								default:
 									log.debug("Attribute Code unknown");
@@ -407,14 +414,15 @@ public class UpdateProccesorThread extends Thread {
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
 			}
 
-			DomainTEDB domainTEDB=intraTEDBs.get(localDomainID);
+			DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(localDomainID.getHostAddress());
 			SimpleTEDB simpleTEDB=null;
 			if (domainTEDB instanceof SimpleTEDB){
 				simpleTEDB = (SimpleTEDB) domainTEDB;
 			}else if (domainTEDB==null){
 				simpleTEDB = new SimpleTEDB();
 				simpleTEDB.createGraph();
-				this.intraTEDBs.put(localDomainID, simpleTEDB);
+				this.intraTEDBs.put(localDomainID.getHostAddress(), simpleTEDB);
+				simpleTEDB.setDomainID(localDomainID);
 			}else {
 				log.error("PROBLEM: TEDB not compatible");
 				return;
@@ -426,6 +434,7 @@ public class UpdateProccesorThread extends Thread {
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(LocalNodeIGPId))){
 
 				simpleTEDB.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
+				simpleTEDB.notifyNewVertex(LocalNodeIGPId);
 			}
 			//			else{ 
 			//				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
@@ -434,6 +443,7 @@ public class UpdateProccesorThread extends Thread {
 			if (!(simpleTEDB.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
 
 				simpleTEDB.getNetworkGraph().addVertex(RemoteNodeIGPId);
+				simpleTEDB.notifyNewVertex(RemoteNodeIGPId);
 
 			}
 			//			else {
@@ -450,7 +460,10 @@ public class UpdateProccesorThread extends Thread {
 				log.info("Adding information of remote node to edge..." + simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				intraEdge.setRemote_Node_Info(simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				log.info("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
+				
 				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
+				simpleTEDB.notifyNewEdge(LocalNodeIGPId, RemoteNodeIGPId);
+				
 				simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId).setNumberFibers(1);
 				IntraDomainEdge edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(intraEdge.getTE_info().getAvailableLabels()!=null)
@@ -638,6 +651,17 @@ public class UpdateProccesorThread extends Thread {
 
 		return te_info;
 	}
+	
+	private void fillITNodeInformation(ITNodeNLRI itNodeNLRI, String learntFrom){
+		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
+		IT_Resources itResources = new IT_Resources();
+		itResources.setControllerIT(itNodeNLRI.getControllerIT());
+		itResources.setCpu(itNodeNLRI.getCpu());
+		itResources.setMem(itNodeNLRI.getMem());
+		itResources.setStorage(itNodeNLRI.getStorage());
+		domainTEDB.setItResources(itResources);
+	}
+	
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
 
 		Inet4Address as_number = null;
@@ -703,7 +727,7 @@ public class UpdateProccesorThread extends Thread {
 		if (as_number==null){
 			log.error(" as_number is NULL");
 		}
-		DomainTEDB domainTEDB=intraTEDBs.get(as_number);
+		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(as_number.getHostAddress());
 
 		SimpleTEDB simpleTEDB=null;
 		if (domainTEDB instanceof SimpleTEDB){
@@ -711,7 +735,8 @@ public class UpdateProccesorThread extends Thread {
 		}else if (domainTEDB==null){
 			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
-			this.intraTEDBs.put(as_number, simpleTEDB);
+			this.intraTEDBs.put(as_number.getHostAddress(), simpleTEDB);
+			simpleTEDB.setDomainID(as_number);
 		}else {
 			log.error("PROBLEM: TEDB not compatible");
 			return;

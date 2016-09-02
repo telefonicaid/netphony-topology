@@ -72,7 +72,7 @@ public class BGPPeer {
 	 * Table with domainID - TEDB.
 	 * The BGP-LS Peer can have several domains
 	 */
-	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	private Hashtable<String,TEDB> intraTEDBs;
 	
 	/**
 	 * Full TEDB with all Links
@@ -150,7 +150,7 @@ public class BGPPeer {
 	 * @param multiTEDB multidomain database
 	 * @param iTEDBs internal domains database 
 	 */
-	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> iTEDBs){
+	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<String,TEDB> iTEDBs){
 		//First of all, read the parameters
 		if (nameParametersFile != null){
 			params=new BGP4Parameters(nameParametersFile);
@@ -186,7 +186,7 @@ public class BGPPeer {
 //		}
 			logServer.info("Inizializing BGP4 Peer");
 		if (iTEDBs!= null) intraTEDBs=iTEDBs;
-		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
+		else intraTEDBs=new Hashtable<String,TEDB>();
 		
 		if (multiTEDB!= null) multiDomainTEDB = multiTEDB;
 		else multiDomainTEDB = new MDTEDB();
@@ -194,8 +194,8 @@ public class BGPPeer {
 		if (params.getLearnTopology().equals("fromXML")){
 			//intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 			//multiDomainTEDB = new MDTEDB();
-			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
 			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
+			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
 		}
 		// Create Thread executor
 		//FIXME: Actualizar n�mero de threads que se crean
@@ -231,7 +231,12 @@ public class BGPPeer {
 
 	public void setReadDomainTEDB(DomainTEDB readDomainTEDB) {
 		//this.readDomainTEDB = readDomainTEDB;
-		this.intraTEDBs.put(readDomainTEDB.getDomainID(), readDomainTEDB);
+		//System.out.println("setReadDomain: readFomainTEDB().getDomainID()="+readDomainTEDB.getDomainID());
+		//System.out.println("setReadDomain: readFomainTEDB="+readDomainTEDB.printTopology());
+		if(readDomainTEDB.getDomainID() == null)
+			this.intraTEDBs.put("default", readDomainTEDB);
+		else
+			this.intraTEDBs.put(readDomainTEDB.getDomainID().toString(), readDomainTEDB);
 	}
 	public void createUpdateDispatcher(){
 		//Updater dispatcher
@@ -341,12 +346,15 @@ public class BGPPeer {
 		this.ud = ud;
 	}
 
-	public void addSimpleTEDB(SimpleTEDB simpleTEDB, Inet4Address domainID) {
+	public void addSimpleTEDB(SimpleTEDB simpleTEDB, String domainID) {
 			this.intraTEDBs.put(domainID, simpleTEDB);
 	}
 	
 	public void setSimpleTEDB(SimpleTEDB simpleTEDB) {
-			this.intraTEDBs.put(simpleTEDB.getDomainID(), simpleTEDB);
+		if(simpleTEDB.getDomainID() == null)
+			this.intraTEDBs.put("default", simpleTEDB);
+		else
+			this.intraTEDBs.put(simpleTEDB.getDomainID().toString(), simpleTEDB);
 	}
 	
 	
@@ -356,9 +364,20 @@ public class BGPPeer {
 	public MultiDomainTEDB getMultiDomainTEDB() {
 		return multiDomainTEDB;
 	}
-	public Hashtable<Inet4Address, DomainTEDB> getIntraTEDBs() {
+	
+
+	public Hashtable<String, TEDB> getIntraTEDBs() {
 		return intraTEDBs;
 	}
+
+	public void setIntraTEDBs(Hashtable<String, TEDB> intraTEDBs) {
+		this.intraTEDBs = intraTEDBs;
+	}
+
+	public void setMultiDomainTEDB(MultiDomainTEDB multiDomainTEDB) {
+		this.multiDomainTEDB = multiDomainTEDB;
+	}
+	
 	
 	
 	

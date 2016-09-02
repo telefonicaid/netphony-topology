@@ -737,7 +737,7 @@ public class FileTEDBUpdater {
 		return graph;
 	}*/
 
-	public static Hashtable<Inet4Address,DomainTEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
+	public static Hashtable<String,TEDB> readMultipleDomainSimpleNetworks(String fileName, String layer,boolean allDomains,int lambdaIni, int lambdaEnd, boolean isSSONnetwork) {
 		Logger log = LoggerFactory.getLogger("PCEPServer");
 		Object router_id_addr = null;
 		Object s_router_id_addr = null;
@@ -745,7 +745,9 @@ public class FileTEDBUpdater {
 		Object src_Numif_id = null;
 		Object dst_Numif_id = null;
 
-		Hashtable<Inet4Address,DomainTEDB> TEDBs = new Hashtable<Inet4Address,DomainTEDB>();
+
+		Hashtable<String,TEDB> TEDBs = new Hashtable<String,TEDB>();
+
 		//First, create the graph
 		
 		log.info("1. SimpleDirectedWeightedGraph");
@@ -795,9 +797,39 @@ public class FileTEDBUpdater {
 					for (int k = 0; k < nodes_domain_id.getLength(); k++) {
 						Element domain_id_e = (Element) nodes_domain_id.item(0);
 						domain_id = getCharacterDataFromElement(domain_id_e);
-						log.info("Looking for nodes in domain: " + domain_id);
+						log.info("Looking for nodes in domain: " + domain_id);						
 					}
-
+					
+					NodeList itResourcesElement = element1.getElementsByTagName("it_resources");
+					for (int i = 0; i < itResourcesElement.getLength(); i++) {
+						Element element = (Element) itResourcesElement.item(i);
+						
+						NodeList itResourcesControllerITList = element.getElementsByTagName("controller_it");
+						Element itResourcesControllerITElement = (Element) itResourcesControllerITList.item(0);
+						String itResourcesControllerIT = getCharacterDataFromElement(itResourcesControllerITElement);
+						
+						NodeList itResourcesCpuList = element.getElementsByTagName("cpu");
+						Element itResourcesCpuElement = (Element) itResourcesCpuList.item(0);
+						String itResourcesCpu = getCharacterDataFromElement(itResourcesCpuElement);
+						
+						NodeList itResourcesMemList = element.getElementsByTagName("mem");
+						Element itResourcesMemElement = (Element) itResourcesMemList.item(0);
+						String itResourcesMem = getCharacterDataFromElement(itResourcesMemElement);
+						
+						NodeList itResourcesStorageList = element.getElementsByTagName("storage");
+						Element itResourcesStorageElement = (Element) itResourcesStorageList.item(0);
+						String itResourcesStorage = getCharacterDataFromElement(itResourcesStorageElement);
+												
+						IT_Resources itResources = new IT_Resources();
+						if (itResourcesControllerIT!=null) itResources.setControllerIT(itResourcesControllerIT);
+						if (itResourcesCpu!=null) itResources.setCpu(itResourcesCpu);
+						if (itResourcesMem!=null) itResources.setMem(itResourcesMem);
+						if (itResourcesStorage!=null) itResources.setStorage(itResourcesStorage);
+						
+						
+						tedb.setItResources(itResources);
+						
+					}
 					NodeList nodes = element1.getElementsByTagName("node");
 					for (int i = 0; i < nodes.getLength(); i++) {
 						Element element = (Element) nodes.item(i);
@@ -832,9 +864,10 @@ public class FileTEDBUpdater {
 
 					}
 				}
+				
 				tedb.setNetworkGraph(graph);
 				tedb.setDomainID((Inet4Address) Inet4Address.getByName(domain_id));
-				TEDBs.put((Inet4Address) Inet4Address.getByName(domain_id),tedb);
+				TEDBs.put(domain_id,tedb);
 			}	
 
 
@@ -867,7 +900,8 @@ public class FileTEDBUpdater {
 						domain_id = getCharacterDataFromElement(domain_id_e);
 						log.info("Looking for links in domain: " + domain_id);
 					}
-					SimpleTEDB domainTEDB = (SimpleTEDB)TEDBs.get((Inet4Address) Inet4Address.getByName(domain_id));
+					//System.out.println("VVV debug domain id:"+domain_id);
+					SimpleTEDB domainTEDB = (SimpleTEDB)TEDBs.get( domain_id);
 					graph = domainTEDB.getNetworkGraph();
 					
 					int numLabels=0;
@@ -949,7 +983,7 @@ public class FileTEDBUpdater {
 								}
 							}*/
 							//else if (type.equals("interlayer")){
-								if (layer.equals("interlayer")){
+								if (layer!=null && layer.equals("interlayer")){
 									type="intradomain";
 								}
 
@@ -2393,6 +2427,7 @@ public class FileTEDBUpdater {
 			/*byte[] domainReachabilityIPv4Prefix,*/ ReachabilityEntry reachabilityEntry,String layer) {
 		Logger log = LoggerFactory.getLogger("PCEPServer");
 		log.info("Initializng reachability from " + fileName);
+		System.out.println("probandoooo Initializng reachability from " + fileName);
 		File file = new File(fileName);
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()

@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<network>
+		
+        <domain>
+                <!--<layer type="mpls" ></layer>-->
+                <domain_id>0.0.0.1</domain_id>
+                <reachability_entry>
+                        <ipv4_address>192.168.0.0</ipv4_address>
+                         <prefix>12</prefix>
+                </reachability_entry>
+				
+				<!-- Node Source -->
+                <node>
+                        <nodeName>Source</nodeName>
+                        <addressList>
+                                <address>10.0.50.3</address>  
+                        </addressList>
+                        <dpid>10.0.50.3</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Discus</routerType>
+						<controllerIP>localhost</controllerIP>
+						<controllerPort>8080</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>                               
+                                        <addressIntfList>
+                                                <addressIntf>50.50.50.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>                               
+                                        <addressIntfList>
+                                                <addressIntf>50.50.50.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+
+                <!-- Node TN1 -->
+                <node>
+                        <nodeName>TN1</nodeName>
+                        <addressList>
+                                <address>192.168.1.1</address>      
+                        </addressList>
+                        <dpid>192.168.1.1</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Idealist</routerType>
+						<controllerIP>pceserver</controllerIP>
+						<controllerPort>4445</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+				
+                <!-- Node TN2 -->
+                <node>
+                        <nodeName>TN2</nodeName>
+                        <addressList>
+                                <address>192.168.1.2</address>      
+                        </addressList>
+                        <dpid>192.168.1.2</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Idealist</routerType>
+                        <controllerIP>pceserver</controllerIP>
+                        <controllerPort>4445</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+
+                <!-- Node TN3 -->
+                <node>
+                        <nodeName>TN3</nodeName>
+                        <addressList>
+                                <address>192.168.1.3</address>      
+                        </addressList>
+                        <dpid>192.168.1.3</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Idealist</routerType>
+                        <controllerIP>pceserver</controllerIP>
+                        <controllerPort>4445</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+
+				<!-- Node OLT1 -->
+                <node>
+                        <nodeName>OLT1</nodeName>
+                        <addressList>
+                                <address>10.0.50.2</address>  
+                        </addressList>
+                        <dpid>00:00:00:00:00:00:03:04</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Discus</routerType>
+						<controllerIP>localhost</controllerIP>
+						<controllerPort>8080</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>                               
+                                        <addressIntfList>
+                                                <addressIntf>50.50.50.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>                               
+                                        <addressIntfList>
+                                                <addressIntf>50.50.50.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+				
+
+                <!-- Node ONU -->
+                <node>
+                        <nodeName>ONU</nodeName>
+                        <addressList>
+                                <address>10.0.50.1</address>
+                        </addressList>
+                        <dpid>00:00:00:00:00:00:03:03</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Discus</routerType>
+						<controllerIP>localhost</controllerIP>
+						<controllerPort>8080</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+
+
+                <!-- Node GPU_rendition -->
+                <node>
+                        <nodeName>GPU_rendition</nodeName>
+                        <addressList>
+                                <address>10.0.50.4</address>
+                        </addressList>
+                        <dpid>00:00:00:00:00:00:00:10</dpid>
+                        <isPhysical>true</isPhysical>
+                        <layerNode>transport</layerNode>
+                        <configurationMode>COPMode</configurationMode>
+                        <routerType>Discus</routerType>
+						<controllerIP>localhost</controllerIP>
+						<controllerPort>8080</controllerPort>
+                        <interfacesList>
+                                <interface>
+                                        <nameIntf>1</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                                <interface>
+                                        <nameIntf>2</nameIntf>
+                                        <label>7</label>
+                                        <addressIntfList>
+                                                <addressIntf>51.51.51.1</addressIntf>
+                                        </addressIntfList>
+                                        <layeringList>
+                                                <layering>transport</layering>                                  
+                                        </layeringList>
+                                        <!--<supportedCountersList>
+                                                <supportedCounters></supportedCounters>
+                                        </supportedCountersList>-->
+                                        <isPhysical>true</isPhysical>
+                                        <!--<parentInterfaceName></parentInterfaceName>-->
+                                </interface>
+                        </interfacesList>
+                        <domainID>1</domainID>
+                        <location>
+                                <Xcord>2</Xcord>
+                                <Ycord>1</Ycord>
+                        </location>
+                        <!--<ipParams>
+                                <staticRoutingParamsList><staticRoutingParams></staticRoutingParams><staticRoutingParamsList>
+                                <bgpParamsList><bgpParams></bgpParams></bgpParamsList>
+                                <isisParamsList> <isisParams></isisParams></isisParamsList>
+                                <ospfParamsList><ospfParams></ospfParams></ospfParamsList>
+                        </ipParams>-->
+                        <!--<parentRouter></parentRouter>       -->                     
+                </node> 
+
+
+
+                
+
+				
+
+
+
+            
+
+                <!-- Source - TN1 -->
+                <link>
+                        <linkID>Source_1_TN1_1</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>Source</nodeLink>
+                                <intfLink>1</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>TN1</nodeLink>
+                                <intfLink>1</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				
+				<link>
+                        <linkID>TN1_1_Source_1</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>TN1</nodeLink>
+                                <intfLink>1</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>Source</nodeLink>
+                                <intfLink>1</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+
+                <!-- TN1 - TN2-->
+                <link>
+                        <linkID>TN1_2_TN2_1</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>TN1</nodeLink>
+                                <intfLink>2</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>TN2</nodeLink>
+                                <intfLink>1</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				<link>
+                        <linkID>TN2_1_TN1_2</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>TN2</nodeLink>
+                                <intfLink>1</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>TN1</nodeLink>
+                                <intfLink>2</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				
+				<!-- TN2 - OLT1-->
+                <link>
+                        <linkID>TN2_2_OLT1_1</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>TN2</nodeLink>
+                                <intfLink>2</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>OLT1</nodeLink>
+                                <intfLink>1</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				<link>
+                        <linkID>OLT1_1_TN2_2</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>OLT1</nodeLink>
+                                <intfLink>1</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>TN2</nodeLink>
+                                <intfLink>2</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				
+				<!-- OLT1 - ONU-->
+                <link>
+                        <linkID>OLT1_2_ONU_1</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>OLT1</nodeLink>
+                                <intfLink>2</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>ONU</nodeLink>
+                                <intfLink>1</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				<link>
+                        <linkID>ADVA_1_OLT1_2</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>ONU</nodeLink>
+                                <intfLink>1</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>OLT1</nodeLink>
+                                <intfLink>2</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				
+				<!-- ONU - GPU_rendition-->
+                <link>
+                        <linkID>ONU_2_GPU_rendition_2</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>ONU</nodeLink>
+                                <intfLink>2</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>GPU_rendition</nodeLink>
+                                <intfLink>2</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+				<link>
+                        <linkID>CTTC_2_ONU_2</linkID>
+                        <isDirectional>true</isDirectional>
+                        <source>
+                                <nodeLink>GPU_rendition</nodeLink>
+                                <intfLink>2</intfLink>
+                        </source>                       
+                        <destination>
+                                <nodeLink>ONU</nodeLink>
+                                <intfLink>2</intfLink>
+                        </destination>
+                        <typeLink>transport</typeLink>
+                        <layerLink>transport</layerLink>                          
+                </link>
+
+               
+        </domain>
+</network>

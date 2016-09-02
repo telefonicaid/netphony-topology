@@ -391,6 +391,18 @@ String topoString="";
 		return null;
 	}
 
+	@Override
+	public IT_Resources getItResources() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setItResources(IT_Resources itResources) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	
 	

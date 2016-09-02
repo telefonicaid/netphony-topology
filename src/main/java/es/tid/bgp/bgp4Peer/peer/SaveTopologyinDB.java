@@ -6,14 +6,17 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.Jedis;
 import es.tid.tedb.DatabaseControlSimplifiedLSA;
 import es.tid.tedb.DomainTEDB;
 import es.tid.tedb.InterDomainEdge;
 import es.tid.tedb.IntraDomainEdge;
 import es.tid.tedb.MultiDomainTEDB;
+import es.tid.tedb.TEDB;
 import es.tid.tedb.TE_Information;
 
 /**
@@ -29,7 +32,7 @@ public class SaveTopologyinDB implements Runnable {
 		private int port=6379;
 		
 	//TEDBs 
-	 private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	 private Hashtable<String,TEDB> intraTEDBs;
 	
 	// Multi-domain TEDB to redistribute Multi-domain Topology
 	private MultiDomainTEDB multiDomainTEDB;
@@ -44,7 +47,7 @@ public class SaveTopologyinDB implements Runnable {
 		jedis = new Jedis(host,port); 
 	}
 
-	public void configure( Hashtable<Inet4Address,DomainTEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
+	public void configure( Hashtable<String,TEDB> intraTEDBs,MultiDomainTEDB multiTED,  boolean writeTopology, String host, int port){
 		this.intraTEDBs=intraTEDBs;
 		this.writeTopology=writeTopology;
 		this.multiDomainTEDB=multiTED;
@@ -79,18 +82,18 @@ public class SaveTopologyinDB implements Runnable {
 				}
 				else {
 					log.info("save form TEDB");
-					Enumeration<DomainTEDB> iter = intraTEDBs.elements();
+					Enumeration<TEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						writeLinkDBInter( iter.nextElement().getInterDomainLinks());
 					}
 				}			
 				
 					log.info("sendIntraDomainLinks activated");
-					Enumeration<Inet4Address> iter = intraTEDBs.keys();
+					Enumeration<String> iter = intraTEDBs.keys();
 					while (iter.hasMoreElements()){						
-						Inet4Address domainID = iter.nextElement();
+						String domainID = iter.nextElement();
 						log.info("Sending TED from domain "+domainID);
-						DomainTEDB ted=intraTEDBs.get(domainID);
+						DomainTEDB ted=(DomainTEDB)intraTEDBs.get(domainID);
 						//writeLinkDB( ted.getNetworkGraph().edgeSet(),domainID);
 						writeLinkDB(ted.getIntraDomainLinks(),domainID);
 					}
@@ -108,7 +111,7 @@ public class SaveTopologyinDB implements Runnable {
 	 * This function write a BGP4 update message in Data Base for each link in the list
 	 * @param intradomainLinks
 	 */
-	private void writeLinkDB(Set<IntraDomainEdge> intradomainLinks, Inet4Address domainID){
+	private void writeLinkDB(Set<IntraDomainEdge> intradomainLinks, String domainID){
 		
 			Iterator<IntraDomainEdge> edgeIt = intradomainLinks.iterator();
 			
