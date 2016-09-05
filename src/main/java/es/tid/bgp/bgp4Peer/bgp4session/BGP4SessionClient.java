@@ -64,7 +64,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 			}
 			
 		} catch (IOException e) {
-			log.error("Connection refused trying to connect " + remotePeerIP.getHostAddress() + " on port " + peerBGP_port);
+			log.info("Connection refused trying to connect " + remotePeerIP.getHostAddress() + " on port " + peerBGP_port);
 			//As there is not yet a session added (it is added in the beginning of initializeBGP4Session());
 			//endSession();
 			return;
@@ -78,7 +78,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 		} catch (BGP4Exception e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
-			log.error("Session with "+this.remotePeerIP+" already exists: "+e2.getMessage());
+			log.debug("Session with "+this.remotePeerIP+" already exists: "+e2.getMessage());
 			try {
 				socket.close();
 			} catch (IOException e) {

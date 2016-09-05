@@ -81,7 +81,7 @@ public class BGP4SessionClientManager implements Runnable{
 					bgp4SessionClient.setUpdateFrom(updateFrom);
 					bgp4SessionClient.start();
 				} catch(BGP4SessionExistsException e){
-					log.error("Checked that there is already a peer initiated session with "+this.peerIP);
+					log.debug("Checked that there is already a peer initiated session with "+this.peerIP);
 				}
 
 				return;
