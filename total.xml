@@ -2,7 +2,7 @@
 <domain>
 <layer type="transport" >
 </layer>
-<domain_id>0.0.0.103</domain_id>
+<domain_id>1.0.0.103</domain_id>
 <reachability_entry>
 <ipv4_address>172.16.0.0</ipv4_address>
 <prefix>24</prefix>
