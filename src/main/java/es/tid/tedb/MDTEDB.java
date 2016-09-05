@@ -1,14 +1,14 @@
 package es.tid.tedb;
 
+import org.jgrapht.graph.DirectedWeightedMultigraph;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.Inet4Address;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
 /**
  * Base de datos de ingenieria de trafico
@@ -35,7 +35,7 @@ public class MDTEDB implements MultiDomainTEDB {
 	LinkedList<ReachabilityEntry> reachability;
 	
 	public MDTEDB(){
-		log=LoggerFactory.getLogger("PCEServer");
+		log=LoggerFactory.getLogger("BGP4Peer");
 		networkDomainGraph=new DirectedWeightedMultigraph<Object,InterDomainEdge> (InterDomainEdge.class);
 		addBidirectional=true;//FIXME: ESTO ES UN APA�O TEMPORAL
 		reachability=new LinkedList<ReachabilityEntry>();
@@ -84,13 +84,13 @@ public class MDTEDB implements MultiDomainTEDB {
 
 		if (!networkDomainGraph.containsVertex(localDomainID)){
 			networkDomainGraph.addVertex(localDomainID);
-			log.info("Vertex (domain) "+localDomainID+" added");
+			log.debug("Vertex (domain) "+localDomainID+" added");
 		}
 		if (!networkDomainGraph.containsVertex(remoteDomainID)){
 			networkDomainGraph.addVertex(remoteDomainID);
-			log.info("Vertex (domain) "+remoteDomainID+" added");
+			log.debug("Vertex (domain) "+remoteDomainID+" added");
 		}
-		log.info("Looking to add "+localRouterASBR+":"+localRouterASBRIf+" ("+localDomainID+") -->"+remoteRouterASBR+":"+remoteRouterASBRIf+" ("+remoteDomainID+")");
+		log.debug("Looking to add "+localRouterASBR+":"+localRouterASBRIf+" ("+localDomainID+") -->"+remoteRouterASBR+":"+remoteRouterASBRIf+" ("+remoteDomainID+")");
 		Set<InterDomainEdge> edgeset= networkDomainGraph.edgesOf(localDomainID);
 		Iterator <InterDomainEdge> iterador=edgeset.iterator();
 		boolean edgeFound=false;
@@ -126,13 +126,13 @@ public class MDTEDB implements MultiDomainTEDB {
 			if (te_info != null)
 				newInterDomainEdge.setTE_info(te_info);
 			networkDomainGraph.addEdge(localDomainID, remoteDomainID, newInterDomainEdge);
-			log.info("Edge between "+localDomainID+" and "+remoteDomainID+" added");
+			log.info("New interdomain edge between "+localDomainID+" and "+remoteDomainID+" received");
 
 		}else {
 			
 			if (te_info != null){
 				//FIXME: Update of TE info to be optimized
-				log.info("TE_info updated");
+				log.debug("TE_info updated");
 				interDomainEdgeFound.setTE_info(te_info);
 			}
 			
