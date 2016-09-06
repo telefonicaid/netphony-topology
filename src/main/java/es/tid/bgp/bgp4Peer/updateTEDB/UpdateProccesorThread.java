@@ -1,72 +1,21 @@
 package es.tid.bgp.bgp4Peer.updateTEDB;
 
+import es.tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4.update.fields.*;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.*;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.*;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.*;
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.*;
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import es.tid.tedb.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import es.tid.bgp.bgp4.messages.BGP4Update;
-import es.tid.bgp.bgp4.update.fields.ITNodeNLRI;
-import es.tid.bgp.bgp4.update.fields.LinkNLRI;
-import es.tid.bgp.bgp4.update.fields.LinkStateNLRI;
-import es.tid.bgp.bgp4.update.fields.NLRITypes;
-import es.tid.bgp.bgp4.update.fields.NodeNLRI;
-import es.tid.bgp.bgp4.update.fields.PathAttribute;
-import es.tid.bgp.bgp4.update.fields.PrefixNLRI;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.BGP_LS_MP_Reach_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.LinkStateAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.MP_Reach_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.PathAttributesTypeCode;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.AdministrativeGroupLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IGPFlagBitsPrefixAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IPv4RouterIDLocalNodeLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IPv4RouterIDRemoteNodeLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.IS_IS_AreaIdentifierNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.LinkProtectionTypeLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MetricLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.NodeFlagBitsNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.NodeNameNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.OSPFForwardingAddressPrefixAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.PrefixMetricPrefixAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.RouteTagPrefixAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.TransceiverClassAndAppAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.MinMaxUndirectionalLinkDelayDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalAvailableBandwidthDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalDelayVariationDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkDelayDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AdministrativeGroup;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumReservableBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.IT_Resources;
-import es.tid.tedb.InterDomainEdge;
-import es.tid.tedb.IntraDomainEdge;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.Node_Info;
-import es.tid.tedb.SSONInformation;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.TEDB;
-import es.tid.tedb.TE_Information;
-import es.tid.tedb.WSONInformation;
 /**
  * This class process the update messages updating the TEDB.
  * 
@@ -455,11 +404,11 @@ public class UpdateProccesorThread extends Thread {
 			intraEdge.setLearntFrom(learntFrom);
 
 			if (!(simpleTEDB.getNetworkGraph().containsEdge(LocalNodeIGPId, RemoteNodeIGPId))){
-				log.info("Adding information of local node to edge..." + simpleTEDB.getNodeTable().get(LocalNodeIGPId));
+				log.debug("Adding information of local node to edge..." + simpleTEDB.getNodeTable().get(LocalNodeIGPId));
 				intraEdge.setLocal_Node_Info(simpleTEDB.getNodeTable().get(LocalNodeIGPId));
-				log.info("Adding information of remote node to edge..." + simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
+				log.debug("Adding information of remote node to edge..." + simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
 				intraEdge.setRemote_Node_Info(simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
-				log.info("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
+				log.debug("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
 				
 				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
 				simpleTEDB.notifyNewEdge(LocalNodeIGPId, RemoteNodeIGPId);
