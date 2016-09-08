@@ -1,12 +1,11 @@
 package es.tid.topologyModuleBase.UnifyTopoModel.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import es.tid.topologyModuleBase.UnifyTopoModel.model.MetadataMetadata;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 
@@ -14,8 +13,10 @@ import java.util.List;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-07-26T10:14:24.517Z")
 public class Metadata   {
-  
-  private List<MetadataMetadata> metadata = new ArrayList<MetadataMetadata>();
+
+  public List<MetadataMetadata> metadata = new ArrayList<MetadataMetadata>();
+
+  //private List<MetadataMetadata> metadata = new ArrayList<MetadataMetadata>();
 
   /**
    **/
