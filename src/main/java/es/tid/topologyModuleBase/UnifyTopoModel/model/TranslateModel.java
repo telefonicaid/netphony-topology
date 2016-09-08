@@ -64,6 +64,11 @@ public class TranslateModel {
 			  resources.setMem(ted.getItResources().getMem());
 			  resources.setStorage(ted.getItResources().getStorage());
 			  node.setResources(resources);
+			  Metadata metadata = new Metadata();
+			  MetadataMetadata e= new MetadataMetadata();
+			  e.setKey("unify-slor");
+			  e.setValue(ted.getItResources().getControllerIT());
+			  metadata.getMetadata().add(e);
 		  }
 				  
 		  ports.setPort(portlist);
