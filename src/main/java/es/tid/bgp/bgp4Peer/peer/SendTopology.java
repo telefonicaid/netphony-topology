@@ -106,7 +106,7 @@ public class SendTopology implements Runnable {
 	private Inet4Address localAreaID;
 	
 	public SendTopology(){
-		log = LoggerFactory.getLogger("BGP4Parser");
+		log = LoggerFactory.getLogger("BGP4Peer");
 	}
 
 	public void configure( Hashtable<String,TEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
@@ -136,11 +136,11 @@ public class SendTopology implements Runnable {
 		if (sendTopology){
 			if (!(bgp4SessionsInformation.getSessionList().isEmpty())){
 				if (multiDomainTEDB!=null){
-					log.info("Sending Multi-Domain TEDB");
+					log.debug("Sending Multi-Domain TEDB");
 					sendLinkNLRI( multiDomainTEDB.getInterDomainLinks());
 				}
 				else {
-					log.info("Sending form TEDB");
+					log.debug("Sending from TEDB");
 					Enumeration<TEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						sendLinkNLRI( iter.nextElement().getInterDomainLinks());
@@ -148,11 +148,12 @@ public class SendTopology implements Runnable {
 				}			
 				
 				if (sendIntraDomainLinks){//Intradomain Links
-					log.info("sendIntraDomainLinks activated");
+					log.debug("sendIntraDomainLinks activated");
 					Enumeration<String> iter = intraTEDBs.keys();
 					while (iter.hasMoreElements()){						
 						String domainID = iter.nextElement();
-						log.info("Sending TED from domain "+domainID);
+						//Andrea
+						log.debug("Sending TED from domain "+domainID);
 
 						TEDB ted=intraTEDBs.get(domainID);
 						if (ted instanceof DomainTEDB) {
@@ -211,7 +212,7 @@ public class SendTopology implements Runnable {
 				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
 				sendMessage(update);	
 			}else {
-				log.info("Node "+node+ " HAS NO node_info in NodeTable");
+				log.debug("Node "+node+ " HAS NO node_info in NodeTable");
 			}
 			
 
@@ -224,7 +225,9 @@ public class SendTopology implements Runnable {
 	 */
 
 
-	private void sendITNodeNLRI(String domainID, IT_Resources itResources){		
+	private void sendITNodeNLRI(String domainID, IT_Resources itResources){
+		//Andrea
+		log.debug("Sending IT REsources");
 		BGP4Update update = createMsgUpdateITNodeNLRI(domainID, itResources);
 		sendMessage(update);
 //		Iterator<Object> vertexIt = vertexSet.iterator();	
@@ -261,7 +264,7 @@ public class SendTopology implements Runnable {
 				InterDomainEdge edge = edgeIt.next();
 				Inet4Address source = (Inet4Address)edge.getSrc_router_id();
 				Inet4Address dst = (Inet4Address)edge.getDst_router_id();
-				log.info("Sending ID edge: ("+source.toString() +":"+((InterDomainEdge) edge).getSrc_if_id()+","+dst.toString()+")");
+				log.debug("Sending ID edge: ("+source.toString() +":"+((InterDomainEdge) edge).getSrc_if_id()+","+dst.toString()+")");
 				addressList = new ArrayList<Inet4Address>();
 				addressList.add(0,source);
 				addressList.add(1,dst);
@@ -280,7 +283,7 @@ public class SendTopology implements Runnable {
 				TE_Information te_info = ((InterDomainEdge) edge).getTE_info();
 				
 				domainList.add(((Inet4Address)edge.getDomain_src_router()).getHostAddress().toString());
-				System.out.println("SRC Domain is "+((Inet4Address)edge.getDomain_src_router()).getHostAddress().toString() );
+				//System.out.println("SRC Domain is "+((Inet4Address)edge.getDomain_src_router()).getHostAddress().toString() );
 				domainList.add( ((Inet4Address)edge.getDomain_dst_router()).getHostAddress().toString());
 				log.debug("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
 				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, false, te_info);
@@ -325,7 +328,7 @@ public class SendTopology implements Runnable {
 			}else{
 				dst = (Inet4Address)edge.getTarget();
 			}
-			log.info("Sending: ("+source.toString() +","+dst.toString()+")");
+			log.debug("Sending: ("+source.toString() +","+dst.toString()+")");
 			addressList = new ArrayList<Inet4Address>();
 			addressList.add(0,source);
 			addressList.add(1,dst);
@@ -376,14 +379,14 @@ public class SendTopology implements Runnable {
 			}else {
 				if (session.getSendTo()) {
 					String destination = session.getRemotePeerIP().getHostAddress();
-					log.info("BGP4 Update learnt from:" + update.getLearntFrom());
+					log.debug("BGP4 Update learnt from:" + update.getLearntFrom());
 					try{
 						if (!destination.equals(update.getLearntFrom())){
-							log.info("Sending BGP4 update to:" + destination);
+							log.debug("Sending BGP4 update to:" + destination);
 							session.sendBGP4Message(update);
 						}
 						else
-							log.info("destination " + destination + " and source of information " + update.getLearntFrom() + " are equal");
+							log.debug("destination " + destination + " and source of information " + update.getLearntFrom() + " are equal");
 					}catch (Exception e){
 						e.printStackTrace();
 					}
@@ -432,7 +435,7 @@ public class SendTopology implements Runnable {
 				}
 		
 				if (linkStateNeeded){
-					log.info("Node Attribute added....");
+					log.debug("Node Attribute added....");
 					pathAttributes.add(linkStateAttribute);
 				}
 		
@@ -682,7 +685,7 @@ public class SendTopology implements Runnable {
 			DefaultTEMetricLinkAttribTLV defaultMetric = new DefaultTEMetricLinkAttribTLV();
 			//defaultMetric.setLinkMetric(metric);
 			defaultMetric.setLinkMetric(te_metric);
-			log.info("Metric en el metodo createMsgUpdateLinkNLRI es: " + te_metric);
+			log.debug("Metric en el metodo createMsgUpdateLinkNLRI es: " + te_metric);
 			linkStateAttribute.setTEMetricTLV(defaultMetric);
 			linkStateNeeded=true;
 		}
@@ -690,7 +693,7 @@ public class SendTopology implements Runnable {
 		//1.2.6 MF_OPT
 		if (mfOTP != null){
 			MF_OTPAttribTLV mfOTPTLV = mfOTP.duplicate();
-			log.info("SENDING MFOTP OSCAR");
+			log.debug("SENDING MFOTP OSCAR");
 			linkStateAttribute.setMF_OTPAttribTLV(mfOTPTLV);
 			linkStateNeeded=true;
 		}

@@ -4,6 +4,8 @@ import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
 import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 import es.tid.tedb.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -12,23 +14,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
-import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
-import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
-import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.FileTEDBUpdater;
-import es.tid.tedb.MDTEDB;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.TEDB;
 
 
 /**
@@ -253,7 +238,7 @@ public class BGPPeer {
 	 * Start the session for the management of the BGP4.
 	 */
 	public void startManagementServer(){
-		logServer.info("Initializing Management Server");																							
+		logServer.debug("Initializing Management Server");
 		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),multiDomainTEDB,intraTEDBs,bgp4SessionsInformation,sendTopologyTask);	
 		bms.start();
 	}
@@ -262,7 +247,7 @@ public class BGPPeer {
 	 * It starts a new process for each peer.  
 	 */
 	public void startClient(){
-		logClient.info("Initializing Session Manager to connect as client");
+		logClient.debug("Initializing Session Manager to connect as client");
 		if (params.getBGPIdentifier() != null){
 			Inet4Address BGPIdentifier=null;
 			try {
@@ -279,7 +264,7 @@ public class BGPPeer {
 			}
 		}
 		else{
-			logClient.info("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
+			logClient.error("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
 			System.exit(1);
 		}
 		
@@ -289,7 +274,7 @@ public class BGPPeer {
 	 * It starts once the session server manager.
 	 */
 	public  void startServer(){
-		logServer.info("Initializing Session Manager to connect as server");
+		logServer.debug("Initializing Session Manager to connect as server");
 		Inet4Address localAddress=null;
 		Inet4Address BGPIdentifier=null;
 		if (params.getBGPIdentifier() != null){

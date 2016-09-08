@@ -1,20 +1,18 @@
 package es.tid.bgp.bgp4Peer.bgp4session;
 
+import es.tid.bgp.bgp4.messages.BGP4Message;
+import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
+import es.tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
+import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Timer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import es.tid.bgp.bgp4.messages.BGP4Message;
-import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
-import es.tid.bgp.bgp4.messages.BGP4Update;
-import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
-import es.tid.bgp.bgp4Peer.peer.BGP4Parameters;
-import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 
 /**
  * BGP4 session server
@@ -47,7 +45,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 
 		this.setFSMstate(BGP4StateSession.BGP4_STATE_IDLE);
 		log=LoggerFactory.getLogger("BGP4Server");
-		log.info("New BGP4Session: "+s);
+		log.debug("New BGP4Session: "+s);
 		this.socket = s;
 		try {
 			s.setTcpNoDelay(noDelay);
@@ -84,7 +82,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 			}
 			return;
 		}
-		log.info("BGP4 Session initiated from "+this.remotePeerIP+"succesfully established!!");	
+		log.info("BGP4 Session established with peer "+this.remotePeerIP);
 		this.deadTimerT=new DeadTimerThread(this, this.holdTime);
 		startDeadTimer();	
 		this.keepAliveT=new KeepAliveThread(out, this.keepAliveTimer);
@@ -106,7 +104,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 					} catch (Exception e1) {
 						log.warn("Exception Closing BGP4 Session with "+this.remotePeerIP);
 					}
-					log.warn("Finishing BGP4 Session with "+this.remotePeerIP);
+					log.debug("Finishing BGP4 Session with "+this.remotePeerIP);
 					return;
 				}
 				if (this.msg != null) {//If null, it is not a valid PCEP message			
@@ -149,7 +147,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 				} 
 			}
 		}finally{
-			log.error("BGP4 SESSION WITH "+this.remotePeerIP+" PEER IS KILLED");
+			log.error("BGP4 session with peer "+this.remotePeerIP+" has been closed");
 			cancelDeadTimer();
 			cancelKeepAlive();
 			this.FSMstate=BGP4StateSession.BGP4_STATE_IDLE;
@@ -168,7 +166,7 @@ public class BGP4PeerInitiatedSession extends GenericBGP4Session{
 	@Override
 	protected void endSession() {
 		// TODO Auto-generated method stub
-		log.error("Ending session with id "+this.getSessionId()+" from peer "+this.remotePeerIP);
+		log.debug("Ending session with id "+this.getSessionId()+" from peer "+this.remotePeerIP);
 		BGP4SessionsInformation.deleteSession(this.getSessionId());
 	}
 

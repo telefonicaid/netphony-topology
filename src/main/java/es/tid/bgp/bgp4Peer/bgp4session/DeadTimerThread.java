@@ -3,8 +3,6 @@ package es.tid.bgp.bgp4Peer.bgp4session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.tid.pce.pcep.objects.ObjectParameters;
-
 
 /**
  * BGP4 DeadTimer management Thread
@@ -38,7 +36,7 @@ public class DeadTimerThread extends Thread {
 			} catch (InterruptedException e) {
 				//return;
 				if (running==false){
-					log.warn("Ending DeadTimerThread");
+					log.debug("Ending DeadTimerThread");
 					return;
 				}
 				else {
