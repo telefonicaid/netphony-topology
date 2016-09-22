@@ -43,10 +43,12 @@ public class BGP4SessionsInformation {
 		//Check if there is already a session with the remote peer.
 		//Only one session allowed with each remote peer
 		GenericBGP4Session existingSession=sessionListByPeerIP.get(session.remotePeerIP);
+		//Andrea: disabled to permit multiple speakers in the same machine
+		/*
 		if (existingSession!=null){
 			log.info("Session with id "+existingSession.getSessionId()+" against "+session.remotePeerIP.getHostAddress()+" already exists");
 			throw new BGP4Exception();//si no existe throw new BGP4Exception();
-		}
+		}*/
 		//If there is no existing session with the peer
 		sessionList.put(new Long(sessionId),session);
 		sessionListByPeerIP.put(session.getPeerIP() , session);

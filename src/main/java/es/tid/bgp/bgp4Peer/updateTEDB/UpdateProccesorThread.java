@@ -8,10 +8,13 @@ import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.*;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.*;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -603,6 +606,16 @@ public class UpdateProccesorThread extends Thread {
 	
 	private void fillITNodeInformation(ITNodeNLRI itNodeNLRI, String learntFrom){
 		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
+		if (domainTEDB==null) {
+			SimpleTEDB simpleTEDB = new SimpleTEDB();
+			simpleTEDB.createGraph();
+			this.intraTEDBs.put(itNodeNLRI.getNodeId(), simpleTEDB);
+			try {
+				simpleTEDB.setDomainID((Inet4Address)Inet4Address.getByName(itNodeNLRI.getNodeId()));
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+		}
 		IT_Resources itResources = new IT_Resources();
 		itResources.setControllerIT(itNodeNLRI.getControllerIT());
 		itResources.setCpu(itNodeNLRI.getCpu());
