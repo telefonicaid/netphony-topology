@@ -209,14 +209,19 @@ public class TopologyModuleParamsArray
 				if(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("Reader").item(0)).equals("True")){
 					littleParams.setBGPLSReading(true);
 					log.info("BGPLS receiver configured!!");
-				};
+				}
 				if(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("Writer").item(0)).equals("True")){
 					littleParams.setBGPLSWriting(true);
 					log.info("BGPLS sender configured!!");
-				};
-				
-				if(!littleParams.isBGPLSReading() && !littleParams.isBGPLSWriting()){
-					log.warning("BGPLS not configured properly (Neither a sender nor a receiver). Please check .xml file");
+				}
+				// Reader/Writter plugin
+				if(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("ReaderWriter").item(0)).equals("True")){
+					littleParams.setBGPLSReaderWriting(true);
+					log.info("BGPLS sender and receiver configured!!");
+				}
+
+				if(!littleParams.isBGPLSReading() && !littleParams.isBGPLSWriting() && !littleParams.isBGPLSReadingWriting()){
+					log.warning("BGPLS not configured properly (Neither a sender nor a receiver or sender/receiver). Please check .xml file");
 				}
 				paramList.add(littleParams);
 			}
