@@ -608,6 +608,7 @@ public class UpdateProccesorThread extends Thread {
 		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
 		if (domainTEDB==null) {
 			SimpleTEDB simpleTEDB = new SimpleTEDB();
+			domainTEDB = simpleTEDB;
 			simpleTEDB.createGraph();
 			this.intraTEDBs.put(itNodeNLRI.getNodeId(), simpleTEDB);
 			try {
