@@ -55,7 +55,6 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
  ```
  
 Before running, you should configure the parameteres. The parameters are configured in an xml file. By default, if used with BGPPeerMain, or it is not specified a file name, BGP4Parameters.xml should be used. An example of the file is located in examples/BGP4Parameters.xml (and with the maven assembly build, it is copied in the target directory).
-
 ## Configuration parameters
 The parameters to be configured are:
 
@@ -69,6 +68,18 @@ The parameters to be configured are:
   *  **import:** If we are going to import topology from this peer. True by default
 * **delay:** Waiting Time to re-connect to clients. Default value: 6000 ms.
 * **myAutonomousSystem:** RFC 4271.  This 2-octet unsigned integer indicates the Autonomous System number of the sender
+
+# Topology Module
+
+The Topology Module is a collection of Traffic Engineering Databases with a set of plugins that can import or export the TEDs. The available plugins are:
+
+* BGP-LS Plugin. The BGP-LS plugin can run in three different modes. The first one is EXPORT only, so the TEDs are exported via BGP-LS. The second mode is IMPORT only, where BGP-LS is activated to import the TEDS. The last one is IMPORT-EXPORT, so the BGP-LS speaker is used both to import and export topologies. By default, the topologies are exported to all the peers, except the one from which the TED has been learnt. For each domain learn and new TED is created. Also, a multi-domain TED is created connecting all the intradomain topologies. The BGP-LS configuration is expressed in a file, following the format shown in the previous section. 
+* XML. The XML plugin can learn a topology described in an XML file. Current plugin reads only the information once. 
+* UNIFY. The UNIFY plugin exports the topology via RESTCONF following the UNIFY format ( 
+* COP. The COP plugin exports the topology via RESTCONF following the COP format
+* IETF. In development.
+* TAPI. In development. 
+* 
 
 ## Logging
 The software is built using the slf4j, Simple Logging Facade for Java (SLF4J), which serves as a facade  for various logging frameworks (e.g. java.util.logging, logback, log4j) allowing the end final to plug in the desired logging framework at deployment time.  See  http://www.slf4j.org/manual.html for more details.
