@@ -109,6 +109,31 @@ However, as an example, there is a profile included (bgp-ls-speaker) to build an
 
 If no logging framework is added, by default it will log to /dev/null
 
+#Examples
+
+# Example 1: 2 BGP-LS Speakers 
+
+In this example there are 2 BGP-LS speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.  
+
+  ```bash
+    cd target/example1
+    sudo java -Dlog4j.configurationFile=../log4j2.xml  -jar ../bgp-ls-speaker-jar-with-dependencies.jar BGP4Parameters.xml
+ ```
+
+# Example 2: Topology module with BGP-LS and COP plugins and BGP-LS speaker
+
+In this example there are 2 BGP-LS speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.  
+
+# Example 3: Topology module with BGP-LS and COP plugins and Topology module with BGP-LS speaker
+
+In this example there are 2 BGP-LS speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.  
+
+
+
+
+
+Topology 
+
 #Acknowledgements
 
 The software has been developed by Telefonica I+D Core & Transport Team, led by Juan Pedro Fernandez Palacios, in internal innovation projects and through several EU funded research proyects, which continuously added functionality. The Core & Transport Team group of Telefonica working with the topology is formed by Juan Pedro Fernandez Palacios (team leader), Victor Lopez, Oscar Gonzalez de Dios, Felipe Jiménez, Luis Miguel Contreras, Michel Carnero and Eduardo Yusta. All of them have contributed to the code, either directly of with ideas and as beta-testers.
