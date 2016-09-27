@@ -1,18 +1,13 @@
 package es.tid.tedb;
 
-import java.net.Inet4Address;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import es.tid.pce.pcep.objects.tlvs.StorageTLV;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.pce.pcep.objects.tlvs.StorageTLV;
+import java.net.Inet4Address;
+import java.util.*;
 
 
 /**
@@ -71,7 +66,12 @@ public class SimpleITTEDB implements DomainTEDB{
 //		mask[3]=(byte)0;
 		
 	}
-	
+
+	@Override
+	public void initializeFromFile(String file, String learnFrom) {
+
+	}
+
 	public long getGraphId() {
 		return graphId;
 	}

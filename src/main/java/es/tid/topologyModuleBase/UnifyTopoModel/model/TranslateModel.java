@@ -1,24 +1,12 @@
 package es.tid.topologyModuleBase.UnifyTopoModel.model;
 
+import es.tid.tedb.*;
+
 import java.net.Inet4Address;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.InterDomainEdge;
-import es.tid.tedb.IntraDomainEdge;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.Node_Info;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.TE_Information;
-import es.tid.tedb.elements.EndPoint;
-import es.tid.tedb.elements.Intf;
 //import es.tid.tedb.elements.Link;
-import es.tid.topologyModuleBase.database.TopologiesDataBase;
-import es.tid.topologyModuleBase.plugins.writer.TopologyServerUnify;
 
 
 public class TranslateModel {
@@ -64,6 +52,12 @@ public class TranslateModel {
 			  resources.setMem(ted.getItResources().getMem());
 			  resources.setStorage(ted.getItResources().getStorage());
 			  node.setResources(resources);
+			  Metadata metadata = new Metadata();
+			  MetadataMetadata e= new MetadataMetadata();
+			  e.setKey("unify-slor");
+			  e.setValue(ted.getItResources().getControllerIT());
+			  metadata.getMetadata().add(e);
+			  node.metadata.add(e);
 		  }
 				  
 		  ports.setPort(portlist);

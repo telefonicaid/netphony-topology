@@ -187,7 +187,8 @@ public class TopologyModuleParams
 	}
 	private boolean isBGPLS = false;
 	private boolean isBGPLSReading = false;
-	private boolean isBGPLSWriting = false; 
+	private boolean isBGPLSWriting = false;
+	private boolean isBGPLSReaderWriting = false;
 	private boolean isOSPF = false;
 	private boolean isGSON = false;
 	private boolean isFloodLight = false;
@@ -428,6 +429,20 @@ public class TopologyModuleParams
 	}
 	public void setBGPLSWriting(boolean isBGPLSWriting) {
 		this.isBGPLSWriting = isBGPLSWriting;
+	}
+	/**
+	 * This method is used to verify if the current BGPLS is a reader/writer.
+	 * @return True if it's reader/writer, false otherwise.
+	 */
+	public boolean isBGPLSReadingWriting() {
+		return isBGPLSReaderWriting;
+	}
+	/**
+	 * This method is used to set if the BGPLS object is reader/writer of not.
+	 * @param isBGPLSReaderWriting True if the current object is reader/writer, false if not.
+	 */
+	public void setBGPLSReaderWriting(boolean isBGPLSReaderWriting) {
+		this.isBGPLSReaderWriting = isBGPLSReaderWriting;
 	}
 	public String getITnetworkDescriptionFile() 
 	{

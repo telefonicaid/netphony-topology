@@ -1,13 +1,13 @@
 package es.tid.bgp.bgp4Peer.bgp4session;
 
+import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.DataOutputStream;
 import java.net.Inet4Address;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
 
 
 /**
@@ -19,7 +19,7 @@ import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
 public class BGP4SessionsInformation {
 	public Hashtable<Long,GenericBGP4Session> sessionList;
 	public Hashtable<Inet4Address,GenericBGP4Session> sessionListByPeerIP;
-	
+	private boolean isTest = false;
 	Logger log;
 	//FIXME: ya lo tenemos a trav�s de la lista de sesiones
 	 DataOutputStream out;
@@ -29,7 +29,15 @@ public class BGP4SessionsInformation {
 		sessionListByPeerIP=new Hashtable<Inet4Address,GenericBGP4Session>();
 		log = LoggerFactory.getLogger("BGP4Parser");
 	}
-	
+
+	public BGP4SessionsInformation(boolean test){
+		sessionList=new Hashtable<Long,GenericBGP4Session>();
+		sessionListByPeerIP=new Hashtable<Inet4Address,GenericBGP4Session>();
+		log = LoggerFactory.getLogger("BGP4Parser");
+		isTest= test;
+	}
+
+
 	public synchronized void notifySessionStart(Inet4Address addr) throws BGP4SessionExistsException{
 		if (sessionListByPeerIP.containsKey(addr)){
 			throw new BGP4SessionExistsException();
@@ -38,20 +46,30 @@ public class BGP4SessionsInformation {
 	
 	public synchronized void addSession(long sessionId, GenericBGP4Session session) throws BGP4Exception{
 		Enumeration <GenericBGP4Session > sessions = sessionList.elements();
-		log.info("Looking to add session with id "+sessionId+" --> "+session.toString());
+		log.debug("Looking to add session with id "+sessionId+" --> "+session.toString());
 		
 		//Check if there is already a session with the remote peer.
 		//Only one session allowed with each remote peer
 		GenericBGP4Session existingSession=sessionListByPeerIP.get(session.remotePeerIP);
-		if (existingSession!=null){
-			log.info("Session with id "+existingSession.getSessionId()+" against "+session.remotePeerIP.getHostAddress()+" already exists");
-			throw new BGP4Exception();//si no existe throw new BGP4Exception();
+		if(isTest){
+			//If there is no existing session with the peer
+			sessionList.put(new Long(sessionId),session);
+			sessionListByPeerIP.put(session.getPeerIP() , session);
+			log.debug("Registering new session with Peer "+session.getPeerIP() +" with ID "+sessionId);
 		}
-		//If there is no existing session with the peer
-		sessionList.put(new Long(sessionId),session);
-		sessionListByPeerIP.put(session.getPeerIP() , session);
-		log.info("Registering new session with Peer "+session.getPeerIP() +" with ID "+sessionId);
-		
+		else{
+			if (existingSession!=null){
+				log.debug("Session with id "+existingSession.getSessionId()+" against "+session.remotePeerIP.getHostAddress()+" already exists");
+				throw new BGP4Exception();//si no existe throw new BGP4Exception();
+			}
+
+			//If there is no existing session with the peer
+			sessionList.put(new Long(sessionId),session);
+			sessionListByPeerIP.put(session.getPeerIP() , session);
+			log.debug("Registering new session with Peer "+session.getPeerIP() +" with ID "+sessionId);
+
+		}
+
 	}
 	
 	public synchronized void deleteSession(long sessionId){
@@ -60,7 +78,7 @@ public class BGP4SessionsInformation {
 			Inet4Address ip=sessionList.get(sessionId).getPeerIP();
 			sessionList.remove(new Long(sessionId));
 			sessionListByPeerIP.remove(ses.getPeerIP());
-			log.info("Deleted Session with id "+sessionId +" with peer "+ses.getPeerIP().getHostAddress());
+			log.debug("Deleted Session with id "+sessionId +" with peer "+ses.getPeerIP().getHostAddress());
 		}else {
 			log.info("SESSION WAS NOT REGISTERED NULL");
 		}

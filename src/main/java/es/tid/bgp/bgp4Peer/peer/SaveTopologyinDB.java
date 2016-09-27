@@ -43,7 +43,7 @@ public class SaveTopologyinDB implements Runnable {
 	
 	
 	public SaveTopologyinDB(){
-		log = LoggerFactory.getLogger("BGP4Parser");
+		log = LoggerFactory.getLogger("BGP4Peer");
 		jedis = new Jedis(host,port); 
 	}
 

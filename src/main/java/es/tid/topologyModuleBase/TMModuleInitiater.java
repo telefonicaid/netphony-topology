@@ -19,10 +19,10 @@ import es.tid.topologyModuleBase.plugins.writer.TopologyServerCOP;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerGson;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerIETF;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerUnify;
+import es.tid.topologyModuleBase.plugins.readerwriter.TopologyReaderWriterBGPLS;
 
 
-public class TMModuleInitiater
-{
+public class TMModuleInitiater {
 	Logger log=Logger.getLogger("TMController");
 			
 	TopologiesDataBase ted;
@@ -136,8 +136,15 @@ public class TMModuleInitiater
 				pluginsList.add(p);
 			}
 			
-			
-			
+			// IMPORTER/EXPORTER
+			if (actualLittleParams.isBGPLSReadingWriting())
+			{
+				TMPlugin p = new TopologyReaderWriterBGPLS(ted, actualLittleParams,lock);
+				executor.execute(p);
+				pluginsList.add(p);
+			}
+
+
 			//BOTH
 			/*NO WS
 			 if (actualLittleParams.isWSOld()){

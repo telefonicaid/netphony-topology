@@ -59,3 +59,8 @@ local.properties
 .cproject
 # PDT-specific
 .buildpath
+
+############
+# Intellij IDE
+############
+.idea

@@ -1,11 +1,10 @@
 package es.tid.bgp.bgp4Peer.tedb;
 
+import es.tid.tedb.InterDomainEdge;
+
 import java.net.Inet4Address;
 import java.util.Hashtable;
 import java.util.LinkedList;
-
-import es.tid.tedb.InterDomainEdge;
-import es.tid.tedb.TEDB;
 
 public class BGP4IntradomainTEDB implements IntraTEDBS {
 	
@@ -14,6 +13,11 @@ public class BGP4IntradomainTEDB implements IntraTEDBS {
 	public void initializeFromFile(String file) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void initializeFromFile(String file, String learnFrom) {
+
 	}
 
 	@Override

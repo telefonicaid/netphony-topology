@@ -35,7 +35,9 @@ public class IT_Resources {
 	private String cpu;
 	private String mem;
 	private String storage;
-	
+	private String learntFrom;
+	private String domainID;
+
 	/**
 	 * TEDB logger
 	 */
@@ -111,9 +113,21 @@ public class IT_Resources {
 		this.controllerIT = controllerIT;
 	}
 
-	
-	
-	
-	
+
+	public String getLearntFrom() {
+		return learntFrom;
+	}
+	public void setLearntFrom(String learntFrom) {
+		this.learntFrom = learntFrom;
+	}
+
+	public String getITdomainID() {
+		return domainID;
+	}
+
+	public void setITdomainID(String ID) {
+		this.domainID = ID;
+	}
+
 	
 }
