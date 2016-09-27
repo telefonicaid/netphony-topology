@@ -198,31 +198,26 @@ public class TopologyModuleParamsArray
 			}
 			
 			NodeList list_nodes_BGPLS = doc.getElementsByTagName("BGPLS");
-			
-			for (int i = 0; i < list_nodes_BGPLS.getLength(); i++) 
-			{
 
+			for (int i = 0; i < list_nodes_BGPLS.getLength(); i++)
+			{
 				TopologyModuleParams littleParams = new TopologyModuleParams();
 				Element nodes_BGPLS= (Element) list_nodes_BGPLS.item(i);
-				
+
 				littleParams.setBGPSConfigurationFile(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("BGPLSconfigFile").item(0)));
-				if(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("Reader").item(0)).equals("True")){
-					littleParams.setBGPLSReading(true);
-					log.info("BGPLS receiver configured!!");
-				}
-				if(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("Writer").item(0)).equals("True")){
-					littleParams.setBGPLSWriting(true);
-					log.info("BGPLS sender configured!!");
-				}
-				// Reader/Writter plugin
-				if(getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName("ReaderWriter").item(0)).equals("True")){
-					littleParams.setBGPLSReaderWriting(true);
-					log.info("BGPLS sender and receiver configured!!");
+
+				// Flag for detect the operation mode (r, w, r/w).
+				Boolean fWriter = getPeerModeTagValue(nodes_BGPLS, "Writer"); 	// Write flag.
+				Boolean fReader = getPeerModeTagValue(nodes_BGPLS, "Reader");	// Reader flag
+				if(!fReader && !fWriter){
+					log.warning("BGPLS not configured properly (Neither a sender nor a receiver or sender/receiver). Please check .xml file");
+				} else {
+					littleParams.setBGPLSReaderWriting(fReader && fWriter); // Reader/Writter plugin
+					littleParams.setBGPLSReading(fReader && !fWriter);  	// Reader plugin.
+					littleParams.setBGPLSWriting(!fReader && fWriter);		// Writer plugin.
+					log.info("BGPLS configured as " + getModeStr(littleParams));
 				}
 
-				if(!littleParams.isBGPLSReading() && !littleParams.isBGPLSWriting() && !littleParams.isBGPLSReadingWriting()){
-					log.warning("BGPLS not configured properly (Neither a sender nor a receiver or sender/receiver). Please check .xml file");
-				}
 				paramList.add(littleParams);
 			}
 			
@@ -251,23 +246,58 @@ public class TopologyModuleParamsArray
 	
 		
 	}
-	
+
 	//Private functions
-	
-		private String getCharacterDataFromElement(Element e) {
-			if (e == null)
-			{
-				return null;
-			}
-			Node child = e.getFirstChild();
-			if (child instanceof CharacterData) {
-				CharacterData cd = (CharacterData) child;
-				return cd.getData();
-			} else {
-				return "?";
-			}
+
+	/**
+	 * This method gets the value from an XML element.
+	 * @param e XML Element.
+	 * @return Value as string.
+	 */
+	private String getCharacterDataFromElement(Element e) {
+		if (e == null)
+		{
+			return null;
 		}
-		
+		Node child = e.getFirstChild();
+		if (child instanceof CharacterData) {
+			CharacterData cd = (CharacterData) child;
+			return cd.getData();
+		} else {
+			return "?";
+		}
+	}
+
+	/**
+	 * This method is used to verify if the XML contains the following tags "Reader" and "Writer". If the tags are
+	 * available, returns its value. If it isn't present, returns false.
+	 * @param nodes_BGPLS Element object with the "nodes_BGPLS" xml data.
+	 * @param tag XML tag name. This field can be "Reader" or "Writer" (case sensitive).
+	 * @return Returns a boolean with the xml tag value. If this tag is not present, then returns false as default.
+	 */
+	private boolean getPeerModeTagValue(Element nodes_BGPLS, String tag){
+		if (getCharacterDataFromElement((Element) nodes_BGPLS.getElementsByTagName(tag).item(0)).equalsIgnoreCase("True")) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * This method is used for returns the operation mode as String.
+	 * @param littleParams Topology object.
+	 * @return The name of the operation mode as string: Reader, Reader/Writer, Writer. If the operation mode is not
+	 * available, it returns "N/A".
+	 */
+	private String getModeStr(TopologyModuleParams littleParams) {
+		if(littleParams.isBGPLSReading()){
+			return "Reader";
+		} else if (littleParams.isBGPLSReadingWriting()){
+			return "Reader/Writer";
+		} else if (littleParams.isBGPLSWriting()){
+			return "Writer";
+		}
+		return "N/A";
+	}
 		//GETTERS AND SETTERS
 	
 	public int getMangementPort()
