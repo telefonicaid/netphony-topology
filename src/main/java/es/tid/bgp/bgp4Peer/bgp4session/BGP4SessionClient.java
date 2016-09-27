@@ -51,7 +51,7 @@ public class BGP4SessionClient extends GenericBGP4Session{
 	 */
 	public void run() {
 	
-		log.debug("Opening new BGP4 Session with host "+ this.remotePeerIP.getHostAddress() + " on port " + this.peerBGP_port);
+		log.info("Opening new BGP4 Session with host "+ this.remotePeerIP.getHostAddress() + " on port " + this.peerBGP_port);
 		log.debug("Do we want to update from peer?" + updateFrom);
 		log.debug("Do we want to send to peer?" + sendTo);
 		try {

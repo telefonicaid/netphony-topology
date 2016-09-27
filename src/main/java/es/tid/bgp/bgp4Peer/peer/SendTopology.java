@@ -1,53 +1,16 @@
 package es.tid.bgp.bgp4Peer.peer;
 
-import java.io.UnsupportedEncodingException;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.tid.bgp.bgp4.messages.BGP4Update;
 import es.tid.bgp.bgp4.update.fields.ITNodeNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.NodeNLRI;
 import es.tid.bgp.bgp4.update.fields.PathAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Segment;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.BGP_LS_MP_Reach_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.LinkStateAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.OriginAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.PathAttributesTypeCode;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.*;
 import es.tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
 import es.tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
 import es.tid.bgp.bgp4.update.tlv.RemoteNodeDescriptorsTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AreaIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.BGPLSIdentifierNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4InterfaceAddressLinkDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4NeighborAddressLinkDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.LinkLocalRemoteIdentifiersLinkDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.MinMaxUndirectionalLinkDelayDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalAvailableBandwidthDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalDelayVariationDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkDelayDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.*;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.*;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.bgp4session.GenericBGP4Session;
 import es.tid.ospf.ospfv2.OSPFv2LinkStateUpdatePacket;
@@ -55,23 +18,15 @@ import es.tid.ospf.ospfv2.lsa.LSA;
 import es.tid.ospf.ospfv2.lsa.LSATypes;
 import es.tid.ospf.ospfv2.lsa.OSPFTEv2LSA;
 import es.tid.ospf.ospfv2.lsa.tlv.LinkTLV;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LinkID;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LocalInterfaceIPAddress;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.RemoteInterfaceIPAddress;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.*;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.IT_Resources;
-import es.tid.tedb.InterDomainEdge;
-import es.tid.tedb.IntraDomainEdge;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.Node_Info;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.TEDB;
-import es.tid.tedb.TE_Information;
+import es.tid.tedb.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * Class to send periodically the topology. It sends the topology to the active BGP4 sessions.
@@ -93,6 +48,7 @@ public class SendTopology implements Runnable {
 	private MultiDomainTEDB multiDomainTEDB;
 
 	private boolean sendTopology;
+	private boolean isTest=false;
 	private BGP4SessionsInformation bgp4SessionsInformation;
 	private Logger log;
 	private int instanceId=1;
@@ -124,6 +80,25 @@ public class SendTopology implements Runnable {
 			e.printStackTrace();
 		}
 		
+	}
+
+
+	public void configure( Hashtable<String,TEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED, boolean test){
+		this.intraTEDBs=intraTEDBs;
+		this.bgp4SessionsInformation=bgp4SessionsInformation;
+		this.sendTopology= sendTopology;
+		this.instanceId = instanceId;
+		this.sendIntraDomainLinks=sendIntraDomainLinks;
+		this.multiDomainTEDB=multiTED;
+		this.isTest=test;
+		try {
+			this.localAreaID=(Inet4Address)Inet4Address.getByName("0.0.0.0");
+			this.localBGPLSIdentifer=(Inet4Address)Inet4Address.getByName("1.1.1.1");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -287,7 +262,7 @@ public class SendTopology implements Runnable {
 				domainList.add( ((Inet4Address)edge.getDomain_dst_router()).getHostAddress().toString());
 				log.debug("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
 				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, false, te_info);
-				
+				update.setLearntFrom(edge.getLearntFrom());
 				log.debug("Update message Created");	
 				sendMessage(update);				
 			}
@@ -380,24 +355,47 @@ public class SendTopology implements Runnable {
 				if (session.getSendTo()) {
 					String destination = session.getRemotePeerIP().getHostAddress();
 					log.debug("BGP4 Update learnt from:" + update.getLearntFrom());
-					try{
-						if (!destination.equals(update.getLearntFrom())){
-							log.debug("Sending BGP4 update to:" + destination);
-							session.sendBGP4Message(update);
-						}
-						else
-							log.debug("destination " + destination + " and source of information " + update.getLearntFrom() + " are equal");
-					}catch (Exception e){
-						e.printStackTrace();
+					if (isTest){
+						log.debug("Sending BGP4 update to:" + destination+" with no check on the ID since it is test");
+						session.sendBGP4Message(update);
 					}
-				}			
+					else{
+						try {
+							if ((update.getLearntFrom() != null) && (update.getLearntFrom().contains("/"))) {
+								//log.info(update.getLearntFrom().substring(1));
+								if (!destination.equals(update.getLearntFrom().substring(1))) {
+									//log.info("id da getLearnt "+ update.getLearntFrom());
+									log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
+									log.debug("Sending BGP4 update to:" + destination);
+									session.sendBGP4Message(update);
+
+								} else
+									log.debug("destination " + destination + " and source of information " + update.getLearntFrom().substring(1) + " are equal");
+
+
+							}
+							else{
+								if (!destination.equals(update.getLearntFrom())) {
+									//log.info("id da getLearnt "+ update.getLearntFrom());
+									log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
+									log.debug("Sending BGP4 update to:" + destination);
+									session.sendBGP4Message(update);
+								} else
+									log.debug("destination " + destination + " and source of information " + update.getLearntFrom() + " are equal");
+								}
+						}
+						catch (Exception e){
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 			
 		}
 	}
 	/**
 	 * This function create a BGP4 Message with NodeNLRI field
-	 * @param addressList 
+
 	 * @param node_info
 	 */
 	private  BGP4Update createMsgUpdateNodeNLRI(Node_Info node_info){
@@ -507,8 +505,7 @@ public class SendTopology implements Runnable {
 			pathAttributes.add(as_path);	
 	
 		
-			
-			
+
 			//NLRI
 			ITNodeNLRI itNodeNLRI = new ITNodeNLRI();
 			itNodeNLRI.setNodeId(domainID);
@@ -516,8 +513,8 @@ public class SendTopology implements Runnable {
 			itNodeNLRI.setCpu(itResources.getCpu());
 			itNodeNLRI.setMem(itResources.getMem());
 			itNodeNLRI.setStorage(itResources.getStorage());
-			
-			
+			update.setLearntFrom(itResources.getLearntFrom());
+			log.info("Creating IT Update related to domain "+domainID+" learnt from "+itResources.getLearntFrom());
 			LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
 			
 			//Complete Dummy TLVs
@@ -568,7 +565,8 @@ public class SendTopology implements Runnable {
 		else
 			or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_EGP);
 		pathAttributes.add(or);	
-
+		///Andreaaaaa
+		//update.setLearntFrom("192.168.0.1");
 		//1.2. AS-PATH
 		
 		AS_Path_Attribute as_path = new AS_Path_Attribute();
@@ -951,6 +949,14 @@ public class SendTopology implements Runnable {
 
 	public void setSendTopology(boolean sendTopology) {
 		this.sendTopology = sendTopology;
+	}
+
+	public void setisTest(boolean test) {
+		this.isTest = test;
+	}
+
+	public boolean getisTest() {
+		return this.isTest;
 	}
 
 

@@ -1,53 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<!-- TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)  --> 
-	<BGP4Port>179</BGP4Port>
-	<BGPIdentifier>172.16.104.201</BGPIdentifier>
+	<BGP4Port>33179</BGP4Port>
+	<BGPIdentifier>3.3.3.3</BGPIdentifier>
 <!-- TCP port to connect to manage the BGP connection. Default value: 1112 -->
-	<BGP4ManagementPort>1111</BGP4ManagementPort> 
-	
+	<BGP4ManagementPort>1113</BGP4ManagementPort> 
 	<!-- Peers to which this Peer is going to establish connection -->
-	  <configPeer>
-                <peer>172.16.105.103</peer>
-                <export>false</export>
-                <import>true</import>
-        </configPeer>
- <configPeer>
-                <peer>172.16.102.201</peer> 
-                <export>false</export>
-                <import>true</import>
-        </configPeer>
-          <configPeer>
-                <peer>172.16.101.3</peer>
-                <export>false</export>
-                <import>true</import>
-        </configPeer>
-	<!--
-	<configPeer>
-		<peer>192.168.1.200</peer>
-		<export>false</export>
-		<import>true</import>
-	</configPeer>
-	
-	<configPeer>
-                <peer>192.168.2.200</peer>
-                <export>false</export>
-                <import>true</import>
-        </configPeer>
-	<configPeer>
-                <peer>192.168.3.200</peer>
-                <export>false</export>
-                <import>true</import>
-        </configPeer>
-	-->
-
-
+    <configPeer>
+                <peer>localhost</peer>
+                <export>true</export>
+                <import>false</import>
+                <peerPort>22179</peerPort>
+    </configPeer>
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
-	<BGP4LogFile>BGP4Parser.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
-	<BGP4LogFileClient>BGP4Client.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
-	<BGP4LogFileServer>BGP4Server.log</BGP4LogFileServer><!-- Default value: BGP4Server.log-->
+	<BGP4LogFile>BGP4Parser-BGPLS3.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
+	<BGP4LogFileClient>BGP4Client-BGPLS3.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
+	<BGP4LogFileServer>BGP4Server-BGPLS3.log</BGP4LogFileServer><!-- Default value: BGP4Server.log-->
 	<!-- If the tcp no delay option is used or not. Optional Parameter. Default value: false. -->
 	<nodelay>true</nodelay>
+	<isTest>true</isTest>
 	<!-- Waiting Time to re-connect to clients. Default value: 6000 ms. -->
 	<delay>40000</delay>
 	<setTraces>false</setTraces>
@@ -67,15 +38,17 @@
          startup and is the same for every local interface and BGP peer. --> 
 	<!--<BGPIdentifier>192.168.1.200</BGPIdentifier> -->
 	<!-- If the peer is in charge of sending its topology (only the interdomain Links) to the other BGP peer it is connected to. Default: false -->
-	<sendTopology>false</sendTopology>
+	<sendTopology>true</sendTopology>
+	<!-- Delay between topology updates sent in ms -->
+	<sendTopoDelay>5000</sendTopoDelay>
 	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
 	<sendIntradomainLinks>true</sendIntradomainLinks>
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
-	<!-- <learnTopology>fromBGP</learnTopology>-->	
+	<learnTopology>fromXML</learnTopology>	
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
-	<!--<topologyFile>CTTC_network.xml</topologyFile>-->
+	<topologyFile>conf/network3.xml</topologyFile>
 	<!-- Optional Parameter. Instance Identifier for node and link NLRI. See rfc 6549. Default value: 0-->
 	<!--<instanceID>0</instanceID>-->
 	<!-- Optional Parameter. Default value: localhost -->
-	<localBGPAddress>172.16.104.201</localBGPAddress>
+	<localBGPAddress>0.0.0.0</localBGPAddress>
 </config>

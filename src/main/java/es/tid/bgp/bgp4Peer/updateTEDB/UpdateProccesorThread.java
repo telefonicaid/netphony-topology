@@ -8,7 +8,6 @@ import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.*;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.*;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import es.tid.tedb.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,8 +116,9 @@ public class UpdateProccesorThread extends Thread {
 				PathAttribute att = null;
 				updateMsg= updateList.take();
 				log.debug("Update Procesor Thread Reading the message: \n"+ updateMsg.toString());
+				//Andrea To be checked
 				String learntFrom = updateMsg.getLearntFrom();
-				log.debug("APRENDIDO DE "+learntFrom);
+				log.debug("Received from "+learntFrom);
 				ArrayList<PathAttribute> pathAttributeList = updateMsg.getPathAttributes();
 				ArrayList<PathAttribute> pathAttributeListUtil = new ArrayList<PathAttribute>();			
 
@@ -358,23 +358,30 @@ public class UpdateProccesorThread extends Thread {
 		//log.info("as_remote "+remoteDomainID);
 
 		if(localDomainID.equals(remoteDomainID)){
-			//log.info("INTRADOMAIN...");
+			log.debug("INTRADOMAIN...for domain"+localDomainID.getCanonicalHostName());
 			IntraDomainEdge intraEdge = new IntraDomainEdge();
 
 			if (linkNLRI.getLinkIdentifiersTLV() != null){				
 				intraEdge.setSrc_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkLocalIdentifier());
 				intraEdge.setDst_if_id(linkNLRI.getLinkIdentifiersTLV().getLinkRemoteIdentifier());						
 			}
+			/*
+			Enumeration el2 = intraTEDBs.keys();
+			while (el2.hasMoreElements()) {
+				String key = (String) el2.nextElement();
+				log.info("Intra-after.....the key is: "+key);
+			}
+			*/
 
 			DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(localDomainID.getHostAddress());
-			SimpleTEDB simpleTEDB=null;
+			SimpleTEDB simpleTEDBxx=null;
 			if (domainTEDB instanceof SimpleTEDB){
-				simpleTEDB = (SimpleTEDB) domainTEDB;
+				simpleTEDBxx = (SimpleTEDB) domainTEDB;
 			}else if (domainTEDB==null){
-				simpleTEDB = new SimpleTEDB();
-				simpleTEDB.createGraph();
-				this.intraTEDBs.put(localDomainID.getHostAddress(), simpleTEDB);
-				simpleTEDB.setDomainID(localDomainID);
+				simpleTEDBxx = new SimpleTEDB();
+				simpleTEDBxx.createGraph();
+				simpleTEDBxx.setDomainID(localDomainID);
+				this.intraTEDBs.put(localDomainID.getHostAddress(), simpleTEDBxx);
 			}else {
 				log.error("PROBLEM: TEDB not compatible");
 				return;
@@ -383,49 +390,52 @@ public class UpdateProccesorThread extends Thread {
 
 			/**Actualizando TED*/
 
-			if (!(simpleTEDB.getNetworkGraph().containsVertex(LocalNodeIGPId))){
-
-				simpleTEDB.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
-				simpleTEDB.notifyNewVertex(LocalNodeIGPId);
+			if (!(simpleTEDBxx.getNetworkGraph().containsVertex(LocalNodeIGPId))){
+				//log.info("Not containing source vertex");
+				simpleTEDBxx.getNetworkGraph().addVertex(LocalNodeIGPId);//add vertex ya comprueba si existe el nodo en la ted-->se puede hacer mas limpio
+				simpleTEDBxx.notifyNewVertex(LocalNodeIGPId);
 			}
 			//			else{ 
 			//				log.info("Local Vertex: "+LocalNodeIGPId.toString() +" already present in TED...");
 			//			}
 
-			if (!(simpleTEDB.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
-
-				simpleTEDB.getNetworkGraph().addVertex(RemoteNodeIGPId);
-				simpleTEDB.notifyNewVertex(RemoteNodeIGPId);
+			if (!(simpleTEDBxx.getNetworkGraph().containsVertex(RemoteNodeIGPId))){
+				//log.info("Not containing dst vertex");
+				simpleTEDBxx.getNetworkGraph().addVertex(RemoteNodeIGPId);
+				simpleTEDBxx.notifyNewVertex(RemoteNodeIGPId);
 
 			}
 			//			else {
 			//				log.info("Remote Vertex: "+RemoteNodeIGPId.toString() +" already present in TED...");
 			//			}
 
-			te_info =  createTE_Info(simpleTEDB);
+			te_info =  createTE_Info(simpleTEDBxx);
 			intraEdge.setTE_info(te_info);
 			intraEdge.setLearntFrom(learntFrom);
 
-			if (!(simpleTEDB.getNetworkGraph().containsEdge(LocalNodeIGPId, RemoteNodeIGPId))){
-				log.debug("Adding information of local node to edge..." + simpleTEDB.getNodeTable().get(LocalNodeIGPId));
-				intraEdge.setLocal_Node_Info(simpleTEDB.getNodeTable().get(LocalNodeIGPId));
-				log.debug("Adding information of remote node to edge..." + simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
-				intraEdge.setRemote_Node_Info(simpleTEDB.getNodeTable().get(RemoteNodeIGPId));
+			if (!(simpleTEDBxx.getNetworkGraph().containsEdge(LocalNodeIGPId, RemoteNodeIGPId))){
+				//log.info("Graph does not contain intra-edge");
+
+				log.debug("Adding information of local node to edge..." + simpleTEDBxx.getNodeTable().get(LocalNodeIGPId));
+				intraEdge.setLocal_Node_Info(simpleTEDBxx.getNodeTable().get(LocalNodeIGPId));
+				log.debug("Adding information of remote node to edge..." + simpleTEDBxx.getNodeTable().get(RemoteNodeIGPId));
+				intraEdge.setRemote_Node_Info(simpleTEDBxx.getNodeTable().get(RemoteNodeIGPId));
 				log.debug("Adding edge from origin vertex"+LocalNodeIGPId.toString()+ " to destination vertex" +RemoteNodeIGPId.toString());
 				
-				simpleTEDB.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
-				simpleTEDB.notifyNewEdge(LocalNodeIGPId, RemoteNodeIGPId);
+				simpleTEDBxx.getNetworkGraph().addEdge(LocalNodeIGPId, RemoteNodeIGPId, intraEdge);
+				simpleTEDBxx.notifyNewEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				
-				simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId).setNumberFibers(1);
-				IntraDomainEdge edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
+				simpleTEDBxx.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId).setNumberFibers(1);
+				IntraDomainEdge edge=simpleTEDBxx.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if(intraEdge.getTE_info().getAvailableLabels()!=null)
 					((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).initializeReservation(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
 
 			}
 			else{
+				//log.info("Graph contains intra-edge");
 
 				IntraDomainEdge edge;
-				edge=simpleTEDB.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
+				edge=simpleTEDBxx.getNetworkGraph().getEdge(LocalNodeIGPId, RemoteNodeIGPId);
 				if (this.availableLabels!=null){
 					if(((BitmapLabelSet)this.availableLabels.getLabelSet()).getDwdmWavelengthLabel()!=null){
 						((BitmapLabelSet)edge.getTE_info().getAvailableLabels().getLabelSet()).arraycopyBytesBitMap(((BitmapLabelSet)intraEdge.getTE_info().getAvailableLabels().getLabelSet()).getBytesBitMap());
@@ -437,7 +447,13 @@ public class UpdateProccesorThread extends Thread {
 					}
 				}
 			}
-
+			/*
+			Enumeration el3 = intraTEDBs.keys();
+			while (el3.hasMoreElements()) {
+				String key = (String) el3.nextElement();
+				log.info("Intra-before.....the key is: "+key);
+			}
+			*/
 		}
 
 		else{
@@ -454,6 +470,45 @@ public class UpdateProccesorThread extends Thread {
 			interEdge.setDomain_dst_router(remoteDomainID);
 
 			interEdge.setDomain_src_router(localDomainID);
+
+			//check soyrce domain
+			DomainTEDB domain= (DomainTEDB)intraTEDBs.get(localDomainID.getHostAddress());
+			SimpleTEDB simpleTEDBs=null;
+			if (domain instanceof SimpleTEDB){
+				//log.info("is instance sssss");
+				simpleTEDBs = (SimpleTEDB) domain;
+			}else if (domain==null){
+				//log.info("nullssss");
+				simpleTEDBs = new SimpleTEDB();
+				simpleTEDBs.createGraph();
+				simpleTEDBs.setDomainID(localDomainID);
+				this.intraTEDBs.put(localDomainID.getHostAddress(), simpleTEDBs);
+			}
+			else {
+				log.error("PROBLEM: TEDB not compatible");
+				return;
+			}
+
+
+			//check soyrce domain
+			DomainTEDB domaind= (DomainTEDB)intraTEDBs.get(remoteDomainID.getHostAddress());
+			SimpleTEDB simpleTEDBd=null;
+			if (domaind instanceof SimpleTEDB){
+				//log.info("is instancedddddd");
+				simpleTEDBd = (SimpleTEDB) domaind;
+			}else if (domaind==null){
+				//log.info("nulldddd");
+				simpleTEDBd = new SimpleTEDB();
+				simpleTEDBd.createGraph();
+				simpleTEDBd.setDomainID(remoteDomainID);
+				this.intraTEDBs.put(remoteDomainID.getHostAddress(), simpleTEDBd);
+
+			}else {
+				log.error("PROBLEM: TEDB not compatible");
+				return;
+			}
+
+
 
 
 			/**Actualizando TED*/
@@ -604,27 +659,53 @@ public class UpdateProccesorThread extends Thread {
 		return te_info;
 	}
 	
+
 	private void fillITNodeInformation(ITNodeNLRI itNodeNLRI, String learntFrom){
-		DomainTEDB domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
-		if (domainTEDB==null) {
-			SimpleTEDB simpleTEDB = new SimpleTEDB();
-			domainTEDB = simpleTEDB;
+/*		try {
+			Thread.sleep(2000);                 //1000 milliseconds is one second.
+		} catch(InterruptedException ex) {
+			Thread.currentThread().interrupt();
+		}
+	*/	DomainTEDB domainTEDB= null;
+
+		domainTEDB=(DomainTEDB)intraTEDBs.get(itNodeNLRI.getNodeId());
+		SimpleTEDB simpleTEDB=null;
+		if (domainTEDB instanceof SimpleTEDB){
+			simpleTEDB = (SimpleTEDB) domainTEDB;
+		}else if (domainTEDB==null){
+			simpleTEDB = new SimpleTEDB();
 			simpleTEDB.createGraph();
-			this.intraTEDBs.put(itNodeNLRI.getNodeId(), simpleTEDB);
+
+
 			try {
-				simpleTEDB.setDomainID((Inet4Address)Inet4Address.getByName(itNodeNLRI.getNodeId()));
+				simpleTEDB.setDomainID((Inet4Address) InetAddress.getByName(itNodeNLRI.getNodeId()));
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			}
+			this.intraTEDBs.put(itNodeNLRI.getNodeId(), simpleTEDB);
+
 		}
+		else {
+			log.error("PROBLEM: TEDB not compatible");
+			return;
+		}
+
+		log.info("Received IT info for domain "+itNodeNLRI.getNodeId()+" from peer "+learntFrom);
 		IT_Resources itResources = new IT_Resources();
 		itResources.setControllerIT(itNodeNLRI.getControllerIT());
 		itResources.setCpu(itNodeNLRI.getCpu());
 		itResources.setMem(itNodeNLRI.getMem());
 		itResources.setStorage(itNodeNLRI.getStorage());
-		domainTEDB.setItResources(itResources);
+		itResources.setLearntFrom(learntFrom);
+		itResources.setITdomainID(itNodeNLRI.getNodeId());
+
+		simpleTEDB.setItResources(itResources);
+
+
+
+
 	}
-	
+
 	private void fillNodeInformation(NodeNLRI nodeNLRI, String learntFrom){
 
 		Inet4Address as_number = null;
@@ -686,7 +767,7 @@ public class UpdateProccesorThread extends Thread {
 		}
 		//.... finally we set the 'learnt from' attribute
 		node_info.setLearntFrom(learntFrom);
-		log.info("learnt from: " +learntFrom);
+		log.debug("learnt from: " +learntFrom);
 		if (as_number==null){
 			log.error(" as_number is NULL");
 		}
@@ -721,8 +802,8 @@ public class UpdateProccesorThread extends Thread {
 			}
 
 		}
-		log.info("Node Table:" + NodeTable.toString());
-		log.info("Node Information Table Updated....");
+		log.debug("Node Table:" + NodeTable.toString());
+		log.debug("Node Information Table Updated....");
 
 	}
 
