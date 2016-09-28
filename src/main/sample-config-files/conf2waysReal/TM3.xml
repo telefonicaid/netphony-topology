@@ -5,8 +5,8 @@
 
     <XML>
         <mode>TM</mode>
-        <XMLFileTopology>target/conf1wayTest/network1.xml</XMLFileTopology>
-        <Identifier>1.1.1.1</Identifier>>
+        <XMLFileTopology>target/conf2waysReal/network3.xml</XMLFileTopology>
+        <Identifier>172.17.11.203</Identifier>>
     </XML>
      <InitFrom>
         <Init>initFromXML</Init>
@@ -16,12 +16,12 @@
 	<port>9876</port>
     </WSOld-->
     <UNIFY>
-        <serve_port>8087</serve_port>
+        <serve_port>8088</serve_port>
     </UNIFY>
     <BGPLS>
         <Reader>True</Reader>
         <Writer>True</Writer>
-        <BGPLSconfigFile>target/conf1wayTest/BGPLS1.xml</BGPLSconfigFile>
+        <BGPLSconfigFile>target/conf2waysReal/BGPLS3_2way.xml</BGPLSconfigFile>
     </BGPLS>
    
 </config>

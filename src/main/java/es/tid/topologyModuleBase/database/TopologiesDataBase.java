@@ -1,26 +1,12 @@
 package es.tid.topologyModuleBase.database;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import es.tid.tedb.*;
+
+import java.util.*;
+
 //import es.tid.pce.computingEngine.algorithms.ComputingAlgorithmPreComputation;
 //import es.tid.pce.computingEngine.algorithms.ComputingAlgorithmPreComputationSSON;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.InterDomainEdge;
-import es.tid.tedb.IntraDomainEdge;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.ReachabilityEntry;
-import es.tid.tedb.SSONInformation;
-import es.tid.tedb.SSONListener;
-import es.tid.tedb.TEDB;
-import es.tid.tedb.TEDListener;
-import es.tid.tedb.TE_Information;
-import es.tid.tedb.WSONInformation;
 
 public class TopologiesDataBase implements TopologyTEDB
 {
@@ -346,7 +332,7 @@ public class TopologiesDataBase implements TopologyTEDB
 	}
 
 	@Override
-	public boolean containsVertex(Object vertex) 
+	public boolean containsVertex(Object vertex)
 	{
 		return ted.containsVertex(vertex);
 	}
@@ -459,7 +445,20 @@ public class TopologiesDataBase implements TopologyTEDB
 	public void initializeFromFile(String file) 
 	{
 		ted.initializeFromFile(file);
+		//teds.putAll(FileTEDBUpdater.readMultipleDomainSimpleNetworks(file, null, false,0,Integer.MAX_VALUE, false, "test"));
+		//mdTed.initializeFromFile(file, "test");
 	}
+
+	@Override
+	public void initializeFromFile(String file, String ID, Boolean test)
+	{
+		//ted.initializeFromFile(file);
+		//System.out.println("It works!!!!");
+		teds.putAll(FileTEDBUpdater.readMultipleDomainSimpleNetworks(file, null, false,0,Integer.MAX_VALUE, false, ID));
+		mdTed.initializeFromFile(file, ID);
+	}
+
+
 
 	@Override
 	public boolean isITtedb() 

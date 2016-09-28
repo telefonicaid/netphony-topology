@@ -1,20 +1,14 @@
 package es.tid.topologyModuleBase;
 
+import es.tid.topologyModuleBase.util.UtilsFunctions;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.*;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
-import javax.jws.soap.InitParam;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import es.tid.topologyModuleBase.util.UtilsFunctions;
 
 /**
  * 
@@ -43,8 +37,9 @@ public class TopologyModuleParamsArray
 	 * Name of the configuration file
 	 */
 	private String confFile;
-	
-	
+
+
+
 	public TopologyModuleParamsArray(String confFile)
 	{
 		paramList = new ArrayList<TopologyModuleParams>();
@@ -136,6 +131,8 @@ public class TopologyModuleParamsArray
 				littleParams.setModexml(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("mode").item(0))));
 				littleParams.setNetworkDescriptionFile(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("XMLFileTopology").item(0))));
 				littleParams.setXML(true);
+				if (littleParams.getModexml()=="TM") littleParams.setIdentifier(getCharacterDataFromElement(((Element) nodes_xml.getElementsByTagName("Identifier").item(0))));
+
 				log.info("XML configured with file: "+littleParams.getNetworkDescriptionFile());
 				paramList.add(littleParams);
 			}
@@ -320,16 +317,18 @@ public class TopologyModuleParamsArray
 		this.managementIP = mangementIP;
 	}
 	
+
 	public String getConfFile()
 	{
 		return confFile;
 	}
-	
+
 	public void setConfFile(String confFile)
 	{
 		this.confFile = confFile;
 	}
-	
+
+
 	public ArrayList<TopologyModuleParams> getParamList() 
 	{
 		return paramList;

@@ -1,18 +1,13 @@
 package es.tid.topologyModuleBase;
 
-import java.io.File;
-import java.util.logging.Logger;
+import es.tid.topologyModuleBase.util.UtilsFunctions;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.CharacterData;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import es.tid.topologyModuleBase.util.UtilsFunctions;
+import java.io.File;
+import java.util.logging.Logger;
 
 public class TopologyModuleParams 
 {
@@ -155,7 +150,11 @@ public class TopologyModuleParams
 	/**
 	 * Name of the reachability file
 	 */
-	
+
+
+	private String Identifier="";
+
+
 	private String reachabilityFile;
 	
 	private String modexml=null;
@@ -369,8 +368,17 @@ public class TopologyModuleParams
 	}
 	
 	//GETTERS AND SETTERS
-	
-	public void setConfFile(String confFile) 
+
+	public String getIdentifier()
+	{
+		return Identifier;
+	}
+	public void setIdentifier(String IDx)
+	{
+		this.Identifier = IDx;
+	}
+
+	public void setConfFile(String confFile)
 	{
 		this.confFile = confFile;
 	}
