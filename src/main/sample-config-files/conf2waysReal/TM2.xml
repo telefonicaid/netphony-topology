@@ -3,24 +3,25 @@
     <managementIP>localhost</managementIP>
     <managementPort>5001</managementPort>
 
-    <!--XML>
-        <mode>IP</mode>
-	    <XMLFileTopology>src/test/resources/EmulatedTopology.xml</XMLFileTopology>
-    </XML-->
+    <XML>
+        <mode>TM</mode>
+        <XMLFileTopology>target/conf2waysReal/network2.xml</XMLFileTopology>
+        <Identifier>172.17.11.202</Identifier>>
+    </XML>
      <InitFrom>
         <Init>initFromXML</Init>
     </InitFrom>
-    <WSOld>
+    <!--WSOld>
 	<ip>localhost</ip>
 	<port>9876</port>
-    </WSOld>
+    </WSOld-->
     <UNIFY>
         <serve_port>8088</serve_port>
     </UNIFY>
     <BGPLS>
         <Reader>True</Reader>
-        <Writer>False</Writer>
-        <BGPLSconfigFile>conf/TM1.xml</BGPLSconfigFile>
+        <Writer>True</Writer>
+        <BGPLSconfigFile>target/conf2waysReal/BGPLS2_2way.xml</BGPLSconfigFile>
     </BGPLS>
    
 </config>

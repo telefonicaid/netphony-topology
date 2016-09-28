@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <managementIP>localhost</managementIP>
-    <managementPort>5001</managementPort>
+    <managementPort>5003</managementPort>
 
     <XML>
         <mode>TM</mode>
-        <XMLFileTopology>target/conf1wayTest/network1.xml</XMLFileTopology>
-        <Identifier>1.1.1.1</Identifier>>
+        <XMLFileTopology>target/conf1wayTest/network3.xml</XMLFileTopology>
+        <Identifier>3.3.3.3</Identifier>>
     </XML>
      <InitFrom>
         <Init>initFromXML</Init>
@@ -16,12 +16,12 @@
 	<port>9876</port>
     </WSOld-->
     <UNIFY>
-        <serve_port>8087</serve_port>
+        <serve_port>8089</serve_port>
     </UNIFY>
     <BGPLS>
         <Reader>True</Reader>
         <Writer>True</Writer>
-        <BGPLSconfigFile>target/conf1wayTest/BGPLS1.xml</BGPLSconfigFile>
+        <BGPLSconfigFile>target/conf1wayTest/BGPLS3.xml</BGPLSconfigFile>
     </BGPLS>
    
 </config>

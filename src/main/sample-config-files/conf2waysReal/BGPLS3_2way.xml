@@ -6,18 +6,12 @@
 <!-- TCP port to connect to manage the BGP connection. Default value: 1112 -->
 	<BGP4ManagementPort>1113</BGP4ManagementPort> 
 	<!-- Peers to which this Peer is going to establish connection -->
-    <configPeer>
-                <peer>localhost</peer>
-                <export>true</export>
-                <import>false</import>
-                <peerPort>44179</peerPort>
-    </configPeer>
-    <configPeer>
+    	<configPeer>
                 <peer>172.17.11.202</peer>
                 <export>true</export>
                 <import>true</import>
                 <peerPort>179</peerPort>
-    </configPeer>
+    	</configPeer>
 	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
 	<BGP4LogFile>BGP4Parser-BGPLS3.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
 	<BGP4LogFileClient>BGP4Client-BGPLS3.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
@@ -50,9 +44,9 @@
 	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
 	<sendIntradomainLinks>true</sendIntradomainLinks>
 	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
-	<learnTopology>fromXML</learnTopology>	
+	<learnTopology>fromBGP</learnTopology>	
 	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
-	<topologyFile>conf/network3.xml</topologyFile>
+	<!--topologyFile>conf/network3.xml</topologyFile-->
 	<!-- Optional Parameter. Instance Identifier for node and link NLRI. See rfc 6549. Default value: 0-->
 	<!--<instanceID>0</instanceID>-->
 	<!-- Optional Parameter. Default value: localhost -->

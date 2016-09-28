@@ -1,30 +1,23 @@
 package es.tid.topologyModuleBase.plugins.reader;
 
 
-import java.io.File;
-import java.net.Inet4Address;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.locks.Lock;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
+import es.tid.tedb.IntraDomainEdge;
+import es.tid.tedb.SimpleTEDB;
+import es.tid.tedb.elements.*;
+import es.tid.topologyModuleBase.TopologyModuleParams;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import es.tid.tedb.IntraDomainEdge;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.elements.EndPoint;
-import es.tid.tedb.elements.IPNodeParams;
-import es.tid.tedb.elements.Intf;
-import es.tid.tedb.elements.Link;
-import es.tid.tedb.elements.Location;
-import es.tid.tedb.elements.Node;
-import es.tid.topologyModuleBase.TopologyModuleParams;
-import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.net.Inet4Address;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
 
 public class TopologyReaderXML extends TopologyReader
 {
@@ -48,8 +41,14 @@ public class TopologyReaderXML extends TopologyReader
 		isRunning=true;
 		//Initialize Traffic Engineering Database
 		if (params.getModexml()!=null){
-			if (params.getModexml().equals("IP"))
+			if (params.getModexml().equals("IP")){
 				readNetwork(params.getNetworkDescriptionFile());
+			}
+			else if(params.getModexml().equals("TM")){
+				log.info("Inside TM");
+				ted.initializeFromFile(params.getNetworkDescriptionFile(), params.getIdentifier(), true);
+			}
+			else log.warning("Unknow Mode");
 		}
 		else if(params.ITcapable==true){
 			log.info("Initializing IT capable TEDB");
@@ -92,7 +91,7 @@ public class TopologyReaderXML extends TopologyReader
 
 			NodeList nodes_domains = doc.getElementsByTagName("domain");
 
-			System.out.println("isAllowingMultipleEdges?: "+((SimpleTEDB)this.ted.getDB()).getNetworkGraph().isAllowingMultipleEdges());
+			//System.out.println("isAllowingMultipleEdges?: "+((SimpleTEDB)this.ted.getDB()).getNetworkGraph().isAllowingMultipleEdges());
 			//First pass to get all the nodes
 
 			for (int j = 0; j < nodes_domains.getLength(); j++) {
