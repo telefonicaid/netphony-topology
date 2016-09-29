@@ -6,7 +6,7 @@
     <XML>
         <mode>TM</mode>
         <XMLFileTopology>target/conf2waysReal/network1.xml</XMLFileTopology>
-        <Identifier>172.17.11.201</Identifier>>
+        <Identifier>172.17.11.201</Identifier>
     </XML>
      <InitFrom>
         <Init>initFromXML</Init>
