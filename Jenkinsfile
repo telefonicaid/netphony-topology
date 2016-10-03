@@ -9,7 +9,7 @@ timestamps {
             docker cp ${c.id}:/root/netphony-topology/target .
             """
         }
-        def tadsVersion = version()
+        def tadsVersion = version() + ".${env.BUILD_NUMBER}"
         docker.withRegistry('https://registry.5gex:5000') {
             def image = docker.build("tads:${tadsVersion}", "-f Dockerfile.tads .")
             image.push()
