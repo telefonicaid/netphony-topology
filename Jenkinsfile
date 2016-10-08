@@ -10,7 +10,7 @@ timestamps {
             """
         }
         def tadsVersion = version() + ".${env.BUILD_NUMBER}"
-        docker.withRegistry('https://registry.5gex:5000') {
+        docker.withRegistry('https://5gex.tmit.bme.hu') {
             def image = docker.build("tads:${tadsVersion}", "-f Dockerfile.tads .")
             image.push()
             image.push('latest')
