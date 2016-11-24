@@ -1,10 +1,10 @@
 package es.tid.bgp.bgp4Peer.bgp4session;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import es.tid.bgp.bgp4.messages.BGP4Keepalive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.tid.bgp.bgp4.messages.BGP4Keepalive;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 
 public class KeepAliveThread extends Thread {
@@ -36,12 +36,12 @@ public class KeepAliveThread extends Thread {
 						sendKeepAlive();
 					}
 					else {
-						log.warn("Ending KEEPALIVE mechanism");
+						log.debug("Ending KEEPALIVE mechanism");
 						return;
 					}
 				} catch (InterruptedException e) {
 					if (running==false){
-						log.warn("Ending KeepAliveThread");
+						log.debug("Ending KeepAliveThread");
 						return;
 					}
 					else {

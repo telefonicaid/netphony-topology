@@ -4,6 +4,8 @@ import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
 import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
 import es.tid.tedb.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -12,23 +14,6 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
-import es.tid.bgp.bgp4Peer.management.BGP4ManagementServer;
-import es.tid.bgp.bgp4Peer.tedb.IntraTEDBS;
-import es.tid.bgp.bgp4Peer.updateTEDB.UpdateDispatcher;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.FileTEDBUpdater;
-import es.tid.tedb.MDTEDB;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.TEDB;
 
 
 /**
@@ -72,7 +57,7 @@ public class BGPPeer {
 	 * Table with domainID - TEDB.
 	 * The BGP-LS Peer can have several domains
 	 */
-	private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	private Hashtable<String,TEDB> intraTEDBs;
 	
 	/**
 	 * Full TEDB with all Links
@@ -150,7 +135,7 @@ public class BGPPeer {
 	 * @param multiTEDB multidomain database
 	 * @param iTEDBs internal domains database 
 	 */
-	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<Inet4Address,DomainTEDB> iTEDBs){
+	public void configure(String nameParametersFile, MultiDomainTEDB multiTEDB, Hashtable<String,TEDB> iTEDBs){
 		//First of all, read the parameters
 		if (nameParametersFile != null){
 			params=new BGP4Parameters(nameParametersFile);
@@ -186,7 +171,7 @@ public class BGPPeer {
 //		}
 			logServer.info("Inizializing BGP4 Peer");
 		if (iTEDBs!= null) intraTEDBs=iTEDBs;
-		else intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
+		else intraTEDBs=new Hashtable<String,TEDB>();
 		
 		if (multiTEDB!= null) multiDomainTEDB = multiTEDB;
 		else multiDomainTEDB = new MDTEDB();
@@ -194,14 +179,24 @@ public class BGPPeer {
 		if (params.getLearnTopology().equals("fromXML")){
 			//intraTEDBs=new Hashtable<Inet4Address,DomainTEDB>();
 			//multiDomainTEDB = new MDTEDB();
-			multiDomainTEDB.initializeFromFile(params.getTopologyFile());
-			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
+			//intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false);
+			logParser.info("BGPIdentifier: "+params.getBGPIdentifier());
+			intraTEDBs = FileTEDBUpdater.readMultipleDomainSimpleNetworks(params.getTopologyFile(), null, false,0,Integer.MAX_VALUE, false, params.getBGPIdentifier());
+
+			//multiDomainTEDB.initializeFromFile(params.getTopologyFile());
+			multiDomainTEDB.initializeFromFile(params.getTopologyFile(), params.getBGPIdentifier());
+
 		}
 		// Create Thread executor
 		//FIXME: Actualizar n�mero de threads que se crean
 		executor = new ScheduledThreadPoolExecutor(20);//1 para el servidor, 1 para el que lanza y vigila los clientes
 		// Information about all the sessions of the PCE
-		bgp4SessionsInformation = new BGP4SessionsInformation();
+		if (params.isTest()) {
+			bgp4SessionsInformation = new BGP4SessionsInformation(params.isTest());
+		}
+		else{
+			bgp4SessionsInformation = new BGP4SessionsInformation();
+		}
 		//Create the task to send the topology. It has to be created because you can start sending the topology in the management (wirting): send topology on.
 		sendTopologyTask = new SendTopology();
 		saveTopologyDB= new SaveTopologyinDB();
@@ -231,7 +226,12 @@ public class BGPPeer {
 
 	public void setReadDomainTEDB(DomainTEDB readDomainTEDB) {
 		//this.readDomainTEDB = readDomainTEDB;
-		this.intraTEDBs.put(readDomainTEDB.getDomainID(), readDomainTEDB);
+		//System.out.println("setReadDomain: readFomainTEDB().getDomainID()="+readDomainTEDB.getDomainID());
+		//System.out.println("setReadDomain: readFomainTEDB="+readDomainTEDB.printTopology());
+		if(readDomainTEDB.getDomainID() == null)
+			this.intraTEDBs.put("default", readDomainTEDB);
+		else
+			this.intraTEDBs.put(readDomainTEDB.getDomainID().toString(), readDomainTEDB);
 	}
 	public void createUpdateDispatcher(){
 		//Updater dispatcher
@@ -248,7 +248,7 @@ public class BGPPeer {
 	 * Start the session for the management of the BGP4.
 	 */
 	public void startManagementServer(){
-		logServer.info("Initializing Management Server");																							
+		logServer.debug("Initializing Management Server");
 		BGP4ManagementServer bms=new BGP4ManagementServer(params.getBGP4ManagementPort(),multiDomainTEDB,intraTEDBs,bgp4SessionsInformation,sendTopologyTask);	
 		bms.start();
 	}
@@ -257,7 +257,7 @@ public class BGPPeer {
 	 * It starts a new process for each peer.  
 	 */
 	public void startClient(){
-		logClient.info("Initializing Session Manager to connect as client");
+		logClient.debug("Initializing Session Manager to connect as client");
 		if (params.getBGPIdentifier() != null){
 			Inet4Address BGPIdentifier=null;
 			try {
@@ -274,7 +274,7 @@ public class BGPPeer {
 			}
 		}
 		else{
-			logClient.info("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
+			logClient.error("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
 			System.exit(1);
 		}
 		
@@ -284,7 +284,7 @@ public class BGPPeer {
 	 * It starts once the session server manager.
 	 */
 	public  void startServer(){
-		logServer.info("Initializing Session Manager to connect as server");
+		logServer.debug("Initializing Session Manager to connect as server");
 		Inet4Address localAddress=null;
 		Inet4Address BGPIdentifier=null;
 		if (params.getBGPIdentifier() != null){
@@ -296,8 +296,15 @@ public class BGPPeer {
 				e.printStackTrace();
 				return;
 			}
-			bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation,multiDomainTEDB, ud,params.getBGP4Port(),params.getHoldTime(),BGPIdentifier,params.getVersion(),params.getMyAutonomousSystem(), params.isNodelay(),localAddress,params.getKeepAliveTimer(),peersToConnect );
-			executor.execute(bgp4SessionServer);
+			if (params.isTest()) {
+				bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation, multiDomainTEDB, ud, params.getBGP4Port(), params.getHoldTime(), BGPIdentifier, params.getVersion(), params.getMyAutonomousSystem(), params.isNodelay(), localAddress, params.getKeepAliveTimer(), peersToConnect, params.isTest());
+				executor.execute(bgp4SessionServer);
+			}
+			else {
+				bgp4SessionServer = new BGP4SessionServerManager(bgp4SessionsInformation, multiDomainTEDB, ud, params.getBGP4Port(), params.getHoldTime(), BGPIdentifier, params.getVersion(), params.getMyAutonomousSystem(), params.isNodelay(), localAddress, params.getKeepAliveTimer(), peersToConnect);
+				executor.execute(bgp4SessionServer);
+			}
+
 		}else{
 			logServer.error("ERROR: BGPIdentifier is not configured. To configure: XML file (BGP4Parameters.xml) <localBGPAddress>.");
 			System.exit(1);
@@ -305,7 +312,12 @@ public class BGPPeer {
 	}
 	
 	public void startSendTopology(){
-		sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
+		if (params.isTest()) {
+			sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB, params.isTest());
+		}
+		else{
+			sendTopologyTask.configure(intraTEDBs, bgp4SessionsInformation, sendTopology, params.getInstanceID(),params.isSendIntradomainLinks(),this.multiDomainTEDB);
+		}
 		executor.scheduleWithFixedDelay(sendTopologyTask, 0,params.getSendTopoDelay(), TimeUnit.MILLISECONDS);
 	}
 	
@@ -341,12 +353,15 @@ public class BGPPeer {
 		this.ud = ud;
 	}
 
-	public void addSimpleTEDB(SimpleTEDB simpleTEDB, Inet4Address domainID) {
+	public void addSimpleTEDB(SimpleTEDB simpleTEDB, String domainID) {
 			this.intraTEDBs.put(domainID, simpleTEDB);
 	}
 	
 	public void setSimpleTEDB(SimpleTEDB simpleTEDB) {
-			this.intraTEDBs.put(simpleTEDB.getDomainID(), simpleTEDB);
+		if(simpleTEDB.getDomainID() == null)
+			this.intraTEDBs.put("default", simpleTEDB);
+		else
+			this.intraTEDBs.put(simpleTEDB.getDomainID().toString(), simpleTEDB);
 	}
 	
 	
@@ -356,9 +371,20 @@ public class BGPPeer {
 	public MultiDomainTEDB getMultiDomainTEDB() {
 		return multiDomainTEDB;
 	}
-	public Hashtable<Inet4Address, DomainTEDB> getIntraTEDBs() {
+	
+
+	public Hashtable<String, TEDB> getIntraTEDBs() {
 		return intraTEDBs;
 	}
+
+	public void setIntraTEDBs(Hashtable<String, TEDB> intraTEDBs) {
+		this.intraTEDBs = intraTEDBs;
+	}
+
+	public void setMultiDomainTEDB(MultiDomainTEDB multiDomainTEDB) {
+		this.multiDomainTEDB = multiDomainTEDB;
+	}
+	
 	
 	
 	

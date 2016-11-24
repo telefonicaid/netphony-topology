@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <managementIP>localhost</managementIP>
+    <managementPort>5008</managementPort>
+
+    <!--XML>
+        <mode>IP</mode>
+	    <XMLFileTopology>src/test/resources/EmulatedTopology.xml</XMLFileTopology>
+    </XML-->
+     <InitFrom>
+        <Init>initFromXML</Init>
+    </InitFrom>
+    <WSOld>
+	<ip>localhost</ip>
+	<port>9876</port>
+    </WSOld>
+    <COP>
+        <serve_port>8088</serve_port>
+        <import_ip>10.95.86.27</import_ip>
+        <import_port>8070</import_port>
+    </COP>
+    <BGPLS>
+        <Reader>False</Reader>
+        <Writer>True</Writer>
+        <BGPLSconfigFile>src/test/resources/BGP4Parameters_TM.xml</BGPLSconfigFile>
+    </BGPLS>
+   
+</config>

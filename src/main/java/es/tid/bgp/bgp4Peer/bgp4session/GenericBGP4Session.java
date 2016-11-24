@@ -1,14 +1,5 @@
 package es.tid.bgp.bgp4Peer.bgp4session;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.Socket;
-import java.util.Timer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.tid.bgp.bgp4.messages.BGP4Keepalive;
 import es.tid.bgp.bgp4.messages.BGP4Message;
 import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
@@ -18,6 +9,15 @@ import es.tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.SAFICodes;
 import es.tid.bgp.bgp4Peer.peer.BGP4Exception;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.Socket;
+import java.util.Timer;
 
 
 /**
@@ -240,7 +240,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 				offset++;
 			}
 			else if (r==-1){
-				log.warn("End of stream has been reached");
+				log.debug("End of stream has been reached");
 				throw new IOException();
 			}
 		}
@@ -522,7 +522,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 				case BGP4MessageTypes.MESSAGE_OPEN:
 					//log.info("OPEN Message Received");
 					if (this.FSMstate==BGP4StateSession.BGP4_STATE_OPEN_WAIT){
-						log.info("FSMstate = BGP4_STATE_OPEN_WAIT");
+						log.debug("FSMstate = BGP4_STATE_OPEN_WAIT");
 						BGP4Open open_received;
 						//								try {
 						open_received=new BGP4Open(msg);
@@ -550,7 +550,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 							//											checkOK=false;
 							//										}									
 							if (checkOK==false){
-								log.info("Dont accept");
+								log.debug("Dont accept");
 								//											PCEPError perror=new PCEPError();
 								//											PCEPErrorObject perrorObject=new PCEPErrorObject();
 								//											perrorObject.setErrorType(ObjectParameters.ERROR_ESTABLISHMENT);
@@ -583,19 +583,19 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 //								}
 
 
-								log.info("OPEN Accepted");
-								log.info("Sending KA to confirm");
+								log.debug("OPEN Accepted");
+								log.debug("Sending KA to confirm");
 								BGP4Keepalive ka_snd= new BGP4Keepalive();
-								log.info("Sending Keepalive message");
+								log.debug("Sending Keepalive message");
 								sendBGP4Message(ka_snd);										//Creates the Keep Wait Timer to wait for a KA to acknowledge the OPEN sent
 								//FIXME: START KA TIMER!
 								this.remoteOK=true;										
 								if(this.localOK==true){
-									log.info("Entering STATE_SESSION_UP");
+									log.debug("Entering STATE_SESSION_UP");
 									this.setFSMstate(BGP4StateSession.BGP4_STATE_SESSION_UP);							
 								}
 								else {
-									log.info("Entering STATE_KEEP_WAIT");
+									log.debug("Entering STATE_KEEP_WAIT");
 									log.debug("Scheduling KeepwaitTimer");
 									timer.schedule(kwtt, 60000);
 									this.setFSMstate(BGP4StateSession.BGP4_STATE_KEEP_WAIT);
@@ -603,7 +603,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 							}
 						}
 						else {//Open retry is 0
-							log.info("Open retry is equal to 0");
+							log.debug("Open retry is equal to 0");
 							boolean dtOK=true;
 							//										boolean kaOK=true;
 							this.version=open_received.getVersion();
@@ -612,7 +612,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 							}										
 							if (dtOK==false){
 								///Parameters are unacceptable but negotiable
-								log.info("PEER  Open parameters are unaccpetable, but negotiable");
+								log.debug("PEER  Open parameters are unaccpetable, but negotiable");
 								//											PCEPError perror=new PCEPError();
 								//											PCEPErrorObject perrorObject=new PCEPErrorObject();
 								//											perrorObject.setErrorType(ObjectParameters.ERROR_ESTABLISHMENT);
@@ -692,7 +692,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 						}								
 					}
 					else{
-						log.info("Ignore OPEN message, already one received!!");
+						log.debug("Ignore OPEN message, already one received!!");
 					}
 
 					break;
@@ -724,12 +724,12 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 					break;
 
 				default:
-					log.info("UNEXPECTED Message Received");
+					log.error("UNEXPECTED Message Received");
 					if (this.FSMstate!=BGP4StateSession.BGP4_STATE_OPEN_WAIT){
-						log.info("Ignore OPEN message, already one received!!");
+						log.debug("Ignore OPEN message, already one received!!");
 					}
 					else {
-						log.info("Unexpected message RECEIVED, closing");
+						log.error("Unexpected message RECEIVED, closing");
 
 					}
 					break;
@@ -740,7 +740,7 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 					log.info("Ignore message, already one received!!");
 				}
 				else {
-					log.info("Unexpected message RECEIVED, closing");
+					log.error("Unexpected message RECEIVED, closing");
 	
 				}
 			}//Fin del else

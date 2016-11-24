@@ -11,6 +11,9 @@ public interface TEDB {
 
 	public void initializeFromFile(String file);
 
+	public void initializeFromFile(String file, String learnFrom);
+
+
 	public boolean isITtedb(); //FIXME: Remove!
 	
 	public String printTopology();

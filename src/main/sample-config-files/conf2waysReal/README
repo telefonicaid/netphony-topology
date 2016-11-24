@@ -1,0 +1,23 @@
+#put the conf folder in the root directory of topology project
+mv conf/ ~/netphony-topology/
+
+cd ~/netphony-topology/
+
+#update the BGP4SessionsInformation.java file to permit multiple connection with the same ip address
+cp conf/BGP4SessionsInformation.java src/main/java/es/tid/bgp/bgp4Peer/bgp4session/
+
+#compile again the project
+mvn clean package -P generate-full-jar -P bgp-ls-speaker assembly:single
+
+#run the Topology Module for MdO1, only a TM can be present within a single VM
+java -jar target/topology-1.3.2-shaded.jar conf/TMConfiguration_BGPLSreader_UNIFYwriter.xml
+
+#run the BGPLS speaker for MdO1
+java -Dlog4j.configurationFile=log4j2.xml -jar target/bgp-ls-speaker-jar-with-dependencies.jar conf/BGPLS1.xml 
+
+#run the BGPLS speaker for MdO2
+java -Dlog4j.configurationFile=log4j2.xml -jar target/bgp-ls-speaker-jar-with-dependencies.jar conf/BGPLS2.xml 
+
+#run the BGPLS speaker for MdO3
+java -Dlog4j.configurationFile=log4j2.xml -jar target/bgp-ls-speaker-jar-with-dependencies.jar conf/BGPLS3.xml 
+
