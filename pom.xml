@@ -7,7 +7,7 @@
 	<version>1.3.3</version>
 	<packaging>jar</packaging>
 	<name>Netphony TED and BGP-LS peer</name>
-	<description>Traffic Engineering Database and BGP-LS peer</description>
+	<description>Traffic Engineering Database, BGP-LS peeri, Topology Module</description>
 	<url>http://telefonicaid.github.io/netphony-topology/</url>
 	<licenses>
 		<license>

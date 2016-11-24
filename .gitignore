@@ -64,3 +64,8 @@ local.properties
 # Intellij IDE
 ############
 .idea
+
+############
+# Jetbrains
+############
+.iml
