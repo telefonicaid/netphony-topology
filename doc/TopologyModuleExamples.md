@@ -8,7 +8,7 @@ Two sets of basic configuration files are here included with Topology Module sof
 
 The setup has been provided just for testing purpose and configures 3 TADS in the same machine to perform unidirectional information exchange.
 
-![1WayTest](/ifigures/1wayTest.png?raw=true "Test with 3 TM")
+![1WayTest](figures/1wayTest.png?raw=true "Test with 3 TM")
 
 The reference files, including Topology Module configuration, BGP-LS Plugin configuration and abstracted topologies are in the folder:
   ```bash
