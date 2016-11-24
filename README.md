@@ -26,13 +26,15 @@ The Topology Module can export the topologies via BGP-LS or RESCONF based APIs f
 - Supports network-protocols 1.3.2 (chages in reading as_path were needed)
 - Update to support reading multiple AS_PATH
 - Topology Module added
-- Export via RESCONF with COP model 
-- Export via RESTCONF with IETF model (nodes only)
+- Topology Module: Export via RESCONF with COP model
+- Topology Module: Export via RESTCONF with IETF model (nodes only)
+- Topology Module: Export via UNIFY model
+- Topology Module: Import via XML
+- Topology Module: Import/Export via BGP-LS
 
 ## Traffic Engineering Database
 
 The traffic Engineering Database (TED) is a collection of nodes and links, each of them with Traffic Engineering Attributes. The TED has as an attribute a domain identifier and a network layer.
-
 
 ## Compilation and use
 
@@ -79,13 +81,12 @@ The parameters to be configured are:
 The Topology Module is a collection of Traffic Engineering Databases with a set of plugins that can import or export the TEDs. The available plugins are:
 
 * BGP-LS Plugin. The BGP-LS plugin can run in three different modes. The first one is EXPORT only, so the TEDs are exported via BGP-LS. The second mode is IMPORT only, where BGP-LS is activated to import the TEDS. The last one is IMPORT-EXPORT, so the BGP-LS speaker is used both to import and export topologies. By default, the topologies are exported to all the peers, except the one from which the TED has been learnt. For each domain learn and new TED is created. Also, a multi-domain TED is created connecting all the intradomain topologies. The BGP-LS configuration is expressed in a file, following the format shown in the previous section. 
-* XML. The XML plugin can learn a topology described in an XML file. Current plugin reads only the information once. 
-* UNIFY. The UNIFY plugin exports the topology via RESTCONF following the UNIFY format ( 
-* COP. The COP plugin exports the topology via RESTCONF following the COP format
-* IETF. In development.
-* TAPI. In development. 
+* XML Plugin. The XML plugin can learn a topology described in an XML file. Current plugin reads only the information once. 
+* UNIFY Plugin. The UNIFY plugin exports the topology via RESTCONF following the UNIFY format (https://tools.ietf.org/html/draft-irtf-nfvrg-unify-recursive-programming-00) 
+* COP Plugin. The COP plugin exports the topology via RESTCONF following the COP format. 
+* IETF Plugin. In development. Current version supports node only. Follows https://tools.ietf.org/html/draft-ietf-teas-yang-te-topo-06 * TAPI Plugin. In development. 
 
-To run the BGP Peer as a standalone application use the class BGPPeerMain. You can use maven to create an autoexecutable jar that includes all dependencies in a single file. There is a specific profile called bgp-ls-speaker for this sole purpose. Plase be aware that if you use the real BGP port (179) you need to start as root.  
+To run the Topology Module as a standalone application use the class es.tid.topologyModuleBase.TopologyModuleMain. You can use maven to create an autoexecutable jar that includes all dependencies in a single file. There is a specific profile called *generate-full-jar* for this sole purpose. Please be aware that if you use the BGP-LS Plugin and need to use the standar port (179) you need to start as root.  
   ```bash
     git clone 
     git clone https://github.com/telefonicaid/netphony-topology.git
@@ -94,11 +95,11 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
     cd target
  ```
  
- To launch a Topology module with BGP-LS import and RECONF COP export (be sure to be in the target directory):
+ For example, to launch a Topology module with BGP-LS import and RECONF COP export (be sure to be in the target directory):
   ```
  sudo java -Dlog4j.configurationFile=log4j2.xml  -jar topology-1.3.2-shaded.jar TMConfiguration_BGPLSreader_COPwriter.xml
   ```
- 
+ Sample configuration files are included. 
 
 ## Logging
 The software is built using the slf4j, Simple Logging Facade for Java (SLF4J), which serves as a facade  for various logging frameworks (e.g. java.util.logging, logback, log4j) allowing the end final to plug in the desired logging framework at deployment time.  See  http://www.slf4j.org/manual.html for more details.
@@ -127,12 +128,6 @@ In this example there are 2 BGP-LS speakers, one acting as sender of topology, a
 # Example 3: Topology module with BGP-LS and COP plugins and Topology module with BGP-LS speaker
 
 In this example there are 2 BGP-LS speakers, one acting as sender of topology, and the other as consumer. A small topology is loaded from an xml file in BGP-LS Speaker #1. This topology is sent to BGP-LS Speaker #2.  
-
-
-
-
-
-Topology 
 
 #Acknowledgements
 
