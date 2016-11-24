@@ -1,11 +1,14 @@
-Examples of Topology Module Configurations
-=================================
+#Examples 
+
+##Topology Module Examples
 
 Two sets of basic configuration files are here included with Topology Module software: the setup for running three TM within the same machine (configuration A) and the setup for running three TM in three dedicated machines (configuration B). In both cases three example network topologies are provided to represent the abstract topology of 2 end-point providers and 1 transit provider.
 
-##Configuration A
+### Configuration A: 1 Way Test in the same virtual machine
 
-The setup has been provided just for testing purpose and configures 3 TADS in the same machine to perform unidirectional information exchange 
+The setup has been provided just for testing purpose and configures 3 TADS in the same machine to perform unidirectional information exchange.
+
+![1WayTest](/ifigures/1wayTest.png?raw=true "Test with 3 TM")
 
 The reference files, including Topology Module configuration, BGP-LS Plugin configuration and abstracted topologies are in the folder:
   ```bash
