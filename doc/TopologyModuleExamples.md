@@ -45,7 +45,7 @@ curl http://localhost:8089/restconf/data/virtualizer/ | python -m json.tool
   
 ### Example TM2:   2 Way Test in the different virtual machines, BPG-LS Plugin and UNIFY Export.
 The setup has been provided as reference configuration for the configuration of 3 TM in dedicated machines to perform bidirectional exchange of information 
-
+![1WayTest](figures/2wayTest.png?raw=true "Test with 3 TM in 3 different machines")
 The reference files, including Topology Module configuration, BGP-LS Plugin configuration and abstracted topologies are in
    ```bash
 target/conf2waysReal
