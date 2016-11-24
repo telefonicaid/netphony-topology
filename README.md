@@ -114,6 +114,10 @@ If no logging framework is added, by default it will log to /dev/null
 
 See [click here](doc/TopologyModuleExamples.md)
 
+# XML Format to describe the topology
+
+See [TopologyFileDescription](doc/TopologyFileDescription.md)
+
 #Acknowledgements
 
 The software has been developed by Telefonica I+D Core & Transport Team, led by Juan Pedro Fernandez Palacios, in internal innovation projects and through several EU funded research proyects, which continuously added functionality. The Core & Transport Team group of Telefonica working with the topology is formed by Juan Pedro Fernandez Palacios (team leader), Victor Lopez, Oscar Gonzalez de Dios, Felipe Jiménez, Luis Miguel Contreras, Michel Carnero and Eduardo Yusta. All of them have contributed to the code, either directly of with ideas and as beta-testers.
