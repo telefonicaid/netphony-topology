@@ -84,7 +84,8 @@ The Topology Module is a collection of Traffic Engineering Databases with a set 
 * XML Plugin. The XML plugin can learn a topology described in an XML file. Current plugin reads only the information once. 
 * UNIFY Plugin. The UNIFY plugin exports the topology via RESTCONF following the UNIFY format (https://tools.ietf.org/html/draft-irtf-nfvrg-unify-recursive-programming-00) 
 * COP Plugin. The COP plugin exports the topology via RESTCONF following the COP format. 
-* IETF Plugin. In development. Current version supports node only. Follows https://tools.ietf.org/html/draft-ietf-teas-yang-te-topo-06 * TAPI Plugin. In development. 
+* IETF Plugin. In development. Current version supports node only. Follows https://tools.ietf.org/html/draft-ietf-teas-yang-te-topo-06
+* TAPI Plugin. In development. 
 
 To run the Topology Module as a standalone application use the class es.tid.topologyModuleBase.TopologyModuleMain. You can use maven to create an autoexecutable jar that includes all dependencies in a single file. There is a specific profile called *generate-full-jar* for this sole purpose. Please be aware that if you use the BGP-LS Plugin and need to use the standar port (179) you need to start as root.  
   ```bash
