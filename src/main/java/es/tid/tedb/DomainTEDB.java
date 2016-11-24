@@ -62,7 +62,8 @@ public interface DomainTEDB extends TEDB {
 
 	public Hashtable<Object, Node_Info> getNodeTable();
 
-	
+	public IT_Resources getItResources();
+	public void setItResources(IT_Resources itResources);
 	
 
 

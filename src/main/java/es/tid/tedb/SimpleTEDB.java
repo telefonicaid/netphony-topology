@@ -27,6 +27,8 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 public class SimpleTEDB implements DomainTEDB{
 	
 	private Inet4Address domainID;
+	
+	private IT_Resources itResources;
 
 	/**
 	 * List of algorithms that will be notified when there are significant changes in the TED
@@ -602,12 +604,18 @@ public class SimpleTEDB implements DomainTEDB{
 		for (int i=0;i<registeredAlgorithms.size();++i){
 			registeredAlgorithms.get(i).notifyNewVertex(vertex);
 		}	
+		for (int i=0;i<registeredAlgorithmssson.size();++i){
+			registeredAlgorithmssson.get(i).notifyNewVertex(vertex);
+		}	
 	}
 
 	@Override
 	public void notifyNewEdge(Object source, Object destination) {
 		for (int i=0;i<registeredAlgorithms.size();++i){
 			registeredAlgorithms.get(i).notifyNewEdge(source,destination);
+		}
+		for (int i=0;i<registeredAlgorithmssson.size();++i){
+			registeredAlgorithmssson.get(i).notifyNewEdge(source,destination);
 		}	
 	}
 
@@ -750,6 +758,14 @@ public class SimpleTEDB implements DomainTEDB{
 			if(flagEqual==false)return false; //edge not present in other
 		}
 		return true;
+	}
+
+	public IT_Resources getItResources() {
+		return itResources;
+	}
+
+	public void setItResources(IT_Resources itResources) {
+		this.itResources = itResources;
 	}
 	
 	

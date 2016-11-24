@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <managementIP>localhost</managementIP>
+    <managementPort>5008</managementPort>
+
+    <COP>
+        <import_ip>localhost</import_ip>
+    	<import_port>8087</import_port>
+    	<serve_port>8088</serve_port>
+    </COP>
+    <COP>
+    	<import_ip>localhost</import_ip>
+     	<import_port>8086</import_port>
+    </COP>
+    <WSOld>
+    	<ip>localhost</ip>
+    	<port>9877</port>
+    </WSOld>
+    <InitFrom>
+        <Init>initFromXML</Init>
+    </InitFrom>
+</config>

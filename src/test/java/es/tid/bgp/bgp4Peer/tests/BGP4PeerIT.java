@@ -79,8 +79,8 @@ public class BGP4PeerIT {
 		System.out.println("Topology of BGP-LS Speaker 1: ");
 		System.out.println("---------------------------------------");
 		System.out.println(topoOriginal);
-		Set<Inet4Address> keySet = bgpPeer.getIntraTEDBs().keySet();
-		for(Inet4Address key : keySet){
+		Set<String> keySet = bgpPeer.getIntraTEDBs().keySet();
+		for(String key : keySet){
 			System.out.println("---IntraTEDB: domain_id= "+key.toString());
 			System.out.println(bgpPeer.getIntraTEDBs().get(key).printTopology());
 		}
@@ -89,8 +89,8 @@ public class BGP4PeerIT {
 		System.out.println("---------------------------------------");		
 		System.out.println(topo2);
 		System.out.println("---------------------------------------");
-		Set<Inet4Address> keySet2 = bgpPeer2.getIntraTEDBs().keySet();
-		for(Inet4Address key : keySet2){
+		Set<String> keySet2 = bgpPeer2.getIntraTEDBs().keySet();
+		for(String key : keySet2){
 			System.out.println("---IntraTEDB: domain_id= "+key.toString());
 			System.out.println(bgpPeer2.getIntraTEDBs().get(key).printTopology());
 		}
@@ -100,7 +100,7 @@ public class BGP4PeerIT {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-		for(Inet4Address key : keySet){
+		for(String key : keySet){
 			assertTrue("Checking if topos, IntraTEDBs, have the same domains", keySet.contains(key));
 			assertTrue("Checking if topos, IntraTEDB (domain="+key+") are equal", bgpPeer.getIntraTEDBs().get(key).equals(bgpPeer2.getIntraTEDBs().get(key)));
 		}

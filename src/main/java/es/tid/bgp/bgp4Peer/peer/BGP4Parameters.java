@@ -1,18 +1,17 @@
 package es.tid.bgp.bgp4Peer.peer;
 
 
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
-import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 /**
  * Parameters to configure the BGP4 session
@@ -82,7 +81,12 @@ public class BGP4Parameters {
 	 * OPEN PARAMENTERS
 	 */
 	int holdTime=90;
-	
+	/**
+	 * OPEN PARAMENTERS
+	 */
+
+	private boolean isTest=false;
+
 	/**
 	 * Time between sending keepalives
 	 */
@@ -224,7 +228,10 @@ public class BGP4Parameters {
 					else if (qName.equalsIgnoreCase("nodelay")) {
 						nodelay=Boolean.parseBoolean(tempVal.trim());
 					}
-					
+					else if (qName.equalsIgnoreCase("isTest")) {
+						isTest=Boolean.parseBoolean(tempVal.trim());
+					}
+
 					else if (qName.equalsIgnoreCase("setTraces")) {
 						setTraces=Boolean.parseBoolean(tempVal.trim());
 					} 
@@ -369,6 +376,13 @@ public class BGP4Parameters {
 	public void setSetTraces(boolean setTraces) {
 		this.setTraces = setTraces;
 	}
+	public boolean isTest() {
+		return isTest;
+	}
+	public void setisTest(boolean test) {
+		this.isTest = test;
+	}
+
 	public String getConfFile() {
 		return confFile;
 	}

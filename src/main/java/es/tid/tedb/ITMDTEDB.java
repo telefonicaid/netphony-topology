@@ -1,18 +1,13 @@
 package es.tid.tedb;
 
-import java.net.Inet4Address;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
+import es.tid.pce.pcep.objects.tlvs.subtlvs.CostSubTLV;
+import org.jgrapht.graph.DirectedWeightedMultigraph;
+import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.jgrapht.graph.SimpleDirectedWeightedGraph;
-
-import es.tid.pce.pcep.objects.tlvs.subtlvs.CostSubTLV;
+import java.net.Inet4Address;
+import java.util.*;
 
 /**
  * Base de datos de ingenieria de trafico con IT
@@ -61,7 +56,15 @@ public class ITMDTEDB implements MultiDomainTEDB {
 		it_site_id_domain_ed=FileTEDBUpdater.getITSites(file);
 		resource_id_domain_ed=FileTEDBUpdater.getResource(file);
 	}
-	
+
+	public void initializeFromFile(String file, String LearnFrom){
+		networkDomainGraph=FileTEDBUpdater.readITMDNetwork(file);
+//		File= file;
+		it_site_id_domain_ed=FileTEDBUpdater.getITSites(file);
+		resource_id_domain_ed=FileTEDBUpdater.getResource(file);
+	}
+
+
 	public void initializeFullTEDFromFile(String file){
 		networkGraph=FileTEDBUpdater.readITNetwork(file);		
 //		it_site_id_domain_ed=FileTEDBUpdater.getITSites(file);
