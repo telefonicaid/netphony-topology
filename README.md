@@ -113,7 +113,7 @@ If no logging framework is added, by default it will log to /dev/null
 
 # Examples
 
-See [click here](doc/TopologyModuleExamples.md)
+See [Examples](doc/Examples.md) for several Test scenarios of the BGP-LS Speaker and the Topology Modules.
 
 # XML Format to describe the topology
 
