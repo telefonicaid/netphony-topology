@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!-- TCP port where the BGP is listening for incoming bgp4 connections. Optional Parameter. Default value: 179 (BGP Port)  --> 
+	<BGP4Port>22179</BGP4Port>
+	<BGPIdentifier>1.1.1.1</BGPIdentifier>
+<!-- TCP port to connect to manage the BGP connection. Default value: 1112 -->
+	<BGP4ManagementPort>1112</BGP4ManagementPort> 
+	<!-- Peers to which this Peer is going to establish connection -->
+    <configPeer>
+                <peer>localhost</peer>
+                <export>false</export>
+                <import>true</import>
+                <peerPort>11179</peerPort>
+    </configPeer>
+
+	<!-- Ficheros log (servidor, protocolo PCEP y OSPF). Campos opcionales-->
+	<BGP4LogFile>BGP4Parser2.log</BGP4LogFile><!-- Default value: BGP4Parser.log -->
+	<BGP4LogFileClient>BGP4Client2.log</BGP4LogFileClient><!-- Default value: BGP4Client.log-->
+	<BGP4LogFileServer>BGP4Server2.log</BGP4LogFileServer><!-- Default value: BGP4Server.log-->
+	<!-- If the tcp no delay option is used or not. Optional Parameter. Default value: false. -->
+	<nodelay>true</nodelay>
+	<!-- Waiting Time to re-connect to clients. Default value: 6000 ms. -->
+	<delay>40000</delay>
+	<setTraces>true</setTraces>
+	<!-- OPEN Parameters -->
+	<!-- RFC 4271. This 2-octet unsigned integer indicates the number of seconds the sender proposes for the value of the Hold Timer.  
+		Upon receipt of an OPEN message, a BGP speaker MUST calculate the value of the Hold Timer by using the smaller of its configured
+         Hold Time and the Hold Time received in the OPEN message.  The Hold Time MUST be either zero or at least three seconds.  An
+         implementation MAY reject connections on the basis of the Hold Time.  The calculated value indicates the maximum number of
+         seconds that may elapse between the receipt of successive KEEPALIVE and/or UPDATE messages from the sender. -->
+	<holdTime>180</holdTime><!-- Optional Parameter. Default value: 3. -->
+	<!-- RFC 4271. This 1-octet unsigned integer indicates the protocol version number of the message.  The current BGP version number is 4. -->
+	<version>4</version><!-- Optional Parameter. Default value: 4. -->
+	<!-- RFC 4271.  This 2-octet unsigned integer indicates the Autonomous System number of the sender.-->
+	<myAutonomousSystem>1</myAutonomousSystem>
+	<!-- RFC 4271. This 4-octet unsigned integer indicates the BGP Identifier of the sender.  A given BGP speaker sets the value of its BGP
+         Identifier to an IP address that is assigned to that BGP speaker.  The value of the BGP Identifier is determined upon
+         startup and is the same for every local interface and BGP peer. --> 
+	<!--<BGPIdentifier>192.168.1.200</BGPIdentifier> -->
+	<!-- If the peer is in charge of sending its topology (only the interdomain Links) to the other BGP peer it is connected to. Default: false -->
+	<sendTopology>false</sendTopology>
+	<!-- If the peer is in charge of sending its whole topology to the other BGP peer it is connected to. Default: false -->
+	<sendIntradomainLinks>true</sendIntradomainLinks>
+	<!-- Optional Parameter. How to learn the topology. Possibilities: fromXML, fromBGP. Default: fromBGP -->
+	<learnTopology>fromBGP</learnTopology>	
+	<!-- Topology network to read. It is mandatory if and only if learnTopology parameter is fromXML. -->
+	<!--<topologyFile>src/test/resources/network1.xml</topologyFile>-->
+	<!-- Optional Parameter. Instance Identifier for node and link NLRI. See rfc 6549. Default value: 0-->
+	<!--<instanceID>0</instanceID>-->
+	<!-- Optional Parameter. Default value: localhost -->
+	<localBGPAddress>0.0.0.0</localBGPAddress>
+</config>

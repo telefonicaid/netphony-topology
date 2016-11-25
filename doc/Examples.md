@@ -10,10 +10,7 @@ The setup has been provided just for testing purpose and configures 3 TADS in th
 
 ![1WayTest](figures/1wayTest.png?raw=true "Test with 3 TM")
 
-The reference files, including Topology Module configuration, BGP-LS Plugin configuration and abstracted topologies are in the folder:
-  ```bash
-target/conf1wayTest
-  ```
+The reference files, including Topology Module configuration, BGP-LS Plugin configuration and abstracted topologies are copiend in the folder target/conf1wayTest after the maven installation. Be sure to compile also the Topology Module as indicated in README.md. 
 
 To execute TM1 run:
   ```bash
