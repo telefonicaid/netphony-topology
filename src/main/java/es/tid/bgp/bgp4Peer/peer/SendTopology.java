@@ -1,52 +1,16 @@
 package es.tid.bgp.bgp4Peer.peer;
 
-import java.io.UnsupportedEncodingException;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import es.tid.bgp.bgp4.messages.BGP4Update;
+import es.tid.bgp.bgp4.update.fields.ITNodeNLRI;
 import es.tid.bgp.bgp4.update.fields.LinkNLRI;
 import es.tid.bgp.bgp4.update.fields.NodeNLRI;
 import es.tid.bgp.bgp4.update.fields.PathAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.AS_Path_Segment;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.BGP_LS_MP_Reach_Attribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.LinkStateAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.OriginAttribute;
-import es.tid.bgp.bgp4.update.fields.pathAttributes.PathAttributesTypeCode;
+import es.tid.bgp.bgp4.update.fields.pathAttributes.*;
 import es.tid.bgp.bgp4.update.tlv.LocalNodeDescriptorsTLV;
 import es.tid.bgp.bgp4.update.tlv.ProtocolIDCodes;
 import es.tid.bgp.bgp4.update.tlv.RemoteNodeDescriptorsTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.DefaultTEMetricLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MF_OTPAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaxReservableBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.MaximumLinkBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.SidLabelNodeAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.UnreservedBandwidthLinkAttribTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AreaIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.AutonomousSystemNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.BGPLSIdentifierNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IGPRouterIDNodeDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4InterfaceAddressLinkDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.IPv4NeighborAddressLinkDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.LinkLocalRemoteIdentifiersLinkDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.MinMaxUndirectionalLinkDelayDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.NodeDescriptorsSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalAvailableBandwidthDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalDelayVariationDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkDelayDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalLinkLossDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalResidualBandwidthDescriptorSubTLV;
-import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.UndirectionalUtilizedBandwidthDescriptorSubTLV;
+import es.tid.bgp.bgp4.update.tlv.linkstate_attribute_tlvs.*;
+import es.tid.bgp.bgp4.update.tlv.node_link_prefix_descriptor_subTLVs.*;
 import es.tid.bgp.bgp4Peer.bgp4session.BGP4SessionsInformation;
 import es.tid.bgp.bgp4Peer.bgp4session.GenericBGP4Session;
 import es.tid.ospf.ospfv2.OSPFv2LinkStateUpdatePacket;
@@ -54,21 +18,15 @@ import es.tid.ospf.ospfv2.lsa.LSA;
 import es.tid.ospf.ospfv2.lsa.LSATypes;
 import es.tid.ospf.ospfv2.lsa.OSPFTEv2LSA;
 import es.tid.ospf.ospfv2.lsa.tlv.LinkTLV;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LinkID;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.LocalInterfaceIPAddress;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.RemoteInterfaceIPAddress;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.TrafficEngineeringMetric;
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.*;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.tedb.DomainTEDB;
-import es.tid.tedb.InterDomainEdge;
-import es.tid.tedb.IntraDomainEdge;
-import es.tid.tedb.MultiDomainTEDB;
-import es.tid.tedb.Node_Info;
-import es.tid.tedb.SimpleTEDB;
-import es.tid.tedb.TE_Information;
+import es.tid.tedb.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+import java.util.*;
 
 /**
  * Class to send periodically the topology. It sends the topology to the active BGP4 sessions.
@@ -84,12 +42,13 @@ public class SendTopology implements Runnable {
 	private int identifier=1;
 
 	//TEDBs 
-	 private Hashtable<Inet4Address,DomainTEDB> intraTEDBs;
+	 private Hashtable<String,TEDB> intraTEDBs;
 	
 	// Multi-domain TEDB to redistribute Multi-domain Topology
 	private MultiDomainTEDB multiDomainTEDB;
 
 	private boolean sendTopology;
+	private boolean isTest=false;
 	private BGP4SessionsInformation bgp4SessionsInformation;
 	private Logger log;
 	private int instanceId=1;
@@ -103,10 +62,10 @@ public class SendTopology implements Runnable {
 	private Inet4Address localAreaID;
 	
 	public SendTopology(){
-		log = LoggerFactory.getLogger("BGP4Parser");
+		log = LoggerFactory.getLogger("BGP4Peer");
 	}
 
-	public void configure( Hashtable<Inet4Address,DomainTEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
+	public void configure( Hashtable<String,TEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED){
 		this.intraTEDBs=intraTEDBs;
 		this.bgp4SessionsInformation=bgp4SessionsInformation;
 		this.sendTopology= sendTopology;
@@ -123,6 +82,25 @@ public class SendTopology implements Runnable {
 		
 	}
 
+
+	public void configure( Hashtable<String,TEDB> intraTEDBs,BGP4SessionsInformation bgp4SessionsInformation,boolean sendTopology,int instanceId,boolean sendIntraDomainLinks, MultiDomainTEDB multiTED, boolean test){
+		this.intraTEDBs=intraTEDBs;
+		this.bgp4SessionsInformation=bgp4SessionsInformation;
+		this.sendTopology= sendTopology;
+		this.instanceId = instanceId;
+		this.sendIntraDomainLinks=sendIntraDomainLinks;
+		this.multiDomainTEDB=multiTED;
+		this.isTest=test;
+		try {
+			this.localAreaID=(Inet4Address)Inet4Address.getByName("0.0.0.0");
+			this.localBGPLSIdentifer=(Inet4Address)Inet4Address.getByName("1.1.1.1");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 	/**
 	 * Function to send the topology database.
 	 */
@@ -133,29 +111,40 @@ public class SendTopology implements Runnable {
 		if (sendTopology){
 			if (!(bgp4SessionsInformation.getSessionList().isEmpty())){
 				if (multiDomainTEDB!=null){
-					log.info("Sending Multi-Domain TEDB");
+					log.debug("Sending Multi-Domain TEDB");
 					sendLinkNLRI( multiDomainTEDB.getInterDomainLinks());
 				}
 				else {
-					log.info("Sending form TEDB");
-					Enumeration<DomainTEDB> iter = intraTEDBs.elements();
+					log.debug("Sending from TEDB");
+					Enumeration<TEDB> iter = intraTEDBs.elements();
 					while (iter.hasMoreElements()){
 						sendLinkNLRI( iter.nextElement().getInterDomainLinks());
 					}
 				}			
 				
 				if (sendIntraDomainLinks){//Intradomain Links
-					log.info("sendIntraDomainLinks activated");
-					Enumeration<Inet4Address> iter = intraTEDBs.keys();
+					log.debug("sendIntraDomainLinks activated");
+					Enumeration<String> iter = intraTEDBs.keys();
 					while (iter.hasMoreElements()){						
-						Inet4Address domainID = iter.nextElement();
-						log.info("Sending TED from domain "+domainID);
-						DomainTEDB ted=intraTEDBs.get(domainID);
-						sendLinkNLRI( ted.getIntraDomainLinks(),domainID);
-						//log.info(" XXXX ted.getNodeTable():"+ted.getNodeTable());
-						sendNodeNLRI( ted.getIntraDomainLinksvertexSet(), ted.getNodeTable());
-						//sendNodeNLRI( ted.getNetworkGraph().vertexSet(), ted.getNodeTable());
+						String domainID = iter.nextElement();
+						//Andrea
+						log.debug("Sending TED from domain "+domainID);
+
+						TEDB ted=intraTEDBs.get(domainID);
+						if (ted instanceof DomainTEDB) {
+							sendLinkNLRI( ((DomainTEDB)ted).getIntraDomainLinks(),domainID);
+							//log.info(" XXXX ted.getNodeTable():"+ted.getNodeTable());
+							sendNodeNLRI( ((DomainTEDB)ted).getIntraDomainLinksvertexSet(), ((DomainTEDB)ted).getNodeTable());
+							if (((DomainTEDB)ted).getItResources()!=null){
+								sendITNodeNLRI( domainID, ((DomainTEDB)ted).getItResources());
+							}
+			
+						}
+				
+
+						
 					}
+
 				}
 						
 			}
@@ -174,7 +163,21 @@ public class SendTopology implements Runnable {
 		Iterator<Object> vertexIt = vertexSet.iterator();	
 		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
 		while (vertexIt.hasNext()){		
-			Inet4Address node = (Inet4Address)vertexIt.next();
+			Inet4Address node=null;
+			Object v = vertexIt.next();
+			if( v instanceof es.tid.tedb.elements.Node){
+				try {
+					node = (Inet4Address)Inet4Address.getByName(((es.tid.tedb.elements.Node)v).getAddress().get(0));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}else{
+				 node = (Inet4Address)v;
+			}
+				
+			
 			//log.info(" XXXX node: "+ node);
 			Node_Info node_info = NodeTable.get(node);
 			//log.info(" XXXX node_info: "+ node_info);
@@ -184,12 +187,44 @@ public class SendTopology implements Runnable {
 				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
 				sendMessage(update);	
 			}else {
-				log.error("Node "+node+ " HAS NO node_info in NodeTable");
+				log.debug("Node "+node+ " HAS NO node_info in NodeTable");
 			}
 			
 
 		}
 	}
+	
+	/**
+	 * This function sends a BGP4 update message (encoded in a ITNodeNLRI) for each node in the set 
+	 * @param vertexIt
+	 */
+
+
+	private void sendITNodeNLRI(String domainID, IT_Resources itResources){
+		//Andrea
+		log.debug("Sending IT REsources");
+		BGP4Update update = createMsgUpdateITNodeNLRI(domainID, itResources);
+		sendMessage(update);
+//		Iterator<Object> vertexIt = vertexSet.iterator();	
+//		//Enviamos primero los nodos. Un Node NLRI por cada nodo.
+//		while (vertexIt.hasNext()){		
+//			Inet4Address node = (Inet4Address)vertexIt.next();
+//			//log.info(" XXXX node: "+ node);
+//			Node_Info node_info = NodeTable.get(node);
+//			//log.info(" XXXX node_info: "+ node_info);
+//			if (node_info!=null){
+//				log.debug("Sending node: ("+node+")");
+//				//Mandamos NodeNLRI
+//				BGP4Update update = createMsgUpdateNodeNLRI(node_info);
+//				sendMessage(update);	
+//			}else {
+//				log.error("Node "+node+ " HAS NO node_info in NodeTable");
+//			}
+//			
+//
+//		}
+	}
+	
 	/**
 	 * This function sends a BGP4 update message (encoded in a LinkNLRI) for each link in the list
 	 * @param interdomainLinks
@@ -204,7 +239,7 @@ public class SendTopology implements Runnable {
 				InterDomainEdge edge = edgeIt.next();
 				Inet4Address source = (Inet4Address)edge.getSrc_router_id();
 				Inet4Address dst = (Inet4Address)edge.getDst_router_id();
-				log.info("Sending ID edge: ("+source.toString() +":"+((InterDomainEdge) edge).getSrc_if_id()+","+dst.toString()+")");
+				log.debug("Sending ID edge: ("+source.toString() +":"+((InterDomainEdge) edge).getSrc_if_id()+","+dst.toString()+")");
 				addressList = new ArrayList<Inet4Address>();
 				addressList.add(0,source);
 				addressList.add(1,dst);
@@ -218,16 +253,16 @@ public class SendTopology implements Runnable {
 				localRemoteIfList.add(1,((InterDomainEdge) edge).getDst_if_id());//te_info.getLinkLocalRemoteIdentifiers().getLinkRemoteIdentifier());
 
 				
-				ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);
+				ArrayList<String> domainList = new ArrayList<String>(2);
 				//FIXME: chequear
 				TE_Information te_info = ((InterDomainEdge) edge).getTE_info();
 				
-				domainList.add((Inet4Address)edge.getDomain_src_router());
-				log.debug("SRC Domain is "+(Inet4Address)edge.getDomain_src_router());
-				domainList.add((Inet4Address)edge.getDomain_dst_router());
+				domainList.add(((Inet4Address)edge.getDomain_src_router()).getHostAddress().toString());
+				//System.out.println("SRC Domain is "+((Inet4Address)edge.getDomain_src_router()).getHostAddress().toString() );
+				domainList.add( ((Inet4Address)edge.getDomain_dst_router()).getHostAddress().toString());
 				log.debug("SRC Domain is "+(Inet4Address)edge.getDomain_dst_router());
 				BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, false, te_info);
-				
+				update.setLearntFrom(edge.getLearntFrom());
 				log.debug("Update message Created");	
 				sendMessage(update);				
 			}
@@ -238,16 +273,37 @@ public class SendTopology implements Runnable {
 	 * This function sends a BGP4 update message (encoded in a LinkNLRI) for each link in the set
 	 * @param edgeIt
 	 */
-	private void sendLinkNLRI(Set<IntraDomainEdge> edgeSet, Inet4Address domainID){
+	private void sendLinkNLRI(Set<IntraDomainEdge> edgeSet, String domainID){
 		int lanID = 1; ///INVENTADOO
 		ArrayList<Inet4Address> addressList = new ArrayList<Inet4Address>();
 		Iterator<IntraDomainEdge> edgeIt = edgeSet.iterator();	
 		while (edgeIt.hasNext()){
 
 			IntraDomainEdge edge = edgeIt.next();
-			Inet4Address source = (Inet4Address)edge.getSource();
-			Inet4Address dst = (Inet4Address)edge.getTarget();
-			log.info("Sending: ("+source.toString() +","+dst.toString()+")");
+			Inet4Address source=null;
+			if(edge.getSource() instanceof  es.tid.tedb.elements.Node){
+				try {
+					source=(Inet4Address)Inet4Address.getByName(((es.tid.tedb.elements.Node)edge.getSource()).getAddress().get(0));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				source = (Inet4Address)edge.getSource();
+			}
+			
+			Inet4Address dst=null;
+			if(edge.getTarget() instanceof  es.tid.tedb.elements.Node){
+				try {
+					dst=(Inet4Address)Inet4Address.getByName(((es.tid.tedb.elements.Node)edge.getTarget()).getAddress().get(0));
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				dst = (Inet4Address)edge.getTarget();
+			}
+			log.debug("Sending: ("+source.toString() +","+dst.toString()+")");
 			addressList = new ArrayList<Inet4Address>();
 			addressList.add(0,source);
 			addressList.add(1,dst);
@@ -272,7 +328,7 @@ public class SendTopology implements Runnable {
 
 			TE_Information te_info = ((IntraDomainEdge) edge).getTE_info();
 			
-			ArrayList<Inet4Address> domainList = new ArrayList<Inet4Address>(2);	
+			ArrayList<String> domainList = new ArrayList<String>(2);	
 			domainList.add(domainID);
 			domainList.add(domainID);
 			BGP4Update update = createMsgUpdateLinkNLRI(addressList,localRemoteIfList, lanID, domainList, true, te_info);
@@ -298,108 +354,190 @@ public class SendTopology implements Runnable {
 			}else {
 				if (session.getSendTo()) {
 					String destination = session.getRemotePeerIP().getHostAddress();
-					log.info("BGP4 Update learnt from:" + update.getLearntFrom());
-					try{
-						if (!destination.equals(update.getLearntFrom())){
-							log.info("Sending BGP4 update to:" + destination);
-							session.sendBGP4Message(update);
-						}
-						else
-							log.info("destination " + destination + " and source of information " + update.getLearntFrom() + " are equal");
-					}catch (Exception e){
-						e.printStackTrace();
+					log.debug("BGP4 Update learnt from:" + update.getLearntFrom());
+					if (isTest){
+						log.debug("Sending BGP4 update to:" + destination+" with no check on the ID since it is test");
+						session.sendBGP4Message(update);
 					}
-				}			
+					else{
+						try {
+							if ((update.getLearntFrom() != null) && (update.getLearntFrom().contains("/"))) {
+								//log.info(update.getLearntFrom().substring(1));
+								if (!destination.equals(update.getLearntFrom().substring(1))) {
+									//log.info("id da getLearnt "+ update.getLearntFrom());
+									log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom().substring(1));
+									log.debug("Sending BGP4 update to:" + destination);
+									session.sendBGP4Message(update);
+
+								} else
+									log.debug("destination " + destination + " and source of information " + update.getLearntFrom().substring(1) + " are equal");
+
+
+							}
+							else{
+								if (!destination.equals(update.getLearntFrom())) {
+									//log.info("id da getLearnt "+ update.getLearntFrom());
+									log.debug("Sending update to destination " + destination + " for info learnt from " + update.getLearntFrom());
+									log.debug("Sending BGP4 update to:" + destination);
+									session.sendBGP4Message(update);
+								} else
+									log.debug("destination " + destination + " and source of information " + update.getLearntFrom() + " are equal");
+								}
+						}
+						catch (Exception e){
+							e.printStackTrace();
+						}
+					}
+				}
 			}
 			
 		}
 	}
 	/**
 	 * This function create a BGP4 Message with NodeNLRI field
-	 * @param addressList 
+
 	 * @param node_info
 	 */
 	private  BGP4Update createMsgUpdateNodeNLRI(Node_Info node_info){
 		try{
 			
 		
-		BGP4Update update= new BGP4Update();	
-		//Path Attributes
-		ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
-		//Origin
-		OriginAttribute or = new OriginAttribute(); 
-		or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_IGP);
-		pathAttributes.add(or);
-
-		//AS_PATH
-		AS_Path_Attribute as_path = new AS_Path_Attribute();
-		AS_Path_Segment as_path_seg= new AS_Path_Segment();
-		int[] segs=new int[1];
-		segs[0]=65002;
-		as_path_seg.setSegments(segs);
-		as_path.getAsPathSegments().add(as_path_seg);
-		pathAttributes.add(as_path);
-
-		//Node Attribute
-
-		LinkStateAttribute  linkStateAttribute = new LinkStateAttribute();
-		boolean linkStateNeeded=false;
+				BGP4Update update= new BGP4Update();	
+				//Path Attributes
+				ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
+				//Origin
+				OriginAttribute or = new OriginAttribute(); 
+				or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_IGP);
+				pathAttributes.add(or);
 		
-		if (node_info.getSid()!=0){
-			int sid = node_info.getSid();
-			SidLabelNodeAttribTLV sidLabelTLV = new SidLabelNodeAttribTLV();
-			sidLabelTLV.setSid(sid);
-			linkStateAttribute.setSidLabelTLV(sidLabelTLV);			
-			linkStateNeeded=true;
+				//AS_PATH
+				AS_Path_Attribute as_path = new AS_Path_Attribute();
+				AS_Path_Segment as_path_seg= new AS_Path_Segment();
+				int[] segs=new int[1];
+				segs[0]=65002;
+				as_path_seg.setSegments(segs);
+				as_path.getAsPathSegments().add(as_path_seg);
+				pathAttributes.add(as_path);
+		
+				//Node Attribute
+		
+				LinkStateAttribute  linkStateAttribute = new LinkStateAttribute();
+				boolean linkStateNeeded=false;
+				
+				if (node_info.getSid()!=0){
+					int sid = node_info.getSid();
+					SidLabelNodeAttribTLV sidLabelTLV = new SidLabelNodeAttribTLV();
+					sidLabelTLV.setSid(sid);
+					linkStateAttribute.setSidLabelTLV(sidLabelTLV);			
+					linkStateNeeded=true;
+				}
+		
+				if (linkStateNeeded){
+					log.debug("Node Attribute added....");
+					pathAttributes.add(linkStateAttribute);
+				}
+		
+				//NLRI
+				NodeNLRI nodeNLRI = new NodeNLRI();
+				nodeNLRI.setProtocolID(ProtocolIDCodes.Unknown_Protocol_ID);	
+				nodeNLRI.setRoutingUniverseIdentifier(identifier);
+				LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
+		
+				//igp router id
+				if(node_info.getIpv4Address()!=null){
+					IGPRouterIDNodeDescriptorSubTLV igpRouterIDLNSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
+					igpRouterIDLNSubTLV.setIpv4AddressOSPF(node_info.getIpv4Address());	
+					igpRouterIDLNSubTLV.setIGP_router_id_type(IGPRouterIDNodeDescriptorSubTLV.IGP_ROUTER_ID_TYPE_OSPF_NON_PSEUDO);
+					localNodeDescriptors.setIGPRouterID(igpRouterIDLNSubTLV);
+					
+				}
+		
+				//as number
+				if(node_info.getAs_number()!=null){
+					AutonomousSystemNodeDescriptorSubTLV asNodeDescrSubTLV = new AutonomousSystemNodeDescriptorSubTLV();
+					asNodeDescrSubTLV.setAS_ID(node_info.getAs_number());
+					localNodeDescriptors.setAutonomousSystemSubTLV(asNodeDescrSubTLV);
+				} 
+				//Complete Dummy TLVs
+						BGPLSIdentifierNodeDescriptorSubTLV bGPLSIDSubTLV =new BGPLSIdentifierNodeDescriptorSubTLV();
+						bGPLSIDSubTLV.setBGPLS_ID(this.localBGPLSIdentifer);
+						localNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
+						AreaIDNodeDescriptorSubTLV areaID = new AreaIDNodeDescriptorSubTLV();
+						areaID.setAREA_ID(this.localAreaID);
+						localNodeDescriptors.setAreaID(areaID);
+				
+				nodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
+				BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
+				ra.setLsNLRI(nodeNLRI);
+				pathAttributes.add(ra);
+				update.setLearntFrom(node_info.getLearntFrom());
+				return update;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		
 		}
 
-		if (linkStateNeeded){
-			log.info("Node Attribute added....");
-			pathAttributes.add(linkStateAttribute);
-		}
+	/**
+	 * This function create a BGP4 Message with NodeNLRI field
+	 * @param addressList 
+	 * @param node_info
+	 */
+	private  BGP4Update createMsgUpdateITNodeNLRI(String domainID, IT_Resources itResources){
+		try{
+	
+			BGP4Update update= new BGP4Update();	
+			//Path Attributes
+			ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
+			//Origin
+			OriginAttribute or = new OriginAttribute(); 
+			or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_IGP);
+			pathAttributes.add(or);
 
-		//NLRI
-		NodeNLRI nodeNLRI = new NodeNLRI();
-		nodeNLRI.setProtocolID(ProtocolIDCodes.Unknown_Protocol_ID);	
-		nodeNLRI.setRoutingUniverseIdentifier(identifier);
-		LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
+			//AS_PATH
+			AS_Path_Attribute as_path = new AS_Path_Attribute();
+			AS_Path_Segment as_path_seg= new AS_Path_Segment();
+			int[] segs=new int[1];
+			segs[0]=65002;
+			as_path_seg.setSegments(segs);
+			as_path.getAsPathSegments().add(as_path_seg);
+			pathAttributes.add(as_path);	
+	
+		
 
-		//igp router id
-		if(node_info.getIpv4Address()!=null){
-			IGPRouterIDNodeDescriptorSubTLV igpRouterIDLNSubTLV = new IGPRouterIDNodeDescriptorSubTLV();
-			igpRouterIDLNSubTLV.setIpv4AddressOSPF(node_info.getIpv4Address());	
-			igpRouterIDLNSubTLV.setIGP_router_id_type(IGPRouterIDNodeDescriptorSubTLV.IGP_ROUTER_ID_TYPE_OSPF_NON_PSEUDO);
-			localNodeDescriptors.setIGPRouterID(igpRouterIDLNSubTLV);
+			//NLRI
+			ITNodeNLRI itNodeNLRI = new ITNodeNLRI();
+			itNodeNLRI.setNodeId(domainID);
+			itNodeNLRI.setControllerIT(itResources.getControllerIT());
+			itNodeNLRI.setCpu(itResources.getCpu());
+			itNodeNLRI.setMem(itResources.getMem());
+			itNodeNLRI.setStorage(itResources.getStorage());
+			update.setLearntFrom(itResources.getLearntFrom());
+			log.info("Creating IT Update related to domain "+domainID+" learnt from "+itResources.getLearntFrom());
+			LocalNodeDescriptorsTLV localNodeDescriptors = new LocalNodeDescriptorsTLV();
 			
-		}
-
-		//as number
-		if(node_info.getAs_number()!=null){
-			AutonomousSystemNodeDescriptorSubTLV asNodeDescrSubTLV = new AutonomousSystemNodeDescriptorSubTLV();
-			asNodeDescrSubTLV.setAS_ID(node_info.getAs_number());
-			localNodeDescriptors.setAutonomousSystemSubTLV(asNodeDescrSubTLV);
-		} 
-		//Complete Dummy TLVs
-				BGPLSIdentifierNodeDescriptorSubTLV bGPLSIDSubTLV =new BGPLSIdentifierNodeDescriptorSubTLV();
-				bGPLSIDSubTLV.setBGPLS_ID(this.localBGPLSIdentifer);
-				localNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
-				AreaIDNodeDescriptorSubTLV areaID = new AreaIDNodeDescriptorSubTLV();
-				areaID.setAREA_ID(this.localAreaID);
-				localNodeDescriptors.setAreaID(areaID);
+			//Complete Dummy TLVs
+			BGPLSIdentifierNodeDescriptorSubTLV bGPLSIDSubTLV =new BGPLSIdentifierNodeDescriptorSubTLV();
+			bGPLSIDSubTLV.setBGPLS_ID(this.localBGPLSIdentifer);
+			localNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
+			AreaIDNodeDescriptorSubTLV areaID = new AreaIDNodeDescriptorSubTLV();
+			areaID.setAREA_ID(this.localAreaID);
+			localNodeDescriptors.setAreaID(areaID);
+	
+			//itNodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
+			BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
+			ra.setLsNLRI(itNodeNLRI);
+			pathAttributes.add(ra);
+			return update;
 		
-		nodeNLRI.setLocalNodeDescriptors(localNodeDescriptors);
-		BGP_LS_MP_Reach_Attribute ra= new BGP_LS_MP_Reach_Attribute();
-		ra.setLsNLRI(nodeNLRI);
-		pathAttributes.add(ra);
-		update.setLearntFrom(node_info.getLearntFrom());
-		return update;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
 		
 	}
-
+	
 	/**
 	 * Function to create a BGP4 update message with a link NRLI field. To send the links.
 	 * 				
@@ -416,7 +554,7 @@ public class SendTopology implements Runnable {
 	 * @param intradomain
 	 * @param linkDelay 
 	 */
-	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,   ArrayList<Inet4Address> domainList, boolean intradomain, TE_Information te_info ){
+	private BGP4Update createMsgUpdateLinkNLRI(ArrayList<Inet4Address> addressList,ArrayList<Long> localRemoteIfList,int lanID,   ArrayList<String> domainList, boolean intradomain, TE_Information te_info ){
 		BGP4Update update= new BGP4Update();	
 		//1. Path Attributes
 		ArrayList<PathAttribute> pathAttributes = update.getPathAttributes();
@@ -427,7 +565,8 @@ public class SendTopology implements Runnable {
 		else
 			or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_EGP);
 		pathAttributes.add(or);	
-
+		///Andreaaaaa
+		//update.setLearntFrom("192.168.0.1");
 		//1.2. AS-PATH
 		
 		AS_Path_Attribute as_path = new AS_Path_Attribute();
@@ -544,7 +683,7 @@ public class SendTopology implements Runnable {
 			DefaultTEMetricLinkAttribTLV defaultMetric = new DefaultTEMetricLinkAttribTLV();
 			//defaultMetric.setLinkMetric(metric);
 			defaultMetric.setLinkMetric(te_metric);
-			log.info("Metric en el metodo createMsgUpdateLinkNLRI es: " + te_metric);
+			log.debug("Metric en el metodo createMsgUpdateLinkNLRI es: " + te_metric);
 			linkStateAttribute.setTEMetricTLV(defaultMetric);
 			linkStateNeeded=true;
 		}
@@ -552,7 +691,7 @@ public class SendTopology implements Runnable {
 		//1.2.6 MF_OPT
 		if (mfOTP != null){
 			MF_OTPAttribTLV mfOTPTLV = mfOTP.duplicate();
-			log.info("SENDING MFOTP OSCAR");
+			log.debug("SENDING MFOTP OSCAR");
 			linkStateAttribute.setMF_OTPAttribTLV(mfOTPTLV);
 			linkStateNeeded=true;
 		}
@@ -589,11 +728,17 @@ public class SendTopology implements Runnable {
 		//2.1.2. AS
 		if (domainList != null){
 			AutonomousSystemNodeDescriptorSubTLV as_local = new AutonomousSystemNodeDescriptorSubTLV();
-			as_local.setAS_ID(domainList.get(0));
-			localNodeDescriptors.setAutonomousSystemSubTLV(as_local);
-			AutonomousSystemNodeDescriptorSubTLV as_remote = new AutonomousSystemNodeDescriptorSubTLV();
-			as_remote.setAS_ID(domainList.get(1));
-			remoteNodeDescriptors.setAutonomousSystemSubTLV(as_remote);	
+			try {
+				as_local.setAS_ID((Inet4Address) Inet4Address.getByName(domainList.get(0)));
+				localNodeDescriptors.setAutonomousSystemSubTLV(as_local);
+				AutonomousSystemNodeDescriptorSubTLV as_remote = new AutonomousSystemNodeDescriptorSubTLV();
+				as_remote.setAS_ID((Inet4Address) Inet4Address.getByName(domainList.get(1)));
+				remoteNodeDescriptors.setAutonomousSystemSubTLV(as_remote);	
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		//Complete Dummy TLVs
 		remoteNodeDescriptors.setBGPLSIDSubTLV(bGPLSIDSubTLV);
@@ -804,6 +949,14 @@ public class SendTopology implements Runnable {
 
 	public void setSendTopology(boolean sendTopology) {
 		this.sendTopology = sendTopology;
+	}
+
+	public void setisTest(boolean test) {
+		this.isTest = test;
+	}
+
+	public boolean getisTest() {
+		return this.isTest;
 	}
 
 

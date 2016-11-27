@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <managementIP>localhost</managementIP>
+    <managementPort>5001</managementPort>
+
+    <XML>
+        <mode>TM</mode>
+        <XMLFileTopology>target/conf2waysReal/network2.xml</XMLFileTopology>
+        <Identifier>172.17.11.202</Identifier>
+    </XML>
+     <InitFrom>
+        <Init>initFromXML</Init>
+    </InitFrom>
+    <!--WSOld>
+	<ip>localhost</ip>
+	<port>9876</port>
+    </WSOld-->
+    <UNIFY>
+        <serve_port>8088</serve_port>
+    </UNIFY>
+    <BGPLS>
+        <Reader>True</Reader>
+        <Writer>True</Writer>
+        <BGPLSconfigFile>target/conf2waysReal/BGPLS2_2way.xml</BGPLSconfigFile>
+    </BGPLS>
+   
+</config>

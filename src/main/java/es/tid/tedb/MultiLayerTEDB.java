@@ -1,18 +1,12 @@
 package es.tid.tedb;
 
-import java.net.Inet4Address;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
+import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
 import org.jgrapht.graph.SimpleDirectedWeightedGraph;
 
-import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
+import java.net.Inet4Address;
+import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class MultiLayerTEDB implements DomainTEDB {
@@ -140,6 +134,11 @@ public class MultiLayerTEDB implements DomainTEDB {
 		reachabilityEntry = new ReachabilityEntry();
 		//domainReachabilityIPv4Prefix=new byte[4];
 		FileTEDBUpdater.getDomainReachabilityFromFile(file,reachabilityEntry,"mpls");
+	}
+
+	@Override
+	public void initializeFromFile(String file, String learnFrom) {
+
 	}
 
 	@Override
@@ -442,5 +441,19 @@ public class MultiLayerTEDB implements DomainTEDB {
 	public Hashtable<Object, Node_Info> getNodeTable() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+	@Override
+	public IT_Resources getItResources() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void setItResources(IT_Resources itResources) {
+		// TODO Auto-generated method stub
+		
 	}
 }
