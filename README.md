@@ -57,8 +57,7 @@ To run the BGP Peer as a standalone application use the class BGPPeerMain. You c
     git clone https://github.com/telefonicaid/netphony-topology.git
     cd netphony-topology
     mvn clean package -P bgp-ls-speaker assembly:single
-    cd target
-    sudo java -Dlog4j.configurationFile=log4j2.xml  -jar bgp-ls-speaker-jar-with-dependencies.jar BGP4Parameters.xml 
+    sudo java -Dlog4j.configurationFile=target/log4j2.xml  -jar target/bgp-ls-speaker-jar-with-dependencies.jar target/bgpls_example1/BGP4Parameters_1.xml
  ```
  
 Before running, you should configure the parameteres. The parameters are configured in an xml file. By default, if used with BGPPeerMain, or it is not specified a file name, BGP4Parameters.xml should be used. An example of the file is located in examples/BGP4Parameters.xml (and with the maven assembly build, it is copied in the target directory).
