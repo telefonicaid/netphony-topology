@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<network>
+	<domain>
+		<layer type="transport" ></layer>
+
+		<domain_id>0.0.0.1</domain_id>
+		<reachability_entry>
+			<ipv4_address>172.16.101.0</ipv4_address>
+			<prefix>29</prefix>
+		</reachability_entry>
+
+		<node>
+			<router_id>172.16.101.101</router_id>
+		</node>
+		<node>
+			<router_id>172.16.101.102</router_id>
+		</node>
+		<node>
+			<router_id>172.16.101.103</router_id>
+		</node>
+
+		<node>
+			<router_id>172.16.101.104</router_id>
+		</node>
+
+		<edgeCommon>
+			<undir_delay_link>99</undir_delay_link>
+			<undir_min_max_delay>
+				<min>23</min>
+				<max>43</max>
+			</undir_min_max_delay>	
+			<undir_delay_variation>1</undir_delay_variation>
+			<undir_link_loss>102</undir_link_loss>
+			<undir_residual_bandwidth>802</undir_residual_bandwidth>
+			<undir_available_bandwidth>500</undir_available_bandwidth>
+			<undir_utilized_bandwidth>436</undir_utilized_bandwidth>	
+		</edgeCommon>
+
+		<edge>
+			<source>
+				<router_id>172.16.101.101</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.104</router_id>
+				<if_id>1</if_id>
+			</destination>	
+			<maximum_bandwidth>3.35</maximum_bandwidth>
+			<undir_delay_link>99</undir_delay_link>
+			<undir_min_max_delay>
+				<min>23</min>
+				<max>43</max>
+			</undir_min_max_delay>	
+			<undir_delay_variation>1</undir_delay_variation>
+			<undir_link_loss>102</undir_link_loss>
+			<undir_residual_bandwidth>802</undir_residual_bandwidth>
+			<undir_available_bandwidth>500</undir_available_bandwidth>
+			<undir_utilized_bandwidth>436</undir_utilized_bandwidth>		
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.104</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.101</router_id>
+				<if_id>1</if_id>
+			</destination>		
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.101</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.102</router_id>
+				<if_id>1</if_id>
+			</destination>		
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.102</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.101</router_id>
+				<if_id>2</if_id>
+			</destination>		
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.102</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.103</router_id>
+				<if_id>1</if_id>
+			</destination>	
+			<undir_delay_link>102103</undir_delay_link>
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.103</router_id>
+				<if_id>1</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.102</router_id>
+				<if_id>2</if_id>
+			</destination>				
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.103</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.104</router_id>
+				<if_id>2</if_id>
+			</destination>	
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.104</router_id>
+				<if_id>2</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.103</router_id>
+				<if_id>2</if_id>
+			</destination>				
+		</edge>
+
+		<edge>
+			<source>
+				<router_id>172.16.101.102</router_id>
+				<if_id>3</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.104</router_id>
+				<if_id>3</if_id>
+			</destination>	
+		</edge>
+		<edge>
+			<source>
+				<router_id>172.16.101.104</router_id>
+				<if_id>3</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.101.102</router_id>
+				<if_id>3</if_id>
+			</destination>				
+		</edge>
+
+		<edge>
+			<source>
+				<router_id>172.16.101.104</router_id>
+				<if_id>13</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.102.101</router_id>
+				<if_id>11</if_id>
+			</destination>	
+			<undir_delay_link>1</undir_delay_link>		
+		</edge>
+	</domain>
+
+
+	
+
+	<domain>
+		<layer type="transport" ></layer>
+
+		<domain_id>0.0.0.2</domain_id>
+		<reachability_entry>
+			<ipv4_address>172.16.102.0</ipv4_address>
+			<prefix>29</prefix>
+		</reachability_entry>
+
+
+        <it_resources>
+        	<controller_it>https://UC3MController.5Gex.com/url</controller_it>
+        	<cpu>222</cpu>
+            <mem>222Gbyte</mem>
+            <storage>222Tbyte</storage>
+        </it_resources>
+
+		<node>
+			<router_id>172.16.102.101</router_id>
+		</node>
+		<node>
+			<router_id>172.16.102.102</router_id>
+		</node>
+		<edge>
+			<source>
+				<router_id>172.16.102.101</router_id>
+				<if_id>14</if_id>
+			</source>			
+			<destination>
+				<router_id>172.16.102.102</router_id>
+				<if_id>13</if_id>
+			</destination>	
+			<undir_delay_link>2</undir_delay_link>			
+		</edge>
+	</domain>
+
+</network>
