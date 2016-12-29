@@ -249,7 +249,7 @@ public class TopologyModuleParams
 	 */
 	private boolean isCOPReading=false;
 	/**
-	 * Port of service-topology Server API
+	 * Port of service-topology Server COP API
 	 */
 	private int exportCOPPort=8087;
 	/**
@@ -260,7 +260,16 @@ public class TopologyModuleParams
 	 * Port of service-topology remote Server API
 	 */
 	private int remoteCOPPort=8081;
+        
+       /**
+	 * Port of service-topology Server TAPI
+	 */
+        private int exportTAPIPort=8887;
 	
+        /**
+	 * Active COP service-topology exporter
+	 */
+	private boolean isTAPIwriting =false;
 	
 	public TopologyModuleParams(String confFile)
 	{
@@ -706,7 +715,7 @@ public class TopologyModuleParams
 		this.isRestInfinera = isRestInfinera;
 	}
 	public boolean isCOPWriting() {
-		// TODO Auto-generated method stub
+		
 		return this.isCOPwritting;
 	}
 	public void setCOPWriting(boolean isCOPwritting)
@@ -829,6 +838,36 @@ public class TopologyModuleParams
 	public void setRemoteUnifyPort(int remoteUnifyPort) {
 		this.remoteUnifyPort = remoteUnifyPort;
 	}
-	
+        
+        /**
+         * This method return the port of the TAPI API
+         * @return integer with the port value
+         */
+        public int getExportTAPIPort() {
+            return exportTAPIPort;
+        }
+        /**
+         * this method sets the port for TAPI API
+         * @param tAPIPort  with port value to be ussed by the plugin 
+         */
+        void setExportTAPIPort(int tAPIPort) {
+            exportTAPIPort = tAPIPort;
+        }
+
+        /**
+         * This method returns true if works as exporter or false otherwise
+         * @return the boolean value 
+         */
+        public boolean isTAPIWriting() {
+		return this.isTAPIwriting;
+	}
+        /**
+         * this method set the exporter flag to specify value as input argument
+         * @param isTAPIwriting  boolean value to set
+         */
+        void setTAPIWriting(boolean isTAPIwriting) {
+            this.isTAPIwriting = isTAPIwriting;
+        }
+
 	
 }
