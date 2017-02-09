@@ -1,9 +1,9 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import es.tid.topologyModuleBase.TAPITopoModel.model.CostCharacteristic;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.CostCharacteristic;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
  * The cost characteristics of a TopologicalEntity not necessarily correlated to the cost of the underlying physical realization.  They may be quite specific to the individual TopologicalEntity e.g. opportunity cost. Relates to layer capacity There may be many perspectives from which cost may be considered  for a particular TopologicalEntity and hence many specific costs and potentially cost algorithms.  Using an entity will incur a cost. 
  */
 @ApiModel(description = "The cost characteristics of a TopologicalEntity not necessarily correlated to the cost of the underlying physical realization.  They may be quite specific to the individual TopologicalEntity e.g. opportunity cost. Relates to layer capacity There may be many perspectives from which cost may be considered  for a particular TopologicalEntity and hence many specific costs and potentially cost algorithms.  Using an entity will incur a cost. ")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class TransferCostPac   {
   private List<CostCharacteristic> costCharacteristic = new ArrayList<CostCharacteristic>();
 

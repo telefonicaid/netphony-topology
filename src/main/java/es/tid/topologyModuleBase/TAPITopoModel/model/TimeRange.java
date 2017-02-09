@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,37 +8,15 @@ import io.swagger.annotations.ApiModelProperty;
 
 
 
-/**
- * none
- **/
 
 /**
- * none
+ * TimeRange
  */
-@ApiModel(description = "none")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class TimeRange   {
-  private String endTime = null;
-
   private String startTime = null;
 
-  public TimeRange endTime(String endTime) {
-    this.endTime = endTime;
-    return this;
-  }
-
-   /**
-   * none
-   * @return endTime
-  **/
-  @ApiModelProperty(value = "none")
-  public String getEndTime() {
-    return endTime;
-  }
-
-  public void setEndTime(String endTime) {
-    this.endTime = endTime;
-  }
+  private String endTime = null;
 
   public TimeRange startTime(String startTime) {
     this.startTime = startTime;
@@ -46,16 +24,34 @@ public class TimeRange   {
   }
 
    /**
-   * none
+   * Get startTime
    * @return startTime
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public String getStartTime() {
     return startTime;
   }
 
   public void setStartTime(String startTime) {
     this.startTime = startTime;
+  }
+
+  public TimeRange endTime(String endTime) {
+    this.endTime = endTime;
+    return this;
+  }
+
+   /**
+   * Get endTime
+   * @return endTime
+  **/
+  @ApiModelProperty(value = "")
+  public String getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(String endTime) {
+    this.endTime = endTime;
   }
 
 
@@ -68,13 +64,13 @@ public class TimeRange   {
       return false;
     }
     TimeRange timeRange = (TimeRange) o;
-    return Objects.equals(this.endTime, timeRange.endTime) &&
-        Objects.equals(this.startTime, timeRange.startTime);
+    return Objects.equals(this.startTime, timeRange.startTime) &&
+        Objects.equals(this.endTime, timeRange.endTime);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(endTime, startTime);
+    return Objects.hash(startTime, endTime);
   }
 
   @Override
@@ -82,8 +78,8 @@ public class TimeRange   {
     StringBuilder sb = new StringBuilder();
     sb.append("class TimeRange {\n");
     
-    sb.append("    endTime: ").append(toIndentedString(endTime)).append("\n");
     sb.append("    startTime: ").append(toIndentedString(startTime)).append("\n");
+    sb.append("    endTime: ").append(toIndentedString(endTime)).append("\n");
     sb.append("}");
     return sb.toString();
   }

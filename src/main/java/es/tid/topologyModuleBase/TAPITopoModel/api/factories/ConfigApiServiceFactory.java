@@ -1,9 +1,9 @@
-package es.tid.topologyModuleBase.TAPITopoModel.api.factories;
+package es.tid.TopologyModuleBase.TAPITopoModel.api.factories;
 
-import es.tid.topologyModuleBase.TAPITopoModel.api.ConfigApiService;
-import es.tid.topologyModuleBase.TAPITopoModel.api.impl.ConfigApiServiceImpl;
+import es.tid.TopologyModuleBase.TAPITopoModel.api.ConfigApiService;
+import es.tid.TopologyModuleBase.TAPITopoModel.api.impl.ConfigApiServiceImpl;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class ConfigApiServiceFactory {
     private final static ConfigApiService service = new ConfigApiServiceImpl();
 

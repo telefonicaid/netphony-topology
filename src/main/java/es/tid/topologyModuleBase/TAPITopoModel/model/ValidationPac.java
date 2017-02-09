@@ -1,9 +1,9 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationMechanism;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.ValidationMechanism;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
  * Validation covers the various adjacenct discovery and reachability verification protocols. Also may cover Information source and degree of integrity.
  */
 @ApiModel(description = "Validation covers the various adjacenct discovery and reachability verification protocols. Also may cover Information source and degree of integrity.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class ValidationPac   {
   private List<ValidationMechanism> validationMechanism = new ArrayList<ValidationMechanism>();
 

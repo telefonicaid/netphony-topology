@@ -1,21 +1,19 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import es.tid.topologyModuleBase.TAPITopoModel.model.AdminStatePac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ExtensionsSpec;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocolTransitionPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LinkPort;
-import es.tid.topologyModuleBase.TAPITopoModel.model.NameAndValue;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ResourceSpec;
-import es.tid.topologyModuleBase.TAPITopoModel.model.RiskParameterPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCapacityPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCostPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferIntegrityPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferTimingPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.AdminStatePac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.LayerProtocolTransitionPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.NameAndValue;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.ResourceSpec;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.RiskParameterPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferCapacityPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferCostPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferIntegrityPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferTimingPac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.ValidationPac;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -31,43 +29,35 @@ import java.util.List;
  * The Link object class models effective adjacency between two or more ForwardingDomains (FD). 
  */
 @ApiModel(description = "The Link object class models effective adjacency between two or more ForwardingDomains (FD). ")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class Link   {
-  /**
-   * The directionality of the Link.  Is applicable to simple Links where all LinkEnds are BIDIRECTIONAL (the Link will be BIDIRECTIONAL) or UNIDIRECTIONAL (the Link will be UNIDIRECTIONAL).  Is not present in more complex cases.
-   */
-  public enum DirectionEnum {
-    BIDIRECTIONAL("BIDIRECTIONAL"),
-    
-    UNIDIRECTIONAL("UNIDIRECTIONAL"),
-    
-    UNDEFINED_OR_UNKNOWN("UNDEFINED_OR_UNKNOWN");
+  private List<String> nodeEdgePoint = new ArrayList<String>();
 
-    private String value;
+  private TransferTimingPac transferTiming = null;
 
-    DirectionEnum(String value) {
-      this.value = value;
-    }
+  private TransferIntegrityPac transferIntegrity = null;
 
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
+  private List<String> node = new ArrayList<String>();
 
-  private DirectionEnum direction = null;
+  private TransferCapacityPac transferCapacity = null;
+
+  private TransferCostPac transferCost = null;
+
+  private LayerProtocolTransitionPac lpTransition = null;
+
+  private RiskParameterPac riskParameter = null;
 
   /**
-   * none
+   * Gets or Sets layerProtocolName
    */
   public enum LayerProtocolNameEnum {
-    OCH("OCH"),
+    OCH("och"),
     
-    ODU("ODU"),
+    ODU("odu"),
     
-    ETH("ETH"),
+    ETH("eth"),
     
-    MPLS_TP("MPLS_TP");
+    MPLS_TP("mpls-tp");
 
     private String value;
 
@@ -83,142 +73,91 @@ public class Link   {
 
   private List<LayerProtocolNameEnum> layerProtocolName = new ArrayList<LayerProtocolNameEnum>();
 
-  private ValidationPac validation = null;
-
-  private LayerProtocolTransitionPac lpTransition = null;
-
   private AdminStatePac state = null;
 
-  private List<LinkPort> linkPort = new ArrayList<LinkPort>();
+  private ValidationPac validation = null;
 
-  private List<String> node = new ArrayList<String>();
-
-  private TransferCapacityPac transferCapacity = null;
-
-  private TransferCostPac transferCost = null;
-
-  private RiskParameterPac riskParameter = null;
-
-  private TransferTimingPac transferTiming = null;
-
-  private TransferIntegrityPac transferIntegrity = null;
-
-  public Link direction(DirectionEnum direction) {
-    this.direction = direction;
-    return this;
-  }
-
-   /**
+  /**
    * The directionality of the Link.  Is applicable to simple Links where all LinkEnds are BIDIRECTIONAL (the Link will be BIDIRECTIONAL) or UNIDIRECTIONAL (the Link will be UNIDIRECTIONAL).  Is not present in more complex cases.
-   * @return direction
-  **/
-  @ApiModelProperty(value = "The directionality of the Link.  Is applicable to simple Links where all LinkEnds are BIDIRECTIONAL (the Link will be BIDIRECTIONAL) or UNIDIRECTIONAL (the Link will be UNIDIRECTIONAL).  Is not present in more complex cases.")
-  public DirectionEnum getDirection() {
-    return direction;
+   */
+  public enum DirectionEnum {
+    BIDIRECTIONAL("bidirectional"),
+    
+    UNIDIRECTIONAL("unidirectional"),
+    
+    UNDEFINED_OR_UNKNOWN("undefined-or-unknown");
+
+    private String value;
+
+    DirectionEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return String.valueOf(value);
+    }
   }
 
-  public void setDirection(DirectionEnum direction) {
-    this.direction = direction;
-  }
+  private DirectionEnum direction = null;
 
-  public Link layerProtocolName(List<LayerProtocolNameEnum> layerProtocolName) {
-    this.layerProtocolName = layerProtocolName;
+  public Link nodeEdgePoint(List<String> nodeEdgePoint) {
+    this.nodeEdgePoint = nodeEdgePoint;
     return this;
   }
 
-  public Link addLayerProtocolNameItem(LayerProtocolNameEnum layerProtocolNameItem) {
-    this.layerProtocolName.add(layerProtocolNameItem);
+  public Link addNodeEdgePointItem(String nodeEdgePointItem) {
+    this.nodeEdgePoint.add(nodeEdgePointItem);
     return this;
   }
 
    /**
-   * Get layerProtocolName
-   * @return layerProtocolName
+   * Get nodeEdgePoint
+   * @return nodeEdgePoint
   **/
   @ApiModelProperty(value = "")
-  public List<LayerProtocolNameEnum> getLayerProtocolName() {
-    return layerProtocolName;
+  public List<String> getNodeEdgePoint() {
+    return nodeEdgePoint;
   }
 
-  public void setLayerProtocolName(List<LayerProtocolNameEnum> layerProtocolName) {
-    this.layerProtocolName = layerProtocolName;
+  public void setNodeEdgePoint(List<String> nodeEdgePoint) {
+    this.nodeEdgePoint = nodeEdgePoint;
   }
 
-  public Link validation(ValidationPac validation) {
-    this.validation = validation;
+  public Link transferTiming(TransferTimingPac transferTiming) {
+    this.transferTiming = transferTiming;
     return this;
   }
 
    /**
-   * none
-   * @return validation
+   * Get transferTiming
+   * @return transferTiming
   **/
-  @ApiModelProperty(value = "none")
-  public ValidationPac getValidation() {
-    return validation;
+  @ApiModelProperty(value = "")
+  public TransferTimingPac getTransferTiming() {
+    return transferTiming;
   }
 
-  public void setValidation(ValidationPac validation) {
-    this.validation = validation;
+  public void setTransferTiming(TransferTimingPac transferTiming) {
+    this.transferTiming = transferTiming;
   }
 
-  public Link lpTransition(LayerProtocolTransitionPac lpTransition) {
-    this.lpTransition = lpTransition;
+  public Link transferIntegrity(TransferIntegrityPac transferIntegrity) {
+    this.transferIntegrity = transferIntegrity;
     return this;
   }
 
    /**
-   * none
-   * @return lpTransition
+   * Get transferIntegrity
+   * @return transferIntegrity
   **/
-  @ApiModelProperty(value = "none")
-  public LayerProtocolTransitionPac getLpTransition() {
-    return lpTransition;
+  @ApiModelProperty(value = "")
+  public TransferIntegrityPac getTransferIntegrity() {
+    return transferIntegrity;
   }
 
-  public void setLpTransition(LayerProtocolTransitionPac lpTransition) {
-    this.lpTransition = lpTransition;
-  }
-
-  public Link state(AdminStatePac state) {
-    this.state = state;
-    return this;
-  }
-
-   /**
-   * none
-   * @return state
-  **/
-  @ApiModelProperty(value = "none")
-  public AdminStatePac getState() {
-    return state;
-  }
-
-  public void setState(AdminStatePac state) {
-    this.state = state;
-  }
-
-  public Link linkPort(List<LinkPort> linkPort) {
-    this.linkPort = linkPort;
-    return this;
-  }
-
-  public Link addLinkPortItem(LinkPort linkPortItem) {
-    this.linkPort.add(linkPortItem);
-    return this;
-  }
-
-   /**
-   * none
-   * @return linkPort
-  **/
-  @ApiModelProperty(value = "none")
-  public List<LinkPort> getLinkPort() {
-    return linkPort;
-  }
-
-  public void setLinkPort(List<LinkPort> linkPort) {
-    this.linkPort = linkPort;
+  public void setTransferIntegrity(TransferIntegrityPac transferIntegrity) {
+    this.transferIntegrity = transferIntegrity;
   }
 
   public Link node(List<String> node) {
@@ -250,10 +189,10 @@ public class Link   {
   }
 
    /**
-   * none
+   * Get transferCapacity
    * @return transferCapacity
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public TransferCapacityPac getTransferCapacity() {
     return transferCapacity;
   }
@@ -268,10 +207,10 @@ public class Link   {
   }
 
    /**
-   * none
+   * Get transferCost
    * @return transferCost
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public TransferCostPac getTransferCost() {
     return transferCost;
   }
@@ -280,16 +219,34 @@ public class Link   {
     this.transferCost = transferCost;
   }
 
+  public Link lpTransition(LayerProtocolTransitionPac lpTransition) {
+    this.lpTransition = lpTransition;
+    return this;
+  }
+
+   /**
+   * Get lpTransition
+   * @return lpTransition
+  **/
+  @ApiModelProperty(value = "")
+  public LayerProtocolTransitionPac getLpTransition() {
+    return lpTransition;
+  }
+
+  public void setLpTransition(LayerProtocolTransitionPac lpTransition) {
+    this.lpTransition = lpTransition;
+  }
+
   public Link riskParameter(RiskParameterPac riskParameter) {
     this.riskParameter = riskParameter;
     return this;
   }
 
    /**
-   * none
+   * Get riskParameter
    * @return riskParameter
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public RiskParameterPac getRiskParameter() {
     return riskParameter;
   }
@@ -298,40 +255,81 @@ public class Link   {
     this.riskParameter = riskParameter;
   }
 
-  public Link transferTiming(TransferTimingPac transferTiming) {
-    this.transferTiming = transferTiming;
+  public Link layerProtocolName(List<LayerProtocolNameEnum> layerProtocolName) {
+    this.layerProtocolName = layerProtocolName;
+    return this;
+  }
+
+  public Link addLayerProtocolNameItem(LayerProtocolNameEnum layerProtocolNameItem) {
+    this.layerProtocolName.add(layerProtocolNameItem);
     return this;
   }
 
    /**
-   * none
-   * @return transferTiming
+   * Get layerProtocolName
+   * @return layerProtocolName
   **/
-  @ApiModelProperty(value = "none")
-  public TransferTimingPac getTransferTiming() {
-    return transferTiming;
+  @ApiModelProperty(value = "")
+  public List<LayerProtocolNameEnum> getLayerProtocolName() {
+    return layerProtocolName;
   }
 
-  public void setTransferTiming(TransferTimingPac transferTiming) {
-    this.transferTiming = transferTiming;
+  public void setLayerProtocolName(List<LayerProtocolNameEnum> layerProtocolName) {
+    this.layerProtocolName = layerProtocolName;
   }
 
-  public Link transferIntegrity(TransferIntegrityPac transferIntegrity) {
-    this.transferIntegrity = transferIntegrity;
+  public Link state(AdminStatePac state) {
+    this.state = state;
     return this;
   }
 
    /**
-   * none
-   * @return transferIntegrity
+   * Get state
+   * @return state
   **/
-  @ApiModelProperty(value = "none")
-  public TransferIntegrityPac getTransferIntegrity() {
-    return transferIntegrity;
+  @ApiModelProperty(value = "")
+  public AdminStatePac getState() {
+    return state;
   }
 
-  public void setTransferIntegrity(TransferIntegrityPac transferIntegrity) {
-    this.transferIntegrity = transferIntegrity;
+  public void setState(AdminStatePac state) {
+    this.state = state;
+  }
+
+  public Link validation(ValidationPac validation) {
+    this.validation = validation;
+    return this;
+  }
+
+   /**
+   * Get validation
+   * @return validation
+  **/
+  @ApiModelProperty(value = "")
+  public ValidationPac getValidation() {
+    return validation;
+  }
+
+  public void setValidation(ValidationPac validation) {
+    this.validation = validation;
+  }
+
+  public Link direction(DirectionEnum direction) {
+    this.direction = direction;
+    return this;
+  }
+
+   /**
+   * The directionality of the Link.  Is applicable to simple Links where all LinkEnds are BIDIRECTIONAL (the Link will be BIDIRECTIONAL) or UNIDIRECTIONAL (the Link will be UNIDIRECTIONAL).  Is not present in more complex cases.
+   * @return direction
+  **/
+  @ApiModelProperty(value = "The directionality of the Link.  Is applicable to simple Links where all LinkEnds are BIDIRECTIONAL (the Link will be BIDIRECTIONAL) or UNIDIRECTIONAL (the Link will be UNIDIRECTIONAL).  Is not present in more complex cases.")
+  public DirectionEnum getDirection() {
+    return direction;
+  }
+
+  public void setDirection(DirectionEnum direction) {
+    this.direction = direction;
   }
 
 
@@ -344,23 +342,23 @@ public class Link   {
       return false;
     }
     Link link = (Link) o;
-    return Objects.equals(this.direction, link.direction) &&
-        Objects.equals(this.layerProtocolName, link.layerProtocolName) &&
-        Objects.equals(this.validation, link.validation) &&
-        Objects.equals(this.lpTransition, link.lpTransition) &&
-        Objects.equals(this.state, link.state) &&
-        Objects.equals(this.linkPort, link.linkPort) &&
+    return Objects.equals(this.nodeEdgePoint, link.nodeEdgePoint) &&
+        Objects.equals(this.transferTiming, link.transferTiming) &&
+        Objects.equals(this.transferIntegrity, link.transferIntegrity) &&
         Objects.equals(this.node, link.node) &&
         Objects.equals(this.transferCapacity, link.transferCapacity) &&
         Objects.equals(this.transferCost, link.transferCost) &&
+        Objects.equals(this.lpTransition, link.lpTransition) &&
         Objects.equals(this.riskParameter, link.riskParameter) &&
-        Objects.equals(this.transferTiming, link.transferTiming) &&
-        Objects.equals(this.transferIntegrity, link.transferIntegrity);
+        Objects.equals(this.layerProtocolName, link.layerProtocolName) &&
+        Objects.equals(this.state, link.state) &&
+        Objects.equals(this.validation, link.validation) &&
+        Objects.equals(this.direction, link.direction);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(direction, layerProtocolName, validation, lpTransition, state, linkPort, node, transferCapacity, transferCost, riskParameter, transferTiming, transferIntegrity);
+    return Objects.hash(nodeEdgePoint, transferTiming, transferIntegrity, node, transferCapacity, transferCost, lpTransition, riskParameter, layerProtocolName, state, validation, direction);
   }
 
   @Override
@@ -368,18 +366,18 @@ public class Link   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Link {\n");
     
-    sb.append("    direction: ").append(toIndentedString(direction)).append("\n");
-    sb.append("    layerProtocolName: ").append(toIndentedString(layerProtocolName)).append("\n");
-    sb.append("    validation: ").append(toIndentedString(validation)).append("\n");
-    sb.append("    lpTransition: ").append(toIndentedString(lpTransition)).append("\n");
-    sb.append("    state: ").append(toIndentedString(state)).append("\n");
-    sb.append("    linkPort: ").append(toIndentedString(linkPort)).append("\n");
+    sb.append("    nodeEdgePoint: ").append(toIndentedString(nodeEdgePoint)).append("\n");
+    sb.append("    transferTiming: ").append(toIndentedString(transferTiming)).append("\n");
+    sb.append("    transferIntegrity: ").append(toIndentedString(transferIntegrity)).append("\n");
     sb.append("    node: ").append(toIndentedString(node)).append("\n");
     sb.append("    transferCapacity: ").append(toIndentedString(transferCapacity)).append("\n");
     sb.append("    transferCost: ").append(toIndentedString(transferCost)).append("\n");
+    sb.append("    lpTransition: ").append(toIndentedString(lpTransition)).append("\n");
     sb.append("    riskParameter: ").append(toIndentedString(riskParameter)).append("\n");
-    sb.append("    transferTiming: ").append(toIndentedString(transferTiming)).append("\n");
-    sb.append("    transferIntegrity: ").append(toIndentedString(transferIntegrity)).append("\n");
+    sb.append("    layerProtocolName: ").append(toIndentedString(layerProtocolName)).append("\n");
+    sb.append("    state: ").append(toIndentedString(state)).append("\n");
+    sb.append("    validation: ").append(toIndentedString(validation)).append("\n");
+    sb.append("    direction: ").append(toIndentedString(direction)).append("\n");
     sb.append("}");
     return sb.toString();
   }

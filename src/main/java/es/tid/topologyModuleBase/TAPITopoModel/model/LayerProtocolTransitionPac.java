@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +18,7 @@ import java.util.List;
  * Relevant for a Link that is formed by abstracting one or more LTPs (in a stack) to focus on the flow and deemphasize the protocol transformation.  This abstraction is relevant when considering multi-layer routing.  The layer protocols of the LTP and the order of their application to the signal is still relevant and need to be accounted for. This is derived from the LTP spec details. This Pac provides the relevant abstractions of the LTPs and provides the necessary association to the LTPs involved. Links that included details in this Pac are often referred to as Transitional Links.
  */
 @ApiModel(description = "Relevant for a Link that is formed by abstracting one or more LTPs (in a stack) to focus on the flow and deemphasize the protocol transformation.  This abstraction is relevant when considering multi-layer routing.  The layer protocols of the LTP and the order of their application to the signal is still relevant and need to be accounted for. This is derived from the LTP spec details. This Pac provides the relevant abstractions of the LTPs and provides the necessary association to the LTPs involved. Links that included details in this Pac are often referred to as Transitional Links.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class LayerProtocolTransitionPac   {
   private List<String> nodeEdgePoint = new ArrayList<String>();
 

@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,31 +16,13 @@ import io.swagger.annotations.ApiModelProperty;
  * Identifies the validation mechanism and describes the characteristics of that mechanism
  */
 @ApiModel(description = "Identifies the validation mechanism and describes the characteristics of that mechanism")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class ValidationMechanism   {
-  private String layerProtocolAdjacencyValidated = null;
-
   private String validationRobustness = null;
 
   private String validationMechanism = null;
 
-  public ValidationMechanism layerProtocolAdjacencyValidated(String layerProtocolAdjacencyValidated) {
-    this.layerProtocolAdjacencyValidated = layerProtocolAdjacencyValidated;
-    return this;
-  }
-
-   /**
-   * State of validatiion
-   * @return layerProtocolAdjacencyValidated
-  **/
-  @ApiModelProperty(value = "State of validatiion")
-  public String getLayerProtocolAdjacencyValidated() {
-    return layerProtocolAdjacencyValidated;
-  }
-
-  public void setLayerProtocolAdjacencyValidated(String layerProtocolAdjacencyValidated) {
-    this.layerProtocolAdjacencyValidated = layerProtocolAdjacencyValidated;
-  }
+  private String layerProtocolAdjacencyValidated = null;
 
   public ValidationMechanism validationRobustness(String validationRobustness) {
     this.validationRobustness = validationRobustness;
@@ -78,6 +60,24 @@ public class ValidationMechanism   {
     this.validationMechanism = validationMechanism;
   }
 
+  public ValidationMechanism layerProtocolAdjacencyValidated(String layerProtocolAdjacencyValidated) {
+    this.layerProtocolAdjacencyValidated = layerProtocolAdjacencyValidated;
+    return this;
+  }
+
+   /**
+   * State of validatiion
+   * @return layerProtocolAdjacencyValidated
+  **/
+  @ApiModelProperty(value = "State of validatiion")
+  public String getLayerProtocolAdjacencyValidated() {
+    return layerProtocolAdjacencyValidated;
+  }
+
+  public void setLayerProtocolAdjacencyValidated(String layerProtocolAdjacencyValidated) {
+    this.layerProtocolAdjacencyValidated = layerProtocolAdjacencyValidated;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -88,14 +88,14 @@ public class ValidationMechanism   {
       return false;
     }
     ValidationMechanism validationMechanism = (ValidationMechanism) o;
-    return Objects.equals(this.layerProtocolAdjacencyValidated, validationMechanism.layerProtocolAdjacencyValidated) &&
-        Objects.equals(this.validationRobustness, validationMechanism.validationRobustness) &&
-        Objects.equals(this.validationMechanism, validationMechanism.validationMechanism);
+    return Objects.equals(this.validationRobustness, validationMechanism.validationRobustness) &&
+        Objects.equals(this.validationMechanism, validationMechanism.validationMechanism) &&
+        Objects.equals(this.layerProtocolAdjacencyValidated, validationMechanism.layerProtocolAdjacencyValidated);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(layerProtocolAdjacencyValidated, validationRobustness, validationMechanism);
+    return Objects.hash(validationRobustness, validationMechanism, layerProtocolAdjacencyValidated);
   }
 
   @Override
@@ -103,9 +103,9 @@ public class ValidationMechanism   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ValidationMechanism {\n");
     
-    sb.append("    layerProtocolAdjacencyValidated: ").append(toIndentedString(layerProtocolAdjacencyValidated)).append("\n");
     sb.append("    validationRobustness: ").append(toIndentedString(validationRobustness)).append("\n");
     sb.append("    validationMechanism: ").append(toIndentedString(validationMechanism)).append("\n");
+    sb.append("    layerProtocolAdjacencyValidated: ").append(toIndentedString(layerProtocolAdjacencyValidated)).append("\n");
     sb.append("}");
     return sb.toString();
   }

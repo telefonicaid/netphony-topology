@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,9 +17,11 @@ import io.swagger.annotations.ApiModelProperty;
  * Information on capacity of a particular TopologicalEntity.
  */
 @ApiModel(description = "Information on capacity of a particular TopologicalEntity.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class Capacity   {
-  private String committedInformationRate = null;
+  private Boolean couplingFlag = null;
+
+  private String committedBurstSize = null;
 
   private String peakBurstSize = null;
 
@@ -27,25 +29,25 @@ public class Capacity   {
    * Total capacity of the TopologicalEntity in MB/s
    */
   public enum TotalSizeEnum {
-    NOT_APPLICABLE("NOT_APPLICABLE"),
+    NOT_APPLICABLE("not-applicable"),
     
-    _10MBPS("10MBPS"),
+    _10MBPS("10mbps"),
     
-    _100MBPS("100MBPS"),
+    _100MBPS("100mbps"),
     
-    _1GBPS("1GBPS"),
+    _1GBPS("1gbps"),
     
-    _2_4GBPS("2_4GBPS"),
+    _2_4GBPS("2.4gbps"),
     
-    _10GBPS("10GBPS"),
+    _10GBPS("10gbps"),
     
-    _40GBPS("40GBPS"),
+    _40GBPS("40gbps"),
     
-    _100GBPS("100GBPS"),
+    _100GBPS("100gbps"),
     
-    _200GBPS("200GBPS"),
+    _200GBPS("200gbps"),
     
-    _400GBPS("400GBPS");
+    _400GBPS("400gbps");
 
     private String value;
 
@@ -61,21 +63,23 @@ public class Capacity   {
 
   private TotalSizeEnum totalSize = null;
 
-  private String committedBurstSize = null;
+  private String committedInformationRate = null;
+
+  private String peakInformationRate = null;
 
   /**
-   * none
+   * Gets or Sets packetBwProfileType
    */
   public enum PacketBwProfileTypeEnum {
-    NOT_APPLICABLE("NOT_APPLICABLE"),
+    NOT_APPLICABLE("not-applicable"),
     
-    MEF_10_X("MEF_10_x"),
+    MEF_10_X("mef-10.x"),
     
-    RFC_2697("RFC_2697"),
+    RFC_2697("rfc-2697"),
     
-    RFC_2698("RFC_2698"),
+    RFC_2698("rfc-2698"),
     
-    RFC_4115("RFC_4115");
+    RFC_4115("rfc-4115");
 
     private String value;
 
@@ -91,28 +95,42 @@ public class Capacity   {
 
   private PacketBwProfileTypeEnum packetBwProfileType = null;
 
-  private String peakInformationRate = null;
-
-  private Boolean couplingFlag = null;
-
   private Boolean colorAware = null;
 
-  public Capacity committedInformationRate(String committedInformationRate) {
-    this.committedInformationRate = committedInformationRate;
+  public Capacity couplingFlag(Boolean couplingFlag) {
+    this.couplingFlag = couplingFlag;
     return this;
   }
 
    /**
-   * none
-   * @return committedInformationRate
+   * Get couplingFlag
+   * @return couplingFlag
   **/
-  @ApiModelProperty(value = "none")
-  public String getCommittedInformationRate() {
-    return committedInformationRate;
+  @ApiModelProperty(value = "")
+  public Boolean getCouplingFlag() {
+    return couplingFlag;
   }
 
-  public void setCommittedInformationRate(String committedInformationRate) {
-    this.committedInformationRate = committedInformationRate;
+  public void setCouplingFlag(Boolean couplingFlag) {
+    this.couplingFlag = couplingFlag;
+  }
+
+  public Capacity committedBurstSize(String committedBurstSize) {
+    this.committedBurstSize = committedBurstSize;
+    return this;
+  }
+
+   /**
+   * Get committedBurstSize
+   * @return committedBurstSize
+  **/
+  @ApiModelProperty(value = "")
+  public String getCommittedBurstSize() {
+    return committedBurstSize;
+  }
+
+  public void setCommittedBurstSize(String committedBurstSize) {
+    this.committedBurstSize = committedBurstSize;
   }
 
   public Capacity peakBurstSize(String peakBurstSize) {
@@ -121,10 +139,10 @@ public class Capacity   {
   }
 
    /**
-   * none
+   * Get peakBurstSize
    * @return peakBurstSize
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public String getPeakBurstSize() {
     return peakBurstSize;
   }
@@ -151,40 +169,22 @@ public class Capacity   {
     this.totalSize = totalSize;
   }
 
-  public Capacity committedBurstSize(String committedBurstSize) {
-    this.committedBurstSize = committedBurstSize;
+  public Capacity committedInformationRate(String committedInformationRate) {
+    this.committedInformationRate = committedInformationRate;
     return this;
   }
 
    /**
-   * none
-   * @return committedBurstSize
+   * Get committedInformationRate
+   * @return committedInformationRate
   **/
-  @ApiModelProperty(value = "none")
-  public String getCommittedBurstSize() {
-    return committedBurstSize;
+  @ApiModelProperty(value = "")
+  public String getCommittedInformationRate() {
+    return committedInformationRate;
   }
 
-  public void setCommittedBurstSize(String committedBurstSize) {
-    this.committedBurstSize = committedBurstSize;
-  }
-
-  public Capacity packetBwProfileType(PacketBwProfileTypeEnum packetBwProfileType) {
-    this.packetBwProfileType = packetBwProfileType;
-    return this;
-  }
-
-   /**
-   * none
-   * @return packetBwProfileType
-  **/
-  @ApiModelProperty(value = "none")
-  public PacketBwProfileTypeEnum getPacketBwProfileType() {
-    return packetBwProfileType;
-  }
-
-  public void setPacketBwProfileType(PacketBwProfileTypeEnum packetBwProfileType) {
-    this.packetBwProfileType = packetBwProfileType;
+  public void setCommittedInformationRate(String committedInformationRate) {
+    this.committedInformationRate = committedInformationRate;
   }
 
   public Capacity peakInformationRate(String peakInformationRate) {
@@ -193,10 +193,10 @@ public class Capacity   {
   }
 
    /**
-   * none
+   * Get peakInformationRate
    * @return peakInformationRate
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public String getPeakInformationRate() {
     return peakInformationRate;
   }
@@ -205,22 +205,22 @@ public class Capacity   {
     this.peakInformationRate = peakInformationRate;
   }
 
-  public Capacity couplingFlag(Boolean couplingFlag) {
-    this.couplingFlag = couplingFlag;
+  public Capacity packetBwProfileType(PacketBwProfileTypeEnum packetBwProfileType) {
+    this.packetBwProfileType = packetBwProfileType;
     return this;
   }
 
    /**
-   * none
-   * @return couplingFlag
+   * Get packetBwProfileType
+   * @return packetBwProfileType
   **/
-  @ApiModelProperty(value = "none")
-  public Boolean getCouplingFlag() {
-    return couplingFlag;
+  @ApiModelProperty(value = "")
+  public PacketBwProfileTypeEnum getPacketBwProfileType() {
+    return packetBwProfileType;
   }
 
-  public void setCouplingFlag(Boolean couplingFlag) {
-    this.couplingFlag = couplingFlag;
+  public void setPacketBwProfileType(PacketBwProfileTypeEnum packetBwProfileType) {
+    this.packetBwProfileType = packetBwProfileType;
   }
 
   public Capacity colorAware(Boolean colorAware) {
@@ -229,10 +229,10 @@ public class Capacity   {
   }
 
    /**
-   * none
+   * Get colorAware
    * @return colorAware
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public Boolean getColorAware() {
     return colorAware;
   }
@@ -251,19 +251,19 @@ public class Capacity   {
       return false;
     }
     Capacity capacity = (Capacity) o;
-    return Objects.equals(this.committedInformationRate, capacity.committedInformationRate) &&
+    return Objects.equals(this.couplingFlag, capacity.couplingFlag) &&
+        Objects.equals(this.committedBurstSize, capacity.committedBurstSize) &&
         Objects.equals(this.peakBurstSize, capacity.peakBurstSize) &&
         Objects.equals(this.totalSize, capacity.totalSize) &&
-        Objects.equals(this.committedBurstSize, capacity.committedBurstSize) &&
-        Objects.equals(this.packetBwProfileType, capacity.packetBwProfileType) &&
+        Objects.equals(this.committedInformationRate, capacity.committedInformationRate) &&
         Objects.equals(this.peakInformationRate, capacity.peakInformationRate) &&
-        Objects.equals(this.couplingFlag, capacity.couplingFlag) &&
+        Objects.equals(this.packetBwProfileType, capacity.packetBwProfileType) &&
         Objects.equals(this.colorAware, capacity.colorAware);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(committedInformationRate, peakBurstSize, totalSize, committedBurstSize, packetBwProfileType, peakInformationRate, couplingFlag, colorAware);
+    return Objects.hash(couplingFlag, committedBurstSize, peakBurstSize, totalSize, committedInformationRate, peakInformationRate, packetBwProfileType, colorAware);
   }
 
   @Override
@@ -271,13 +271,13 @@ public class Capacity   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Capacity {\n");
     
-    sb.append("    committedInformationRate: ").append(toIndentedString(committedInformationRate)).append("\n");
+    sb.append("    couplingFlag: ").append(toIndentedString(couplingFlag)).append("\n");
+    sb.append("    committedBurstSize: ").append(toIndentedString(committedBurstSize)).append("\n");
     sb.append("    peakBurstSize: ").append(toIndentedString(peakBurstSize)).append("\n");
     sb.append("    totalSize: ").append(toIndentedString(totalSize)).append("\n");
-    sb.append("    committedBurstSize: ").append(toIndentedString(committedBurstSize)).append("\n");
-    sb.append("    packetBwProfileType: ").append(toIndentedString(packetBwProfileType)).append("\n");
+    sb.append("    committedInformationRate: ").append(toIndentedString(committedInformationRate)).append("\n");
     sb.append("    peakInformationRate: ").append(toIndentedString(peakInformationRate)).append("\n");
-    sb.append("    couplingFlag: ").append(toIndentedString(couplingFlag)).append("\n");
+    sb.append("    packetBwProfileType: ").append(toIndentedString(packetBwProfileType)).append("\n");
     sb.append("    colorAware: ").append(toIndentedString(colorAware)).append("\n");
     sb.append("}");
     return sb.toString();

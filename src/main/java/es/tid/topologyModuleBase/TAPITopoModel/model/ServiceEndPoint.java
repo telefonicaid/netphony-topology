@@ -1,14 +1,13 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ExtensionsSpec;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocol;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LifecycleStatePac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.NameAndValue;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ResourceSpec;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.LayerProtocol;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.LifecycleStatePac;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.NameAndValue;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.ResourceSpec;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -24,21 +23,21 @@ import java.util.List;
  * The LogicalTerminationPoint (LTP) object class encapsulates the termination and adaptation functions of one or more transport layers.  The structure of LTP supports all transport protocols including circuit and packet forms.
  */
 @ApiModel(description = "The LogicalTerminationPoint (LTP) object class encapsulates the termination and adaptation functions of one or more transport layers.  The structure of LTP supports all transport protocols including circuit and packet forms.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class ServiceEndPoint   {
-  private LifecycleStatePac state = null;
+  private List<LayerProtocol> layerProtocol = new ArrayList<LayerProtocol>();
 
   /**
-   * none
+   * Gets or Sets direction
    */
   public enum DirectionEnum {
-    BIDIRECTIONAL("BIDIRECTIONAL"),
+    BIDIRECTIONAL("bidirectional"),
     
-    SINK("SINK"),
+    SINK("sink"),
     
-    SOURCE("SOURCE"),
+    SOURCE("source"),
     
-    UNDEFINED_OR_UNKNOWN("UNDEFINED_OR_UNKNOWN");
+    UNDEFINED_OR_UNKNOWN("undefined-or-unknown");
 
     private String value;
 
@@ -54,43 +53,7 @@ public class ServiceEndPoint   {
 
   private DirectionEnum direction = null;
 
-  private List<LayerProtocol> layerProtocol = new ArrayList<LayerProtocol>();
-
-  public ServiceEndPoint state(LifecycleStatePac state) {
-    this.state = state;
-    return this;
-  }
-
-   /**
-   * none
-   * @return state
-  **/
-  @ApiModelProperty(value = "none")
-  public LifecycleStatePac getState() {
-    return state;
-  }
-
-  public void setState(LifecycleStatePac state) {
-    this.state = state;
-  }
-
-  public ServiceEndPoint direction(DirectionEnum direction) {
-    this.direction = direction;
-    return this;
-  }
-
-   /**
-   * none
-   * @return direction
-  **/
-  @ApiModelProperty(value = "none")
-  public DirectionEnum getDirection() {
-    return direction;
-  }
-
-  public void setDirection(DirectionEnum direction) {
-    this.direction = direction;
-  }
+  private LifecycleStatePac state = null;
 
   public ServiceEndPoint layerProtocol(List<LayerProtocol> layerProtocol) {
     this.layerProtocol = layerProtocol;
@@ -103,16 +66,52 @@ public class ServiceEndPoint   {
   }
 
    /**
-   * none
+   * Get layerProtocol
    * @return layerProtocol
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public List<LayerProtocol> getLayerProtocol() {
     return layerProtocol;
   }
 
   public void setLayerProtocol(List<LayerProtocol> layerProtocol) {
     this.layerProtocol = layerProtocol;
+  }
+
+  public ServiceEndPoint direction(DirectionEnum direction) {
+    this.direction = direction;
+    return this;
+  }
+
+   /**
+   * Get direction
+   * @return direction
+  **/
+  @ApiModelProperty(value = "")
+  public DirectionEnum getDirection() {
+    return direction;
+  }
+
+  public void setDirection(DirectionEnum direction) {
+    this.direction = direction;
+  }
+
+  public ServiceEndPoint state(LifecycleStatePac state) {
+    this.state = state;
+    return this;
+  }
+
+   /**
+   * Get state
+   * @return state
+  **/
+  @ApiModelProperty(value = "")
+  public LifecycleStatePac getState() {
+    return state;
+  }
+
+  public void setState(LifecycleStatePac state) {
+    this.state = state;
   }
 
 
@@ -125,14 +124,14 @@ public class ServiceEndPoint   {
       return false;
     }
     ServiceEndPoint serviceEndPoint = (ServiceEndPoint) o;
-    return Objects.equals(this.state, serviceEndPoint.state) &&
+    return Objects.equals(this.layerProtocol, serviceEndPoint.layerProtocol) &&
         Objects.equals(this.direction, serviceEndPoint.direction) &&
-        Objects.equals(this.layerProtocol, serviceEndPoint.layerProtocol);
+        Objects.equals(this.state, serviceEndPoint.state);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(state, direction, layerProtocol);
+    return Objects.hash(layerProtocol, direction, state);
   }
 
   @Override
@@ -140,9 +139,9 @@ public class ServiceEndPoint   {
     StringBuilder sb = new StringBuilder();
     sb.append("class ServiceEndPoint {\n");
     
-    sb.append("    state: ").append(toIndentedString(state)).append("\n");
-    sb.append("    direction: ").append(toIndentedString(direction)).append("\n");
     sb.append("    layerProtocol: ").append(toIndentedString(layerProtocol)).append("\n");
+    sb.append("    direction: ").append(toIndentedString(direction)).append("\n");
+    sb.append("    state: ").append(toIndentedString(state)).append("\n");
     sb.append("}");
     return sb.toString();
   }

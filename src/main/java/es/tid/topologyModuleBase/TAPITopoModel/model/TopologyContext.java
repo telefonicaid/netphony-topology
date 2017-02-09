@@ -3,6 +3,7 @@ package es.tid.TopologyModuleBase.TAPITopoModel.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.NetworkTopologyService;
 import es.tid.TopologyModuleBase.TAPITopoModel.model.Topology;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -13,18 +14,38 @@ import java.util.List;
 
 
 /**
- * GetTopologyListRPCOutputSchema
+ * TopologyContext
  */
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
-public class GetTopologyListRPCOutputSchema   {
+public class TopologyContext   {
+  private NetworkTopologyService nwTopologyService = null;
+
   private List<Topology> topology = new ArrayList<Topology>();
 
-  public GetTopologyListRPCOutputSchema topology(List<Topology> topology) {
+  public TopologyContext nwTopologyService(NetworkTopologyService nwTopologyService) {
+    this.nwTopologyService = nwTopologyService;
+    return this;
+  }
+
+   /**
+   * Get nwTopologyService
+   * @return nwTopologyService
+  **/
+  @ApiModelProperty(value = "")
+  public NetworkTopologyService getNwTopologyService() {
+    return nwTopologyService;
+  }
+
+  public void setNwTopologyService(NetworkTopologyService nwTopologyService) {
+    this.nwTopologyService = nwTopologyService;
+  }
+
+  public TopologyContext topology(List<Topology> topology) {
     this.topology = topology;
     return this;
   }
 
-  public GetTopologyListRPCOutputSchema addTopologyItem(Topology topologyItem) {
+  public TopologyContext addTopologyItem(Topology topologyItem) {
     this.topology.add(topologyItem);
     return this;
   }
@@ -51,20 +72,22 @@ public class GetTopologyListRPCOutputSchema   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GetTopologyListRPCOutputSchema getTopologyListRPCOutputSchema = (GetTopologyListRPCOutputSchema) o;
-    return Objects.equals(this.topology, getTopologyListRPCOutputSchema.topology);
+    TopologyContext topologyContext = (TopologyContext) o;
+    return Objects.equals(this.nwTopologyService, topologyContext.nwTopologyService) &&
+        Objects.equals(this.topology, topologyContext.topology);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(topology);
+    return Objects.hash(nwTopologyService, topology);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class GetTopologyListRPCOutputSchema {\n");
+    sb.append("class TopologyContext {\n");
     
+    sb.append("    nwTopologyService: ").append(toIndentedString(nwTopologyService)).append("\n");
     sb.append("    topology: ").append(toIndentedString(topology)).append("\n");
     sb.append("}");
     return sb.toString();

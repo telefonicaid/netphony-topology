@@ -1,9 +1,8 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -17,132 +16,66 @@ import io.swagger.annotations.ApiModelProperty;
  * Provides state attributes that are applicable to an entity that can be administered. Such an entity also has operational and lifecycle aspects.
  */
 @ApiModel(description = "Provides state attributes that are applicable to an entity that can be administered. Such an entity also has operational and lifecycle aspects.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class AdminStatePac   {
-  /**
-   * none
-   */
-  public enum AdministrativeStateEnum {
-    LOCKED("LOCKED"),
-    
-    UNLOCKED("UNLOCKED");
+  private String lifecycleState = null;
 
-    private String value;
+  private String administrativeState = null;
 
-    AdministrativeStateEnum(String value) {
-      this.value = value;
-    }
+  private String operationalState = null;
 
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
-
-  private AdministrativeStateEnum administrativeState = null;
-
-  /**
-   * none
-   */
-  public enum OperationalStateEnum {
-    DISABLED("DISABLED"),
-    
-    ENABLED("ENABLED");
-
-    private String value;
-
-    OperationalStateEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
-
-  private OperationalStateEnum operationalState = null;
-
-  /**
-   * none
-   */
-  public enum LifecycleStateEnum {
-    PLANNED("PLANNED"),
-    
-    POTENTIAL("POTENTIAL"),
-    
-    INSTALLED("INSTALLED"),
-    
-    RESTORING("RESTORING"),
-    
-    PENDING_REMOVAL("PENDING_REMOVAL");
-
-    private String value;
-
-    LifecycleStateEnum(String value) {
-      this.value = value;
-    }
-
-    @Override
-    public String toString() {
-      return String.valueOf(value);
-    }
-  }
-
-  private LifecycleStateEnum lifecycleState = null;
-
-  public AdminStatePac administrativeState(AdministrativeStateEnum administrativeState) {
-    this.administrativeState = administrativeState;
-    return this;
-  }
-
-   /**
-   * none
-   * @return administrativeState
-  **/
-  @ApiModelProperty(value = "none")
-  public AdministrativeStateEnum getAdministrativeState() {
-    return administrativeState;
-  }
-
-  public void setAdministrativeState(AdministrativeStateEnum administrativeState) {
-    this.administrativeState = administrativeState;
-  }
-
-  public AdminStatePac operationalState(OperationalStateEnum operationalState) {
-    this.operationalState = operationalState;
-    return this;
-  }
-
-   /**
-   * none
-   * @return operationalState
-  **/
-  @ApiModelProperty(value = "none")
-  public OperationalStateEnum getOperationalState() {
-    return operationalState;
-  }
-
-  public void setOperationalState(OperationalStateEnum operationalState) {
-    this.operationalState = operationalState;
-  }
-
-  public AdminStatePac lifecycleState(LifecycleStateEnum lifecycleState) {
+  public AdminStatePac lifecycleState(String lifecycleState) {
     this.lifecycleState = lifecycleState;
     return this;
   }
 
    /**
-   * none
+   * Get lifecycleState
    * @return lifecycleState
   **/
-  @ApiModelProperty(value = "none")
-  public LifecycleStateEnum getLifecycleState() {
+  @ApiModelProperty(value = "")
+  public String getLifecycleState() {
     return lifecycleState;
   }
 
-  public void setLifecycleState(LifecycleStateEnum lifecycleState) {
+  public void setLifecycleState(String lifecycleState) {
     this.lifecycleState = lifecycleState;
+  }
+
+  public AdminStatePac administrativeState(String administrativeState) {
+    this.administrativeState = administrativeState;
+    return this;
+  }
+
+   /**
+   * Get administrativeState
+   * @return administrativeState
+  **/
+  @ApiModelProperty(value = "")
+  public String getAdministrativeState() {
+    return administrativeState;
+  }
+
+  public void setAdministrativeState(String administrativeState) {
+    this.administrativeState = administrativeState;
+  }
+
+  public AdminStatePac operationalState(String operationalState) {
+    this.operationalState = operationalState;
+    return this;
+  }
+
+   /**
+   * Get operationalState
+   * @return operationalState
+  **/
+  @ApiModelProperty(value = "")
+  public String getOperationalState() {
+    return operationalState;
+  }
+
+  public void setOperationalState(String operationalState) {
+    this.operationalState = operationalState;
   }
 
 
@@ -155,14 +88,14 @@ public class AdminStatePac   {
       return false;
     }
     AdminStatePac adminStatePac = (AdminStatePac) o;
-    return Objects.equals(this.administrativeState, adminStatePac.administrativeState) &&
-        Objects.equals(this.operationalState, adminStatePac.operationalState) &&
-        Objects.equals(this.lifecycleState, adminStatePac.lifecycleState);
+    return Objects.equals(this.lifecycleState, adminStatePac.lifecycleState) &&
+        Objects.equals(this.administrativeState, adminStatePac.administrativeState) &&
+        Objects.equals(this.operationalState, adminStatePac.operationalState);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(administrativeState, operationalState, lifecycleState);
+    return Objects.hash(lifecycleState, administrativeState, operationalState);
   }
 
   @Override
@@ -170,9 +103,9 @@ public class AdminStatePac   {
     StringBuilder sb = new StringBuilder();
     sb.append("class AdminStatePac {\n");
     
+    sb.append("    lifecycleState: ").append(toIndentedString(lifecycleState)).append("\n");
     sb.append("    administrativeState: ").append(toIndentedString(administrativeState)).append("\n");
     sb.append("    operationalState: ").append(toIndentedString(operationalState)).append("\n");
-    sb.append("    lifecycleState: ").append(toIndentedString(lifecycleState)).append("\n");
     sb.append("}");
     return sb.toString();
   }

@@ -1,9 +1,9 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import es.tid.topologyModuleBase.TAPITopoModel.model.Topology;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.Topology;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * GetTopologyDetailsRPCOutputSchema
  */
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class GetTopologyDetailsRPCOutputSchema   {
   private Topology topology = null;
 
@@ -23,10 +23,10 @@ public class GetTopologyDetailsRPCOutputSchema   {
   }
 
    /**
-   * none
+   * Get topology
    * @return topology
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public Topology getTopology() {
     return topology;
   }

@@ -1,10 +1,9 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ExtensionsSpec;
-import es.tid.topologyModuleBase.TAPITopoModel.model.NameAndValue;
+import es.tid.TopologyModuleBase.TAPITopoModel.model.NameAndValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -20,36 +19,11 @@ import java.util.List;
  * The TAPI GlobalComponent serves as the super class for all TAPI entities that can be directly retrieved by their ID. As such, these are first class entities and their ID is expected to be globally unique. 
  */
 @ApiModel(description = "The TAPI GlobalComponent serves as the super class for all TAPI entities that can be directly retrieved by their ID. As such, these are first class entities and their ID is expected to be globally unique. ")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class LocalClass   {
-  private List<ExtensionsSpec> extensions = new ArrayList<ExtensionsSpec>();
-
   private String localId = null;
 
   private List<NameAndValue> name = new ArrayList<NameAndValue>();
-
-  public LocalClass extensions(List<ExtensionsSpec> extensions) {
-    this.extensions = extensions;
-    return this;
-  }
-
-  public LocalClass addExtensionsItem(ExtensionsSpec extensionsItem) {
-    this.extensions.add(extensionsItem);
-    return this;
-  }
-
-   /**
-   * none
-   * @return extensions
-  **/
-  @ApiModelProperty(value = "none")
-  public List<ExtensionsSpec> getExtensions() {
-    return extensions;
-  }
-
-  public void setExtensions(List<ExtensionsSpec> extensions) {
-    this.extensions = extensions;
-  }
 
   public LocalClass localId(String localId) {
     this.localId = localId;
@@ -57,10 +31,10 @@ public class LocalClass   {
   }
 
    /**
-   * none
+   * Get localId
    * @return localId
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public String getLocalId() {
     return localId;
   }
@@ -102,14 +76,13 @@ public class LocalClass   {
       return false;
     }
     LocalClass localClass = (LocalClass) o;
-    return Objects.equals(this.extensions, localClass.extensions) &&
-        Objects.equals(this.localId, localClass.localId) &&
+    return Objects.equals(this.localId, localClass.localId) &&
         Objects.equals(this.name, localClass.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(extensions, localId, name);
+    return Objects.hash(localId, name);
   }
 
   @Override
@@ -117,7 +90,6 @@ public class LocalClass   {
     StringBuilder sb = new StringBuilder();
     sb.append("class LocalClass {\n");
     
-    sb.append("    extensions: ").append(toIndentedString(extensions)).append("\n");
     sb.append("    localId: ").append(toIndentedString(localId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");

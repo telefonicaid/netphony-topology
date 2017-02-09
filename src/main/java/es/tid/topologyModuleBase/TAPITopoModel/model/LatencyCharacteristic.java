@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,53 +16,17 @@ import io.swagger.annotations.ApiModelProperty;
  * Provides information on latency characteristic for a particular stated trafficProperty.
  */
 @ApiModel(description = "Provides information on latency characteristic for a particular stated trafficProperty.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class LatencyCharacteristic   {
-  private String trafficPropertyQueingLatency = null;
-
-  private String wanderCharacteristic = null;
-
   private String fixedLatencyCharacteristic = null;
 
   private String trafficPropertyName = null;
 
   private String jitterCharacteristic = null;
 
-  public LatencyCharacteristic trafficPropertyQueingLatency(String trafficPropertyQueingLatency) {
-    this.trafficPropertyQueingLatency = trafficPropertyQueingLatency;
-    return this;
-  }
+  private String wanderCharacteristic = null;
 
-   /**
-   * The specific queuing latency for the traffic property.
-   * @return trafficPropertyQueingLatency
-  **/
-  @ApiModelProperty(value = "The specific queuing latency for the traffic property.")
-  public String getTrafficPropertyQueingLatency() {
-    return trafficPropertyQueingLatency;
-  }
-
-  public void setTrafficPropertyQueingLatency(String trafficPropertyQueingLatency) {
-    this.trafficPropertyQueingLatency = trafficPropertyQueingLatency;
-  }
-
-  public LatencyCharacteristic wanderCharacteristic(String wanderCharacteristic) {
-    this.wanderCharacteristic = wanderCharacteristic;
-    return this;
-  }
-
-   /**
-   * Low frequency deviation from true periodicity of a signal and therefore a small low rate of change of transfer latency. Applies to TDM systems (and not packet).
-   * @return wanderCharacteristic
-  **/
-  @ApiModelProperty(value = "Low frequency deviation from true periodicity of a signal and therefore a small low rate of change of transfer latency. Applies to TDM systems (and not packet).")
-  public String getWanderCharacteristic() {
-    return wanderCharacteristic;
-  }
-
-  public void setWanderCharacteristic(String wanderCharacteristic) {
-    this.wanderCharacteristic = wanderCharacteristic;
-  }
+  private String trafficPropertyQueingLatency = null;
 
   public LatencyCharacteristic fixedLatencyCharacteristic(String fixedLatencyCharacteristic) {
     this.fixedLatencyCharacteristic = fixedLatencyCharacteristic;
@@ -118,6 +82,42 @@ public class LatencyCharacteristic   {
     this.jitterCharacteristic = jitterCharacteristic;
   }
 
+  public LatencyCharacteristic wanderCharacteristic(String wanderCharacteristic) {
+    this.wanderCharacteristic = wanderCharacteristic;
+    return this;
+  }
+
+   /**
+   * Low frequency deviation from true periodicity of a signal and therefore a small low rate of change of transfer latency. Applies to TDM systems (and not packet).
+   * @return wanderCharacteristic
+  **/
+  @ApiModelProperty(value = "Low frequency deviation from true periodicity of a signal and therefore a small low rate of change of transfer latency. Applies to TDM systems (and not packet).")
+  public String getWanderCharacteristic() {
+    return wanderCharacteristic;
+  }
+
+  public void setWanderCharacteristic(String wanderCharacteristic) {
+    this.wanderCharacteristic = wanderCharacteristic;
+  }
+
+  public LatencyCharacteristic trafficPropertyQueingLatency(String trafficPropertyQueingLatency) {
+    this.trafficPropertyQueingLatency = trafficPropertyQueingLatency;
+    return this;
+  }
+
+   /**
+   * The specific queuing latency for the traffic property.
+   * @return trafficPropertyQueingLatency
+  **/
+  @ApiModelProperty(value = "The specific queuing latency for the traffic property.")
+  public String getTrafficPropertyQueingLatency() {
+    return trafficPropertyQueingLatency;
+  }
+
+  public void setTrafficPropertyQueingLatency(String trafficPropertyQueingLatency) {
+    this.trafficPropertyQueingLatency = trafficPropertyQueingLatency;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -128,16 +128,16 @@ public class LatencyCharacteristic   {
       return false;
     }
     LatencyCharacteristic latencyCharacteristic = (LatencyCharacteristic) o;
-    return Objects.equals(this.trafficPropertyQueingLatency, latencyCharacteristic.trafficPropertyQueingLatency) &&
-        Objects.equals(this.wanderCharacteristic, latencyCharacteristic.wanderCharacteristic) &&
-        Objects.equals(this.fixedLatencyCharacteristic, latencyCharacteristic.fixedLatencyCharacteristic) &&
+    return Objects.equals(this.fixedLatencyCharacteristic, latencyCharacteristic.fixedLatencyCharacteristic) &&
         Objects.equals(this.trafficPropertyName, latencyCharacteristic.trafficPropertyName) &&
-        Objects.equals(this.jitterCharacteristic, latencyCharacteristic.jitterCharacteristic);
+        Objects.equals(this.jitterCharacteristic, latencyCharacteristic.jitterCharacteristic) &&
+        Objects.equals(this.wanderCharacteristic, latencyCharacteristic.wanderCharacteristic) &&
+        Objects.equals(this.trafficPropertyQueingLatency, latencyCharacteristic.trafficPropertyQueingLatency);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(trafficPropertyQueingLatency, wanderCharacteristic, fixedLatencyCharacteristic, trafficPropertyName, jitterCharacteristic);
+    return Objects.hash(fixedLatencyCharacteristic, trafficPropertyName, jitterCharacteristic, wanderCharacteristic, trafficPropertyQueingLatency);
   }
 
   @Override
@@ -145,11 +145,11 @@ public class LatencyCharacteristic   {
     StringBuilder sb = new StringBuilder();
     sb.append("class LatencyCharacteristic {\n");
     
-    sb.append("    trafficPropertyQueingLatency: ").append(toIndentedString(trafficPropertyQueingLatency)).append("\n");
-    sb.append("    wanderCharacteristic: ").append(toIndentedString(wanderCharacteristic)).append("\n");
     sb.append("    fixedLatencyCharacteristic: ").append(toIndentedString(fixedLatencyCharacteristic)).append("\n");
     sb.append("    trafficPropertyName: ").append(toIndentedString(trafficPropertyName)).append("\n");
     sb.append("    jitterCharacteristic: ").append(toIndentedString(jitterCharacteristic)).append("\n");
+    sb.append("    wanderCharacteristic: ").append(toIndentedString(wanderCharacteristic)).append("\n");
+    sb.append("    trafficPropertyQueingLatency: ").append(toIndentedString(trafficPropertyQueingLatency)).append("\n");
     sb.append("}");
     return sb.toString();
   }

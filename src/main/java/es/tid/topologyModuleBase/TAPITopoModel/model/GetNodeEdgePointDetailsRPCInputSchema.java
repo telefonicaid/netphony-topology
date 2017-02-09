@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -12,31 +12,13 @@ import io.swagger.annotations.ApiModelProperty;
 /**
  * GetNodeEdgePointDetailsRPCInputSchema
  */
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class GetNodeEdgePointDetailsRPCInputSchema   {
-  private String epIdOrName = null;
-
   private String topologyIdOrName = null;
 
   private String nodeIdOrName = null;
 
-  public GetNodeEdgePointDetailsRPCInputSchema epIdOrName(String epIdOrName) {
-    this.epIdOrName = epIdOrName;
-    return this;
-  }
-
-   /**
-   * none
-   * @return epIdOrName
-  **/
-  @ApiModelProperty(value = "none")
-  public String getEpIdOrName() {
-    return epIdOrName;
-  }
-
-  public void setEpIdOrName(String epIdOrName) {
-    this.epIdOrName = epIdOrName;
-  }
+  private String epIdOrName = null;
 
   public GetNodeEdgePointDetailsRPCInputSchema topologyIdOrName(String topologyIdOrName) {
     this.topologyIdOrName = topologyIdOrName;
@@ -44,10 +26,10 @@ public class GetNodeEdgePointDetailsRPCInputSchema   {
   }
 
    /**
-   * none
+   * Get topologyIdOrName
    * @return topologyIdOrName
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public String getTopologyIdOrName() {
     return topologyIdOrName;
   }
@@ -62,16 +44,34 @@ public class GetNodeEdgePointDetailsRPCInputSchema   {
   }
 
    /**
-   * none
+   * Get nodeIdOrName
    * @return nodeIdOrName
   **/
-  @ApiModelProperty(value = "none")
+  @ApiModelProperty(value = "")
   public String getNodeIdOrName() {
     return nodeIdOrName;
   }
 
   public void setNodeIdOrName(String nodeIdOrName) {
     this.nodeIdOrName = nodeIdOrName;
+  }
+
+  public GetNodeEdgePointDetailsRPCInputSchema epIdOrName(String epIdOrName) {
+    this.epIdOrName = epIdOrName;
+    return this;
+  }
+
+   /**
+   * Get epIdOrName
+   * @return epIdOrName
+  **/
+  @ApiModelProperty(value = "")
+  public String getEpIdOrName() {
+    return epIdOrName;
+  }
+
+  public void setEpIdOrName(String epIdOrName) {
+    this.epIdOrName = epIdOrName;
   }
 
 
@@ -84,14 +84,14 @@ public class GetNodeEdgePointDetailsRPCInputSchema   {
       return false;
     }
     GetNodeEdgePointDetailsRPCInputSchema getNodeEdgePointDetailsRPCInputSchema = (GetNodeEdgePointDetailsRPCInputSchema) o;
-    return Objects.equals(this.epIdOrName, getNodeEdgePointDetailsRPCInputSchema.epIdOrName) &&
-        Objects.equals(this.topologyIdOrName, getNodeEdgePointDetailsRPCInputSchema.topologyIdOrName) &&
-        Objects.equals(this.nodeIdOrName, getNodeEdgePointDetailsRPCInputSchema.nodeIdOrName);
+    return Objects.equals(this.topologyIdOrName, getNodeEdgePointDetailsRPCInputSchema.topologyIdOrName) &&
+        Objects.equals(this.nodeIdOrName, getNodeEdgePointDetailsRPCInputSchema.nodeIdOrName) &&
+        Objects.equals(this.epIdOrName, getNodeEdgePointDetailsRPCInputSchema.epIdOrName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(epIdOrName, topologyIdOrName, nodeIdOrName);
+    return Objects.hash(topologyIdOrName, nodeIdOrName, epIdOrName);
   }
 
   @Override
@@ -99,9 +99,9 @@ public class GetNodeEdgePointDetailsRPCInputSchema   {
     StringBuilder sb = new StringBuilder();
     sb.append("class GetNodeEdgePointDetailsRPCInputSchema {\n");
     
-    sb.append("    epIdOrName: ").append(toIndentedString(epIdOrName)).append("\n");
     sb.append("    topologyIdOrName: ").append(toIndentedString(topologyIdOrName)).append("\n");
     sb.append("    nodeIdOrName: ").append(toIndentedString(nodeIdOrName)).append("\n");
+    sb.append("    epIdOrName: ").append(toIndentedString(epIdOrName)).append("\n");
     sb.append("}");
     return sb.toString();
   }

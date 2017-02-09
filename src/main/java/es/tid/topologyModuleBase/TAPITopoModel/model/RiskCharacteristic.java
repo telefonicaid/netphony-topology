@@ -1,4 +1,4 @@
-package es.tid.topologyModuleBase.TAPITopoModel.model;
+package es.tid.TopologyModuleBase.TAPITopoModel.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +18,7 @@ import java.util.List;
  * The information for a particular risk characteristic where there is a list of risk identifiers related to that characteristic.
  */
 @ApiModel(description = "The information for a particular risk characteristic where there is a list of risk identifiers related to that characteristic.")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2016-12-28T15:11:12.465+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
 public class RiskCharacteristic   {
   private List<String> riskIdentifierList = new ArrayList<String>();
 
