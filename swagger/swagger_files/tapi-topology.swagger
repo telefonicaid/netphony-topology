@@ -2026,7 +2026,7 @@
                         "description": "Successful operation",
                         "schema": {
                             "items": {
-                                "x-path": "/context/topology/{uuid}/node/{node_uuid}/transfer-cost/cost-characteristic/{cost-name cost-value cost-algorithm}/",
+                                "x-path": "/context/topology/{uuid}/node/{node_uuid}/transfer-cost/cost-characteristic/{cost-name-cost-value-cost-algorithm}/",
                                 "type": "string"
                             },
                             "type": "array"
@@ -2057,7 +2057,7 @@
                 ]
             }
         },
-        "/config/context/topology/{uuid}/node/{node_uuid}/transfer-cost/cost-characteristic/{cost-name cost-value cost-algorithm}/": {
+        "/config/context/topology/{uuid}/node/{node_uuid}/transfer-cost/cost-characteristic/{cost-name-cost-value-cost-algorithm}/": {
             "get": {
                 "produces": [
                     "application/json"
@@ -2099,7 +2099,7 @@
                         "required": true,
                         "in": "path",
                         "type": "string",
-                        "name": "cost-name cost-value cost-algorithm"
+                        "name": "cost-name-cost-value-cost-algorithm"
                     }
                 ]
             }
@@ -2197,7 +2197,7 @@
                         "description": "Successful operation",
                         "schema": {
                             "items": {
-                                "x-path": "/context/topology/{uuid}/node/{node_uuid}/transfer-timing/latency-characteristic/{traffic-property-name traffic-property-queing-latency}/",
+                                "x-path": "/context/topology/{uuid}/node/{node_uuid}/transfer-timing/latency-characteristic/{traffic-property-name-traffic-property-queing-latency}/",
                                 "type": "string"
                             },
                             "type": "array"
@@ -2228,7 +2228,7 @@
                 ]
             }
         },
-        "/config/context/topology/{uuid}/node/{node_uuid}/transfer-timing/latency-characteristic/{traffic-property-name traffic-property-queing-latency}/": {
+        "/config/context/topology/{uuid}/node/{node_uuid}/transfer-timing/latency-characteristic/{traffic-property-name-traffic-property-queing-latency}/": {
             "get": {
                 "produces": [
                     "application/json"
@@ -2266,11 +2266,11 @@
                         "name": "node_uuid"
                     },
                     {
-                        "description": "ID of traffic-property-name traffic-property-queing-latency",
+                        "description": "ID of traffic-property-name-traffic-property-queing-latency",
                         "required": true,
                         "in": "path",
                         "type": "string",
-                        "name": "traffic-property-name traffic-property-queing-latency"
+                        "name": "traffic-property-name-traffic-property-queing-latency"
                     }
                 ]
             }
@@ -2840,7 +2840,7 @@
                         "description": "Successful operation",
                         "schema": {
                             "items": {
-                                "x-path": "/context/topology/{uuid}/link/{link_uuid}/transfer-cost/cost-characteristic/{cost-name cost-value cost-algorithm}/",
+                                "x-path": "/context/topology/{uuid}/link/{link_uuid}/transfer-cost/cost-characteristic/{cost-name-cost-value-cost-algorithm}/",
                                 "type": "string"
                             },
                             "type": "array"
@@ -2871,7 +2871,7 @@
                 ]
             }
         },
-        "/config/context/topology/{uuid}/link/{link_uuid}/transfer-cost/cost-characteristic/{cost-name cost-value cost-algorithm}/": {
+        "/config/context/topology/{uuid}/link/{link_uuid}/transfer-cost/cost-characteristic/{cost-name-cost-value-cost-algorithm}/": {
             "get": {
                 "produces": [
                     "application/json"
@@ -2913,7 +2913,7 @@
                         "required": true,
                         "in": "path",
                         "type": "string",
-                        "name": "cost-name cost-value cost-algorithm"
+                        "name": "cost-name-cost-value-cost-algorithm"
                     }
                 ]
             }
@@ -3011,7 +3011,7 @@
                         "description": "Successful operation",
                         "schema": {
                             "items": {
-                                "x-path": "/context/topology/{uuid}/link/{link_uuid}/transfer-timing/latency-characteristic/{traffic-property-name traffic-property-queing-latency}/",
+                                "x-path": "/context/topology/{uuid}/link/{link_uuid}/transfer-timing/latency-characteristic/{traffic-property-name-traffic-property-queing-latency}/",
                                 "type": "string"
                             },
                             "type": "array"
@@ -3042,7 +3042,7 @@
                 ]
             }
         },
-        "/config/context/topology/{uuid}/link/{link_uuid}/transfer-timing/latency-characteristic/{traffic-property-name traffic-property-queing-latency}/": {
+        "/config/context/topology/{uuid}/link/{link_uuid}/transfer-timing/latency-characteristic/{traffic-property-name-traffic-property-queing-latency}/": {
             "get": {
                 "produces": [
                     "application/json"
@@ -3084,7 +3084,7 @@
                         "required": true,
                         "in": "path",
                         "type": "string",
-                        "name": "traffic-property-name traffic-property-queing-latency"
+                        "name": "traffic-property-name-traffic-property-queing-latency"
                     }
                 ]
             }
@@ -3273,7 +3273,7 @@
                         "description": "Successful operation",
                         "schema": {
                             "items": {
-                                "x-path": "/context/topology/{uuid}/link/{link_uuid}/validation/validation-mechanism/{validation-mechanism layer-protocol-adjacency-validated validation-robustness}/",
+                                "x-path": "/context/topology/{uuid}/link/{link_uuid}/validation/validation-mechanism/{validation-mechanism-layer-protocol-adjacency-validated-validation-robustness}/",
                                 "type": "string"
                             },
                             "type": "array"
@@ -3304,7 +3304,7 @@
                 ]
             }
         },
-        "/config/context/topology/{uuid}/link/{link_uuid}/validation/validation-mechanism/{validation-mechanism layer-protocol-adjacency-validated validation-robustness}/": {
+        "/config/context/topology/{uuid}/link/{link_uuid}/validation/validation-mechanism/{validation-mechanism-layer-protocol-adjacency-validated-validation-robustness}/": {
             "get": {
                 "produces": [
                     "application/json"
@@ -3346,7 +3346,7 @@
                         "required": true,
                         "in": "path",
                         "type": "string",
-                        "name": "validation-mechanism layer-protocol-adjacency-validated validation-robustness"
+                        "name": "validation-mechanism-layer-protocol-adjacency-validated-validation-robustness"
                     }
                 ]
             }
@@ -4039,7 +4039,7 @@
             "description": "Validation covers the various adjacenct discovery and reachability verification protocols. Also may cover Information source and degree of integrity.",
             "properties": {
                 "validation-mechanism": {
-                    "x-key": "validation-mechanism layer-protocol-adjacency-validated validation-robustness",
+                    "x-key": "validation-mechanism-layer-protocol-adjacency-validated-validation-robustness",
                     "description": "Provides details of the specific validation mechanism(s) used to confirm the presence of an intended topologicalEntity.",
                     "items": {
                         "$ref": "#/definitions/validation-mechanism"
@@ -4122,7 +4122,7 @@
             "description": "A TopologicalEntity will suffer effects from the underlying physical realization related to the timing of the information passed by the TopologicalEntity.",
             "properties": {
                 "latency-characteristic": {
-                    "x-key": "traffic-property-name traffic-property-queing-latency",
+                    "x-key": "traffic-property-name-traffic-property-queing-latency",
                     "description": "The effect on the latency of a queuing process. This only has significant effect for packet based systems and has a complex characteristic.",
                     "items": {
                         "$ref": "#/definitions/latency-characteristic"
@@ -4326,7 +4326,7 @@
             "description": "The cost characteristics of a TopologicalEntity not necessarily correlated to the cost of the underlying physical realization. \nThey may be quite specific to the individual TopologicalEntity e.g. opportunity cost. Relates to layer capacity\nThere may be many perspectives from which cost may be considered  for a particular TopologicalEntity and hence many specific costs and potentially cost algorithms. \nUsing an entity will incur a cost. ",
             "properties": {
                 "cost-characteristic": {
-                    "x-key": "cost-name cost-value cost-algorithm",
+                    "x-key": "cost-name-cost-value-cost-algorithm",
                     "description": "The list of costs where each cost relates to some aspect of the TopologicalEntity.",
                     "items": {
                         "$ref": "#/definitions/cost-characteristic"
