@@ -1,34 +1,17 @@
 package es.tid.topologyModuleBase.TAPITopoModel.api.impl;
 
+import es.tid.tedb.DomainTEDB;
+import es.tid.tedb.TEDB;
 import es.tid.topologyModuleBase.TAPITopoModel.api.*;
 import es.tid.topologyModuleBase.TAPITopoModel.model.*;
 
-import es.tid.topologyModuleBase.TAPITopoModel.model.ContextSchema;
-import es.tid.topologyModuleBase.TAPITopoModel.model.NameAndValue;
-import es.tid.topologyModuleBase.TAPITopoModel.model.NetworkTopologyService;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocol;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ServiceEndPoint;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LifecycleStatePac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.Link;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocolTransitionPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.RiskCharacteristic;
-import es.tid.topologyModuleBase.TAPITopoModel.model.RiskParameterPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.AdminStatePac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.Capacity;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCapacityPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.CostCharacteristic;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCostPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferIntegrityPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.LatencyCharacteristic;
-import es.tid.topologyModuleBase.TAPITopoModel.model.TransferTimingPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationPac;
-import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationMechanism;
-import es.tid.topologyModuleBase.TAPITopoModel.model.Node;
-import es.tid.topologyModuleBase.TAPITopoModel.model.NodeEdgePoint;
-import es.tid.topologyModuleBase.TAPITopoModel.model.Topology;
-
 import java.util.List;
+import java.util.Map;
+
 import es.tid.topologyModuleBase.TAPITopoModel.api.NotFoundException;
+import es.tid.topologyModuleBase.database.TopologiesDataBase;
+import es.tid.topologyModuleBase.plugins.writer.TopologyServerCOP;
+import es.tid.topologyModuleBase.plugins.writer.TopologyServerTAPI;
 
 import java.io.InputStream;
 
@@ -477,7 +460,20 @@ public class ConfigApiServiceImpl extends ConfigApiService {
     @Override
     public Response retrieveContextTopologyTopology(SecurityContext securityContext) throws NotFoundException {
         // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+    	//XX
+    	System.out.println("por aqui");
+    	 TopologiesDataBase ted = TopologyServerTAPI.getActualTed();
+    	TopologyContext tc= new TopologyContext();
+    	  for(Map.Entry<String, TEDB>entry : ted.getTeds().entrySet() ){
+      		 System.out.println("Topologia servida con id: "+entry.getKey());
+      		  if (entry.getValue() instanceof DomainTEDB) {
+      	    	tc.addTopologyItem(TranslateModel.translateTopology(entry.getKey(), (DomainTEDB)entry.getValue()));
+      	    	
+      		  }
+    	  }
+    	
+    	  return Response.ok().entity(tc).build();
+        //return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
     public Response retrieveContextTopologyTopologyById(String uuid, SecurityContext securityContext) throws NotFoundException {
