@@ -120,7 +120,7 @@ public class TopologyModuleParamsArray
 			}
 			
 			
-			NodeList list_nodes_XML = doc.getElementsByTagName("XML");
+			NodeList list_nodes_XML = doc.getElementsByTagName("XML_Plugin");
 			
 			for (int i = 0; i < list_nodes_XML.getLength(); i++) 
 			{
@@ -249,8 +249,8 @@ public class TopologyModuleParamsArray
 					littleParams.setRemoteTAPIPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_tapi.getElementsByTagName("import_port").item(0))))));
 					littleParams.setTAPIReading(true);
 				}*/
-				if(nodes_tapi.getElementsByTagName("serve_port").getLength()>0){
-					littleParams.setExportTAPIPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_tapi.getElementsByTagName("serve_port").item(0))))));
+				if(nodes_tapi.getElementsByTagName("server_port").getLength()>0){
+					littleParams.setExportTAPIPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_tapi.getElementsByTagName("server_port").item(0))))));
                                         System.out.println("PUERTO SERVIDOR "+littleParams.getExportTAPIPort() + " ACTIVAMOS: " + littleParams.isTAPIWriting());
 				}
 				paramList.add(littleParams);
