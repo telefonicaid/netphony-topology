@@ -6,15 +6,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
-import es.tid.bgp.bgp4Peer.peer.BGPPeer;
-import es.tid.tedb.SimpleTEDB;
 import es.tid.topologyModuleBase.TopologyModuleParams;
 import es.tid.topologyModuleBase.database.TopologiesDataBase;
 
-//import javax.servlet.Servlet;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+
 
 
 public class TopologyServerTAPI extends TopologyServer
@@ -79,6 +74,7 @@ public class TopologyServerTAPI extends TopologyServer
           
             jettyServer.join();
         } catch(Exception e){
+        	e.printStackTrace();
         	log.severe(e.getStackTrace().toString());
         }finally {     
             jettyServer.destroy();

@@ -1,24 +1,24 @@
-package es.tid.TopologyModuleBase.TAPITopoModel.api;
+package es.tid.topologyModuleBase.TAPITopoModel.api;
 
-import es.tid.TopologyModuleBase.TAPITopoModel.model.*;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.OperationsApiService;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.factories.OperationsApiServiceFactory;
+import es.tid.topologyModuleBase.TAPITopoModel.model.*;
+import es.tid.topologyModuleBase.TAPITopoModel.api.OperationsApiService;
+import es.tid.topologyModuleBase.TAPITopoModel.api.factories.OperationsApiServiceFactory;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.jaxrs.*;
 
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetLinkDetailsRPCInputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetLinkDetailsRPCOutputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetNodeDetailsRPCOutputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetNodeDetailsRPCInputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetNodeEdgePointDetailsRPCOutputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetNodeEdgePointDetailsRPCInputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetTopologyDetailsRPCOutputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetTopologyDetailsRPCInputSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.GetTopologyListRPCOutputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetLinkDetailsRPCInputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetLinkDetailsRPCOutputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetNodeDetailsRPCOutputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetNodeDetailsRPCInputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetNodeEdgePointDetailsRPCOutputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetNodeEdgePointDetailsRPCInputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetTopologyDetailsRPCOutputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetTopologyDetailsRPCInputSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.GetTopologyListRPCOutputSchema;
 
 import java.util.List;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.NotFoundException;
+import es.tid.topologyModuleBase.TAPITopoModel.api.NotFoundException;
 
 import java.io.InputStream;
 
@@ -34,7 +34,7 @@ import javax.ws.rs.*;
 
 
 @io.swagger.annotations.Api(description = "the operations API")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-10T14:31:20.668+01:00")
 public class OperationsApi  {
    private final OperationsApiService delegate = OperationsApiServiceFactory.getOperationsApi();
 

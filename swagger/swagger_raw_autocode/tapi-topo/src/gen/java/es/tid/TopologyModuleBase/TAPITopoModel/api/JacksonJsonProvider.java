@@ -1,4 +1,4 @@
-package es.tid.TopologyModuleBase.TAPITopoModel.api;
+package es.tid.topologyModuleBase.TAPITopoModel.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;

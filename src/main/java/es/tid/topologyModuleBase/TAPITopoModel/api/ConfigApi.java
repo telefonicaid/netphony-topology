@@ -1,38 +1,38 @@
-package es.tid.TopologyModuleBase.TAPITopoModel.api;
+package es.tid.topologyModuleBase.TAPITopoModel.api;
 
-import es.tid.TopologyModuleBase.TAPITopoModel.model.*;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.ConfigApiService;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.factories.ConfigApiServiceFactory;
+import es.tid.topologyModuleBase.TAPITopoModel.model.*;
+import es.tid.topologyModuleBase.TAPITopoModel.api.ConfigApiService;
+import es.tid.topologyModuleBase.TAPITopoModel.api.factories.ConfigApiServiceFactory;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.jaxrs.*;
 
-import es.tid.TopologyModuleBase.TAPITopoModel.model.ContextSchema;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.NameAndValue;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.NetworkTopologyService;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.LayerProtocol;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.ServiceEndPoint;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.LifecycleStatePac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.Link;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.LayerProtocolTransitionPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.RiskCharacteristic;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.RiskParameterPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.AdminStatePac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.Capacity;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferCapacityPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.CostCharacteristic;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferCostPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferIntegrityPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.LatencyCharacteristic;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.TransferTimingPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.ValidationPac;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.ValidationMechanism;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.Node;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.NodeEdgePoint;
-import es.tid.TopologyModuleBase.TAPITopoModel.model.Topology;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ContextSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.NameAndValue;
+import es.tid.topologyModuleBase.TAPITopoModel.model.NetworkTopologyService;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocol;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ServiceEndPoint;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LifecycleStatePac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Link;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocolTransitionPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.RiskCharacteristic;
+import es.tid.topologyModuleBase.TAPITopoModel.model.RiskParameterPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.AdminStatePac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Capacity;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCapacityPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.CostCharacteristic;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCostPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferIntegrityPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LatencyCharacteristic;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferTimingPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationMechanism;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Node;
+import es.tid.topologyModuleBase.TAPITopoModel.model.NodeEdgePoint;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Topology;
 
 import java.util.List;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.NotFoundException;
+import es.tid.topologyModuleBase.TAPITopoModel.api.NotFoundException;
 
 import java.io.InputStream;
 
@@ -48,7 +48,7 @@ import javax.ws.rs.*;
 
 
 @io.swagger.annotations.Api(description = "the config API")
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:50:28.288+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-10T14:31:20.668+01:00")
 public class ConfigApi  {
    private final ConfigApiService delegate = ConfigApiServiceFactory.getConfigApi();
 

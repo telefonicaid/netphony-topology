@@ -1,43 +1,43 @@
-package es.tid.TopologyModuleBase.TAPITopoModel.api;
+package es.tid.topologyModuleBase.TAPITopoModel.api;
 
-import es.tid.TopologyModuleBase.TAPITopoModel.api.*;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.*;
+import es.tid.topologyModuleBase.TAPITopoModel.api.*;
+import es.tid.topologyModuleBase.TAPITopoModel.model.*;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.ContextSchema;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.NameAndValue;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.NetworkTopologyService;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.LayerProtocol;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.ServiceEndPoint;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.LifecycleStatePac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.Link;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.LayerProtocolTransitionPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.RiskCharacteristic;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.RiskParameterPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.AdminStatePac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.Capacity;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.TransferCapacityPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.CostCharacteristic;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.TransferCostPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.TransferIntegrityPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.LatencyCharacteristic;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.TransferTimingPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.ValidationPac;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.ValidationMechanism;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.Node;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.NodeEdgePoint;
-import es.tid.es.tid.opologyModuleBase.TAPITopoModel.api.model.Topology;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ContextSchema;
+import es.tid.topologyModuleBase.TAPITopoModel.model.NameAndValue;
+import es.tid.topologyModuleBase.TAPITopoModel.model.NetworkTopologyService;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocol;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ServiceEndPoint;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LifecycleStatePac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Link;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LayerProtocolTransitionPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.RiskCharacteristic;
+import es.tid.topologyModuleBase.TAPITopoModel.model.RiskParameterPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.AdminStatePac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Capacity;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCapacityPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.CostCharacteristic;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferCostPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferIntegrityPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.LatencyCharacteristic;
+import es.tid.topologyModuleBase.TAPITopoModel.model.TransferTimingPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationPac;
+import es.tid.topologyModuleBase.TAPITopoModel.model.ValidationMechanism;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Node;
+import es.tid.topologyModuleBase.TAPITopoModel.model.NodeEdgePoint;
+import es.tid.topologyModuleBase.TAPITopoModel.model.Topology;
 
 import java.util.List;
-import es.tid.TopologyModuleBase.TAPITopoModel.api.NotFoundException;
+import es.tid.topologyModuleBase.TAPITopoModel.api.NotFoundException;
 
 import java.io.InputStream;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
-@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-09T12:33:04.057+01:00")
+@javax.annotation.Generated(value = "class io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2017-02-10T14:31:20.668+01:00")
 public abstract class ConfigApiService {
     public abstract Response createContextById(ContextSchema context,SecurityContext securityContext) throws NotFoundException;
     public abstract Response createContextLabelLabelById(String valueName,NameAndValue label,SecurityContext securityContext) throws NotFoundException;

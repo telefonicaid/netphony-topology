@@ -11,7 +11,7 @@
             <param-value>
                 io.swagger.jaxrs.listing,
                 io.swagger.sample.resource,
-                es.tid.TopologyModuleBase.TAPITopoModel.api
+                es.tid.topologyModuleBase.TAPITopoModel.api
             </param-value>
         </init-param>
         <init-param>
@@ -45,7 +45,7 @@
     </servlet>
     <servlet>
         <servlet-name>Bootstrap</servlet-name>
-        <servlet-class>es.tid.TopologyModuleBase.TAPITopoModel.api.Bootstrap</servlet-class>
+        <servlet-class>es.tid.topologyModuleBase.TAPITopoModel.api.Bootstrap</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -54,7 +54,7 @@
     </servlet-mapping>
     <filter>
         <filter-name>ApiOriginFilter</filter-name>
-        <filter-class>es.tid.TopologyModuleBase.TAPITopoModel.api.ApiOriginFilter</filter-class>
+        <filter-class>es.tid.topologyModuleBase.TAPITopoModel.api.ApiOriginFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>ApiOriginFilter</filter-name>

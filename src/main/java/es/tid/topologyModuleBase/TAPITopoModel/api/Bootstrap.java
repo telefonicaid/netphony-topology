@@ -1,4 +1,4 @@
-package es.tid.TopologyModuleBase.TAPITopoModel.api;
+package es.tid.topologyModuleBase.TAPITopoModel.api;
 
 import io.swagger.jaxrs.config.SwaggerContextService;
 import io.swagger.models.*;
