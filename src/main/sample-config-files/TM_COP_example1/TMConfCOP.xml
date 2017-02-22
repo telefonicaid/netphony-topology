@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <managementIP>localhost</managementIP>
+    <managementPort>5008</managementPort>
+    <COP>
+       <serve_port>8089</serve_port>
+    </COP>
+    <XML_Plugin>
+     	<mode>TM</mode>
+     	<Identifier>fromXML</Identifier>
+        <XMLFileTopology>target/TM_COP_example1/network1.xml</XMLFileTopology>
+    </XML_Plugin>
+</config>
