@@ -6,7 +6,7 @@ timestamps {
             docker.image('maven:3.3.3-jdk-8').withRun('-it -v /var/lib/m2:/root/.m2', 'bash') {c ->
                 sh """
                 docker cp . ${c.id}:/root/netphony-topology
-                docker exec ${c.id} mvn -f /root/netphony-topology clean package -P generate-full-jar
+                docker exec ${c.id} mvn -f /root/netphony-topology package -P generate-full-jar
                 docker cp ${c.id}:/root/netphony-topology/target .
                 """
             }
