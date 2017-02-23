@@ -1,13 +1,8 @@
-FROM n3ziniuka5/ubuntu-oracle-jdk:14.04-JDK7
+FROM goyalzz/ubuntu-java-8-maven-docker-image
 MAINTAINER Oscar Gonzalez (oscar.gonzalezdedios@telefonica.com)
-LABEL version="1.3.0"
+LABEL version="1.3.4"
 LABEL description="BGP Peer"
 LABEL source_url="https://github.com/telefonicaid/netphony-topology"
-
-#install maven
-RUN sudo apt-get update
-RUN sudo apt-cache search maven
-RUN sudo apt-get -y install maven
 
 #copy code files
 COPY . /usr/src/app

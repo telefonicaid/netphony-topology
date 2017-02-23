@@ -164,6 +164,16 @@
 		<url>git@github.com:telefonicaid/netphony-topology.git</url>
 	</scm>
 
+	<repositories>
+		<!--Enables to get SNAPSHOTS-->
+	    <repository>
+	        <id>oss.sonatype.org-snapshot</id>
+	        <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+	        <releases><enabled>false</enabled></releases>
+	        <snapshots><enabled>true</enabled></snapshots>
+	    </repository>
+	</repositories>
+
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
