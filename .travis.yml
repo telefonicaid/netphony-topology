@@ -4,6 +4,12 @@ jdk:
   - oraclejdk8
 services:
   - docker
+before_install:
+  - echo "Integration only, remove before moving to non-SNAPSHOT"
+  - git clone https://github.com/telefonicaid/netphony-network-protocols.git
+  - cd netphony-network-protocols
+  - mvn install -X -f ./pom.xml
+  - cd ..
 install:
   - sudo docker build -t bgppeer . 
   - docker_host=$(ifconfig docker0 | grep 'inet' | cut -d ':' -f2 | awk '{ print $1}')
