@@ -10,12 +10,6 @@
 			<prefix>24</prefix>
 		</reachability_entry>
 
-        <it_resources>
-        	<controller_it>https://openstack.5Gex.com/url</controller_it>
-        	<cpu>100</cpu>
-            <mem>100Gbyte</mem>
-            <storage>100Tbyte</storage>
-        </it_resources>
 
 		<node>
 			<router_id>172.16.101.101</router_id>

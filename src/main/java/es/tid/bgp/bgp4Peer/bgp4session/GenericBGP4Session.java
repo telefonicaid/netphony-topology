@@ -5,6 +5,7 @@ import es.tid.bgp.bgp4.messages.BGP4Message;
 import es.tid.bgp.bgp4.messages.BGP4MessageTypes;
 import es.tid.bgp.bgp4.messages.BGP4Open;
 import es.tid.bgp.bgp4.open.BGP4CapabilitiesOptionalParameter;
+import es.tid.bgp.bgp4.open.BGP4OctetsASByteCapabilityAdvertisement;
 import es.tid.bgp.bgp4.open.MultiprotocolExtensionCapabilityAdvertisement;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.AFICodes;
 import es.tid.bgp.bgp4.update.fields.pathAttributes.SAFICodes;
@@ -501,8 +502,11 @@ public abstract class GenericBGP4Session extends Thread implements BGP4Session {
 		multProtExtCapAdv.setAFI(AFICodes.AFI_BGP_LS);
 		multProtExtCapAdv.setSAFI(SAFICodes.SAFI_BGP_LS);		
 		cop.getCapabilityList().add(multProtExtCapAdv);
-		//Send the OPEN message
+		BGP4OctetsASByteCapabilityAdvertisement fouroctects = new BGP4OctetsASByteCapabilityAdvertisement();
+		fouroctects.setAS(myAutonomousSystem);
+		cop.getCapabilityList().add(fouroctects);
 
+		//Send the OPEN message
 		this.sendBGP4Message(open_msg);
 		//Now, read messages until we are in SESSION UP
 		while (this.FSMstate!=BGP4StateSession.BGP4_STATE_SESSION_UP){
