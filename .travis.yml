@@ -8,6 +8,7 @@ before_install:
   - echo "Integration only, remove before moving to non-SNAPSHOT"
   - git clone https://github.com/telefonicaid/netphony-network-protocols.git
   - cd netphony-network-protocols
+  - git checkout 5gex
   - mvn install -X -f ./pom.xml
   - cd ..
 install:
