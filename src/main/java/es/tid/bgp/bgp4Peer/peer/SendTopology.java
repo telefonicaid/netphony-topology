@@ -53,8 +53,9 @@ public class SendTopology implements Runnable {
 	private Logger log;
 	private int instanceId=1;
 	private boolean sendIntraDomainLinks=false;
-	
-	
+
+	private boolean send4AS=false;
+
 
 	
 	
@@ -409,17 +410,27 @@ public class SendTopology implements Runnable {
 				OriginAttribute or = new OriginAttribute(); 
 				or.setValue(PathAttributesTypeCode.PATH_ATTRIBUTE_ORIGIN_IGP);
 				pathAttributes.add(or);
-		
 				//AS_PATH
-				AS_Path_Attribute as_path = new AS_Path_Attribute();
-				AS_Path_Segment as_path_seg= new AS_Path_Segment();
-				int[] segs=new int[1];
-				segs[0]=65002;
-				as_path_seg.setSegments(segs);
-				as_path.getAsPathSegments().add(as_path_seg);
-				pathAttributes.add(as_path);
-		
-				//Node Attribute
+				if (send4AS==true) {
+					AS4_Path_Attribute as_path = new AS4_Path_Attribute();
+					AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+					long[] segs = new long[1];
+					segs[0] = 65522;
+					as_path_seg.setSegments(segs);
+					as_path.getAsPathSegments().add(as_path_seg);
+					pathAttributes.add(as_path);
+				}
+				else {
+					AS_Path_Attribute as_path = new AS_Path_Attribute();
+					AS_Path_Segment as_path_seg = new AS_Path_Segment();
+					int[] segs = new int[1];
+					segs[0] = 65522;
+					as_path_seg.setSegments(segs);
+					as_path.getAsPathSegments().add(as_path_seg);
+					pathAttributes.add(as_path);
+				}
+
+			//Node Attribute
 		
 				LinkStateAttribute  linkStateAttribute = new LinkStateAttribute();
 				boolean linkStateNeeded=false;
@@ -496,14 +507,26 @@ public class SendTopology implements Runnable {
 			pathAttributes.add(or);
 
 			//AS_PATH
-			AS_Path_Attribute as_path = new AS_Path_Attribute();
-			AS_Path_Segment as_path_seg= new AS_Path_Segment();
-			int[] segs=new int[1];
-			segs[0]=65002;
-			as_path_seg.setSegments(segs);
-			as_path.getAsPathSegments().add(as_path_seg);
-			pathAttributes.add(as_path);	
-	
+			if (send4AS==true) {
+				AS4_Path_Attribute as_path = new AS4_Path_Attribute();
+				AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+				long[] segs = new long[1];
+				segs[0] = 65522;
+				as_path_seg.setSegments(segs);
+				as_path.getAsPathSegments().add(as_path_seg);
+				pathAttributes.add(as_path);
+			}
+			else {
+				AS_Path_Attribute as_path = new AS_Path_Attribute();
+				AS_Path_Segment as_path_seg = new AS_Path_Segment();
+				int[] segs = new int[1];
+				segs[0] = 65522;
+				as_path_seg.setSegments(segs);
+				as_path.getAsPathSegments().add(as_path_seg);
+				pathAttributes.add(as_path);
+			}
+
+
 		
 
 			//NLRI
@@ -568,14 +591,25 @@ public class SendTopology implements Runnable {
 		///Andreaaaaa
 		//update.setLearntFrom("192.168.0.1");
 		//1.2. AS-PATH
-		
-		AS_Path_Attribute as_path = new AS_Path_Attribute();
-		AS_Path_Segment as_path_seg= new AS_Path_Segment();
-		int[] segs=new int[1];
-		segs[0]=300;
-		as_path_seg.setSegments(segs);
-		as_path.getAsPathSegments().add(as_path_seg);
-		pathAttributes.add(as_path);
+
+		if (send4AS==true) {
+			AS4_Path_Attribute as_path = new AS4_Path_Attribute();
+			AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+			long[] segs = new long[1];
+			segs[0] = 65522;
+			as_path_seg.setSegments(segs);
+			as_path.getAsPathSegments().add(as_path_seg);
+			pathAttributes.add(as_path);
+		}
+		else {
+			AS_Path_Attribute as_path = new AS_Path_Attribute();
+			AS_Path_Segment as_path_seg = new AS_Path_Segment();
+			int[] segs = new int[1];
+			segs[0] = 65522;
+			as_path_seg.setSegments(segs);
+			as_path.getAsPathSegments().add(as_path_seg);
+			pathAttributes.add(as_path);
+		}
 
 
 		//1.2. LINK-STATE
