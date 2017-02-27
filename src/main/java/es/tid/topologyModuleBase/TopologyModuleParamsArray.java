@@ -238,7 +238,6 @@ public class TopologyModuleParamsArray
                          * This block is going to used to load the XML params fot TAPI TOPOLOGY
                          */
 			NodeList list_nodes_TAPI = doc.getElementsByTagName("TAPI");
-			System.out.println("ETIQUETA TAPI");
 			for (int i = 0; i < list_nodes_TAPI.getLength(); i++) 
 			{
 				Element nodes_tapi = (Element) list_nodes_TAPI.item(i);
