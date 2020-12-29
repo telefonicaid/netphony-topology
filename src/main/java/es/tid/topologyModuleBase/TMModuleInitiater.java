@@ -20,6 +20,7 @@ import es.tid.topologyModuleBase.plugins.writer.TopologyServerGson;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerIETF;
 import es.tid.topologyModuleBase.plugins.writer.TopologyServerUnify;
 import es.tid.topologyModuleBase.plugins.readerwriter.TopologyReaderWriterBGPLS;
+import es.tid.topologyModuleBase.plugins.writer.TopologyServerTAPI;
 
 
 public class TMModuleInitiater {
@@ -135,7 +136,17 @@ public class TMModuleInitiater {
 				executor.execute(p);
 				pluginsList.add(p);
 			}
-			
+			if (actualLittleParams.isTAPIWriting())
+			{
+                            log.info("vamos por aqui");
+				TMPlugin p = new TopologyServerTAPI(ted, actualLittleParams,lock);
+				executor.execute(p);
+				pluginsList.add(p);
+			} else {
+                            System.out.println("VALOR DEL FLAG: " + actualLittleParams.isTAPIWriting());
+                        }
+                        
+                        
 			// IMPORTER/EXPORTER
 			if (actualLittleParams.isBGPLSReadingWriting())
 			{

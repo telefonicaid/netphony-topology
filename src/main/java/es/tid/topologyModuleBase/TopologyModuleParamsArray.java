@@ -120,7 +120,7 @@ public class TopologyModuleParamsArray
 			}
 			
 			
-			NodeList list_nodes_XML = doc.getElementsByTagName("XML");
+			NodeList list_nodes_XML = doc.getElementsByTagName("XML_Plugin");
 			
 			for (int i = 0; i < list_nodes_XML.getLength(); i++) 
 			{
@@ -231,6 +231,27 @@ public class TopologyModuleParamsArray
 				littleParams.setIpWSOld(getCharacterDataFromElement(((Element) nodes_ws.getElementsByTagName("ip").item(0))));
 				littleParams.setPortWSOld(Integer.parseInt(getCharacterDataFromElement(((Element) nodes_ws.getElementsByTagName("port").item(0)))));
 				littleParams.setWSOld(true);
+				paramList.add(littleParams);
+			}
+                        
+                        /**
+                         * This block is going to used to load the XML params fot TAPI TOPOLOGY
+                         */
+			NodeList list_nodes_TAPI = doc.getElementsByTagName("TAPI");
+			for (int i = 0; i < list_nodes_TAPI.getLength(); i++) 
+			{
+				Element nodes_tapi = (Element) list_nodes_TAPI.item(i);
+				TopologyModuleParams littleParams = new TopologyModuleParams();
+                                littleParams.setTAPIWriting(true);
+                                /*if(nodes_tapi.getElementsByTagName("import_ip").getLength()>0){
+					littleParams.setRemoteTAPIhost((getCharacterDataFromElement(((Element) nodes_tapi.getElementsByTagName("import_ip").item(0)))));
+					littleParams.setRemoteTAPIPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_tapi.getElementsByTagName("import_port").item(0))))));
+					littleParams.setTAPIReading(true);
+				}*/
+				if(nodes_tapi.getElementsByTagName("server_port").getLength()>0){
+					littleParams.setExportTAPIPort(Integer.parseInt((getCharacterDataFromElement(((Element) nodes_tapi.getElementsByTagName("server_port").item(0))))));
+                                        System.out.println("PUERTO SERVIDOR "+littleParams.getExportTAPIPort() + " ACTIVAMOS: " + littleParams.isTAPIWriting());
+				}
 				paramList.add(littleParams);
 			}
 			

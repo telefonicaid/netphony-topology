@@ -12,6 +12,7 @@ import es.tid.topologyModuleBase.plugins.TMPlugin;
 import es.tid.tedb.MultiDomainTEDB;
 
 /**
+ * Main class of the Topology Module 
  *  
  * @author jaume
  *
@@ -34,16 +35,11 @@ public class TopologyModuleMain
 		
 		TopologiesDataBase sTop = new TopologiesDataBase();
 		
-//	    sTop.addTEDB("255.255.255.255", new SimpleTEDB() );
-//		
-//		((SimpleTEDB)sTop.getDB()).createGraph();
-//		
+		//By default, create a multi-domain database, empty
 		MultiDomainTEDB mdTed = new MDTEDB();
 		sTop.setMdTed(mdTed);
 		
-		//((SimpleTEDB)sTop.getDB()).createGraph();
-		Lock lock = new ReentrantLock();
-		
+		Lock lock = new ReentrantLock();	
 		
 		TMManagementServer TMms=new TMManagementServer(sTop,params,pluginsList);
 		TMms.start();
