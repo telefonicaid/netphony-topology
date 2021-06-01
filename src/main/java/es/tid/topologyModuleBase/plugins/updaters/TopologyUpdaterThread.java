@@ -407,10 +407,15 @@ public class TopologyUpdaterThread extends Thread{
 				//No son iguales
 				log.info("Distinto el LinkProtectionType");
 
-		if ((lsaOriginal.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor() != null )&&(lsaReceived.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor() != null))
-			if (!(lsaOriginal.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor().equals(lsaReceived.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor())))
-				//No son iguales
-				log.info("Distinto el InterfaceSwitchingCapabilityDescriptor");
+		/*
+		 * if ((lsaOriginal.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor() !=
+		 * null )&&(lsaReceived.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor()
+		 * != null)) if
+		 * (!(lsaOriginal.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor().
+		 * equals(lsaReceived.getLinkTLV().getInterfaceSwitchingCapabilityDescriptor()))
+		 * ) //No son iguales
+		 * log.info("Distinto el InterfaceSwitchingCapabilityDescriptor");
+		 */
 
 		if ((lsaOriginal.getLinkTLV().getSharedRiskLinkGroup() != null )&&(lsaReceived.getLinkTLV().getSharedRiskLinkGroup() != null))
 			if (!(lsaOriginal.getLinkTLV().getSharedRiskLinkGroup().equals(lsaReceived.getLinkTLV().getSharedRiskLinkGroup())))
@@ -420,8 +425,8 @@ public class TopologyUpdaterThread extends Thread{
 			if (!(lsaOriginal.getLinkTLV().getRemoteASNumber().equals(lsaReceived.getLinkTLV().getRemoteASNumber())))
 				//No son iguales
 				log.info("Distinto el getRemoteASNumber");
-		if ((lsaOriginal.getLinkTLV().getiPv4RemoteASBRID()!= null )&&(lsaReceived.getLinkTLV().getiPv4RemoteASBRID() !=null))
-			if (!(lsaOriginal.getLinkTLV().getiPv4RemoteASBRID().equals(lsaReceived.getLinkTLV().getiPv4RemoteASBRID())))
+		if ((lsaOriginal.getLinkTLV().getIPv4RemoteASBRID()!= null )&&(lsaReceived.getLinkTLV().getIPv4RemoteASBRID() !=null))
+			if (!(lsaOriginal.getLinkTLV().getIPv4RemoteASBRID().equals(lsaReceived.getLinkTLV().getIPv4RemoteASBRID())))
 				log.info("Distinto el getiPv4RemoteASBRID");//No son iguales
 		if ((lsaOriginal.getLinkTLV().getAvailableLabels() != null )&&(lsaReceived.getLinkTLV().getAvailableLabels() != null))
 			if (!(lsaOriginal.getLinkTLV().getAvailableLabels().equals(lsaReceived.getLinkTLV().getAvailableLabels())))

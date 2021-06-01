@@ -412,11 +412,11 @@ public class SendTopology implements Runnable {
 				pathAttributes.add(or);
 				//AS_PATH
 				if (send4AS==true) {
-					AS4_Path_Attribute as_path = new AS4_Path_Attribute();
-					AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+					AS_Path_Attribute as_path = new AS_Path_Attribute();
+					AS_Path_Segment as_path_seg = new AS_Path_Segment();
 					long[] segs = new long[1];
 					segs[0] = 65522;
-					as_path_seg.setSegments(segs);
+					as_path_seg.set4Segments(segs);
 					as_path.getAsPathSegments().add(as_path_seg);
 					pathAttributes.add(as_path);
 				}
@@ -508,11 +508,11 @@ public class SendTopology implements Runnable {
 
 			//AS_PATH
 			if (send4AS==true) {
-				AS4_Path_Attribute as_path = new AS4_Path_Attribute();
-				AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+				AS_Path_Attribute as_path = new AS_Path_Attribute();
+				AS_Path_Segment as_path_seg = new AS_Path_Segment();
 				long[] segs = new long[1];
 				segs[0] = 65522;
-				as_path_seg.setSegments(segs);
+				as_path_seg.set4Segments(segs);
 				as_path.getAsPathSegments().add(as_path_seg);
 				pathAttributes.add(as_path);
 			}
@@ -593,11 +593,11 @@ public class SendTopology implements Runnable {
 		//1.2. AS-PATH
 
 		if (send4AS==true) {
-			AS4_Path_Attribute as_path = new AS4_Path_Attribute();
-			AS4_Path_Segment as_path_seg = new AS4_Path_Segment();
+			AS_Path_Attribute as_path = new AS_Path_Attribute();
+			AS_Path_Segment as_path_seg = new AS_Path_Segment();
 			long[] segs = new long[1];
 			segs[0] = 65522;
-			as_path_seg.setSegments(segs);
+			as_path_seg.set4Segments(segs);
 			as_path.getAsPathSegments().add(as_path_seg);
 			pathAttributes.add(as_path);
 		}

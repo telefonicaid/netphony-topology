@@ -7,10 +7,7 @@ import es.tid.ospf.ospfv2.lsa.tlv.subtlv.AvailableLabels;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.MaximumBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.UnreservedBandwidth;
 import es.tid.ospf.ospfv2.lsa.tlv.subtlv.complexFields.BitmapLabelSet;
-import es.tid.pce.pcep.objects.tlvs.StorageTLV;
-import es.tid.pce.pcep.objects.tlvs.subtlvs.CostSubTLV;
-import es.tid.pce.pcep.objects.tlvs.subtlvs.ResourceIDSubTLV;
-import es.tid.pce.pcep.objects.tlvs.subtlvs.StorageSizeSubTLV;
+
 import es.tid.rsvp.constructs.gmpls.DWDMWavelengthLabel;
 import es.tid.rsvp.objects.subobjects.IPv4prefixEROSubobject;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
@@ -330,11 +327,13 @@ public class FileTEDBUpdater {
 								s_source_if_id = getCharacterDataFromElement(source_if_id_el);
 								src_if_id = Integer.parseInt(s_source_if_id);
 							}
-							log.debug("SRC if id: "+src_if_id);
+							if (src_if_id!=-1) {
+								log.debug("SRC if id: "+src_if_id);	
+							}							
 
 							NodeList source_Numif_id_nl = source_router_el.getElementsByTagName("NumIf_id");
 							Element source_Numif_id_el = (Element) source_Numif_id_nl.item(0);
-							String s_source_Numif_id;
+							String s_source_Numif_id=null;
 							if (source_Numif_id_el!=null){
 								s_source_Numif_id = getCharacterDataFromElement(source_Numif_id_el);
 								try { // src_Numif_id type : Inet4Address
@@ -343,7 +342,10 @@ public class FileTEDBUpdater {
 									src_Numif_id =  DataPathID.getByName(s_source_Numif_id);
 								}
 							}
-
+							if (s_source_Numif_id!=null) {
+								log.debug("NumIf_id id: "+src_Numif_id);	
+							}
+							
 							NodeList dest_nl = element.getElementsByTagName("destination");
 							Element dest_el = (Element) dest_nl.item(0);
 
@@ -379,11 +381,14 @@ public class FileTEDBUpdater {
 								s_dest_if_id = getCharacterDataFromElement(dest_if_id_el);
 								dst_if_id = Integer.parseInt(s_dest_if_id);
 							}
-							log.debug("DST if id: "+dst_if_id);
+							if (dst_if_id!=-1) {
+								log.debug("DST if id: "+dst_if_id);
+							}	
+							
 
 							NodeList dest_Numif_id_nl = dest_el.getElementsByTagName("NumIf_id");
 							Element dest_Numif_id_el = (Element) dest_Numif_id_nl.item(0);
-							String s_dest_Numif_id;
+							String s_dest_Numif_id=null;
 
 							if (source_Numif_id_el!=null){
 								s_dest_Numif_id = getCharacterDataFromElement(dest_Numif_id_el);
@@ -394,6 +399,10 @@ public class FileTEDBUpdater {
 									dst_Numif_id =  DataPathID.getByName(s_dest_Numif_id);
 								}
 							}
+							if (s_dest_Numif_id!=null) {
+								log.debug("DST NumIf_id id: "+dst_Numif_id);	
+							}
+							
 							// Añadimos interfaces Numeradas
 							if (src_Numif_id!=null){
 								edge.setSrc_Numif_id(src_Numif_id);
@@ -2699,7 +2708,7 @@ public class FileTEDBUpdater {
 	public static void initializeReachabilityFromFile(String fileName,
 			ReachabilityManager rm) {
 		Logger log = LoggerFactory.getLogger("BGP4Peer");
-		log.debug("Initializng reachability from " + fileName);
+		log.debug("Initializing reachability from " + fileName);
 		File file = new File(fileName);
 		try {
 			DocumentBuilder builder = DocumentBuilderFactory.newInstance()
@@ -3558,63 +3567,5 @@ public class FileTEDBUpdater {
 
 	}
 
-	public static Hashtable<StorageTLV,Object> getStorageCharacteristics(String fileName){
-		Hashtable <StorageTLV,Object> storage_site_ed=new Hashtable <StorageTLV,Object>();
-		//		StorageTLV storagetlv = new StorageTLV();
-		//		ResourceIDSubTLV resourceidsubtlv = new ResourceIDSubTLV();
-		//		CostSubTLV costsubtlv = new CostSubTLV();
-		//		LinkedList<CostSubTLV> costlist = new LinkedList<CostSubTLV> (); 
-		//		StorageSizeSubTLV storagesizesubtlv = new StorageSizeSubTLV();
 
-		File file2 = new File(fileName);
-		try {
-			DocumentBuilder builder2 =	DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document doc2 = builder2.parse(file2);
-
-			NodeList nodes_domains = doc2.getElementsByTagName("domain");
-
-			for (int j = 0; j < nodes_domains.getLength(); j++) {
-				Element element_domain = (Element) nodes_domains.item(j);
-				NodeList nodes_domain_id =  element_domain.getElementsByTagName("domain_id");
-				Element domain_id_e = (Element) nodes_domain_id.item(0);
-				String domain_id_str=getCharacterDataFromElement(domain_id_e);
-				Inet4Address domain_id= (Inet4Address) Inet4Address.getByName(domain_id_str);
-
-				NodeList storages = element_domain.getElementsByTagName("storage");
-				for (int i = 0; i < storages.getLength(); i++) {
-					StorageTLV storagetlv = new StorageTLV();
-					ResourceIDSubTLV resourceidsubtlv = new ResourceIDSubTLV();
-					CostSubTLV costsubtlv = new CostSubTLV();
-					LinkedList<CostSubTLV> costlist = new LinkedList<CostSubTLV> (); 
-					StorageSizeSubTLV storagesizesubtlv = new StorageSizeSubTLV();
-
-
-					Element element = (Element) storages.item(i);
-					NodeList resource_id_node = element.getElementsByTagName("resource_id");
-					Element resource_id_e = (Element) resource_id_node.item(0);
-					String resource_id=getCharacterDataFromElement(resource_id_e);
-					Inet4Address resource_id_addr= (Inet4Address) Inet4Address.getByName(resource_id);
-
-					resourceidsubtlv.setResourceID(resource_id_addr);
-
-					Inet4Address virtual_TI_site= (Inet4Address) Inet4Address.getByName((element.getAttributeNode("it_site").getValue()).toString());
-					costsubtlv.setUsageUnit((element.getAttributeNode("UsageUnit").getValue()).getBytes());
-					costsubtlv.setUnitaryPrice((element.getAttributeNode("UnitaryPrice").getValue()).getBytes());
-					costlist.add(costsubtlv);
-					storagesizesubtlv.setTotalSize(Integer.parseInt(element.getAttributeNode("TotalSize").getValue()));
-					storagesizesubtlv.setAvailableSize(Integer.parseInt(element.getAttributeNode("AvailableSize").getValue()));
-
-					storagetlv.setResourceIDSubTLV(resourceidsubtlv);
-					storagetlv.setCostList(costlist);
-					storagetlv.setStorageSizeSubTLV(storagesizesubtlv);
-
-					storage_site_ed.put(storagetlv, virtual_TI_site);					
-				}
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}		 
-		return storage_site_ed;
-	}
 }

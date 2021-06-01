@@ -60,11 +60,11 @@ public class BGP4PeerTest {
 		//Create the TEDB
 		//bgpPeer2.createTEDB("test"); //did it in configure
 		bgpPeer2.createUpdateDispatcher();
-		bgpPeer2.startClient();		
+		//bgpPeer2.startClient();		
 		bgpPeer2.startServer();
 		bgpPeer2.startSaveTopology();
 		bgpPeer2.startManagementServer();
-		bgpPeer2.startSendTopology();
+		//bgpPeer2.startSendTopology();
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
