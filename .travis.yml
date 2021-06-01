@@ -1,14 +1,7 @@
 language: java
 jdk:
   - openjdk11
-services:
-  - docker
-install:
-  - sudo docker build -t bgppeer . 
-  - docker_host=$(ifconfig docker0 | grep 'inet' | cut -d ':' -f2 | awk '{ print $1}')
-  - echo $docker_host
+
 script:
   - mvn install -X -f ./pom.xml
   - mvn -P generate-javadoc org.apache.maven.plugins:maven-javadoc-plugin:2.9.1:jar
-  - sudo docker run -d -p 11179:11179 --add-host docker_host:$docker_host -t --name bgppeer1 bgppeer java -jar target/BGPPeer.jar src/test/resources/BGP4Parameters_1_IT.xml
-  - mvn compile failsafe:integration-test
