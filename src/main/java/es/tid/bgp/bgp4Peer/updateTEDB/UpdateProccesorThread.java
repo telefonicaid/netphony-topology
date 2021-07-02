@@ -178,7 +178,7 @@ public class UpdateProccesorThread extends Thread {
 									fillNodeInformation((NodeNLRI)(nlri), learntFrom);
 									continue;
 								case NLRITypes.Prefix_v4_NLRI://POR HACER...
-									fillPrefixNLRI((PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
+									fillPrefixNLRI((IPv4PrefixNLRI)nlri, igpFlagBitsTLV, OSPFForwardingAddrTLV, prefixMetricTLV, routeTagTLV);
 									continue;
 								case NLRITypes.IT_Node_NLRI:
 									fillITNodeInformation((ITNodeNLRI)(nlri), learntFrom);
@@ -204,7 +204,7 @@ public class UpdateProccesorThread extends Thread {
 	}
 
 
-	private void fillPrefixNLRI(PrefixNLRI nlri, IGPFlagBitsPrefixAttribTLV igpFlagBitsTLV, OSPFForwardingAddressPrefixAttribTLV oSPFForwardingAddrTLV, PrefixMetricPrefixAttribTLV prefixMetricTLV, RouteTagPrefixAttribTLV routeTagTLV) {
+	private void fillPrefixNLRI(IPv4PrefixNLRI nlri, IGPFlagBitsPrefixAttribTLV igpFlagBitsTLV, OSPFForwardingAddressPrefixAttribTLV oSPFForwardingAddrTLV, PrefixMetricPrefixAttribTLV prefixMetricTLV, RouteTagPrefixAttribTLV routeTagTLV) {
 		// TODO Auto-generated method stub
 
 	}
@@ -266,12 +266,12 @@ public class UpdateProccesorThread extends Thread {
 		if (lsAtt.getAvailableLabels() != null){
 			this.availableLabels =lsAtt.getAvailableLabels();
 		}
-		if (lsAtt.getMF_OTP() != null){
-			this.mF_OTP_ATLV =lsAtt.getMF_OTP();
+		if (lsAtt.getMF_OTP_ATLV() != null){
+			this.mF_OTP_ATLV =lsAtt.getMF_OTP_ATLV();
 		}
 
-		if (lsAtt.getTransceiverClassAndApp() != null){
-			this.transceiverClassAndAppATLV =lsAtt.getTransceiverClassAndApp();
+		if (lsAtt.getTransceiverClassAndAppATLV() != null){
+			this.transceiverClassAndAppATLV =lsAtt.getTransceiverClassAndAppATLV();
 		}
 
 	}

@@ -72,7 +72,7 @@
 		<dependency>
 			<groupId>es.tid.netphony</groupId>
 			<artifactId>network-protocols</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jgrapht</groupId>

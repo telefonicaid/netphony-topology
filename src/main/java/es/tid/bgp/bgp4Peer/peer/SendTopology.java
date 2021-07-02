@@ -726,7 +726,7 @@ public class SendTopology implements Runnable {
 		if (mfOTP != null){
 			MF_OTPAttribTLV mfOTPTLV = mfOTP.duplicate();
 			log.debug("SENDING MFOTP OSCAR");
-			linkStateAttribute.setMF_OTPAttribTLV(mfOTPTLV);
+			linkStateAttribute.setMF_OTP_ATLV(mfOTPTLV);
 			linkStateNeeded=true;
 		}
 		
