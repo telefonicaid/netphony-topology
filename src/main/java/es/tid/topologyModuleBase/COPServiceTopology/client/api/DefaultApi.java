@@ -44,7 +44,7 @@ public class DefaultApi {
     
 
     // create path and map variables
-    String path = "/config/topologies/".replaceAll("\\{format\\}","json");
+    String path = "/data/topologies/".replaceAll("\\{format\\}","json");
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
