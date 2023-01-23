@@ -1,4 +1,4 @@
-netphony-topology v1.3.3
+netphony-topology v1.4.0-SNAPSHOT
 =======
 Repository branch build status:
 
